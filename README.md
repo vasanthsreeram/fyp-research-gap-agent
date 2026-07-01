@@ -40,6 +40,10 @@ It aims to accelerate discovery by highlighting discrepancies between what theor
 
 See `requirements.txt` for initial dependencies.
 
+## Project Brief
+
+See [docs/fyp-brief.md](docs/fyp-brief.md) for the call-captured FYP framing, first research questions, and early success criteria.
+
 ## Next Steps for Vas
 1. Rename the repo if desired (GitHub → Settings → General → Repository name).
 2. Add real data samples and domain focus (e.g., your specific research area with Prof. Lerwen Liu).
