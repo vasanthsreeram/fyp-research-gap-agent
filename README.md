@@ -44,13 +44,18 @@ See `requirements.txt` for initial dependencies.
 
 See [docs/fyp-brief.md](docs/fyp-brief.md) for the call-captured FYP framing, first research questions, and early success criteria.
 
+See [docs/meeting-2026-07-01-professor.md](docs/meeting-2026-07-01-professor.md) for the professor-meeting summary and refined biology/surprise-detection direction.
+
+See [docs/proposed-approaches.md](docs/proposed-approaches.md) for three concrete approaches to send back to the professor.
+
 ## Next Steps for Vas
 1. Rename the repo if desired (GitHub → Settings → General → Repository name).
-2. Add real data samples and domain focus (e.g., your specific research area with Prof. Lerwen Liu).
-3. Implement ingestion module first (start with arXiv API + Semantic Scholar).
-4. Set up GitHub repo secrets for any API keys (OpenAI, Semantic Scholar, etc.).
-5. Create initial issues for each major module.
-6. Link to NTU FYP submission requirements and timeline.
+2. Turn the professor meeting into a short memo with 2-3 proposed approaches.
+3. Pick an initial biology corpus that avoids model memorization, preferably recent post-cutoff papers.
+4. Build a scoring rubric for surprise, plausibility, feasibility, and expected impact.
+5. Implement ingestion and evidence tracing first.
+6. Create initial issues for each major module.
+7. Link to NTU FYP submission requirements and timeline.
 
 ---
 

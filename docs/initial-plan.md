@@ -25,4 +25,15 @@
 - Memory: Short-term (conversation) + long-term (vector store of past gaps)
 - Human loop: Review UI or Telegram/CLI approval gates
 
-Next milestone: End-to-end run on 50 papers in one subfield (e.g., your Digital Twin or facility intelligence work).
+## 6. Memorization Controls
+- Use recent papers that are unlikely to be in the model training data.
+- Test smaller models against larger models to separate reasoning from memorized knowledge.
+- Include a paper-continuation or withheld-section test where practical.
+- Keep provenance for every claim, score, and generated research idea.
+
+## 7. Biology First Slice
+- Start with one narrow biology subfield aligned to the professor's lab.
+- Candidate areas: protein/nucleic-acid chemistry, hybrid non-coding RNA mechanisms, molecular engineering, nucleic acid delivery, aging-related molecular mechanisms.
+- Output should be suitable for professor review: research question, why surprising, why plausible, evidence base, risks, and suggested experiment.
+
+Next milestone: write a short project memo from the professor meeting, then run a tiny end-to-end experiment on 10-20 recent biology papers.
