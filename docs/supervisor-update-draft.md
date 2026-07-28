@@ -16,72 +16,97 @@ Following our discussion in early July about building an **AI-agentic framework 
 
 ## What I've built
 
-I've shipped the first **working vertical slice** of the Research Gap Agent — an AI pipeline that ingests papers, extracts claims and experimental evidence, quantifies theory↔experiment gaps, and proposes high-impact research topics.
+I've shipped a **working end-to-end Research Gap Agent** pipeline and reorganized it into clean modules for the next stage of work.
 
-The code lives at: https://github.com/vasanthsreeram/fyp-research-gap-agent
+Repo: https://github.com/vasanthsreeram/fyp-research-gap-agent
 
 ### Domain focus
 
-Per our last discussion, the prototype is scoped to **nucleic acid delivery / lipid nanoparticles (LNPs) / mRNA therapeutics** — a domain where the gap between biophysical theory and experimental delivery outcomes is well-documented and mechanistically interesting.
+Prototype scoped to **nucleic acid delivery / lipid nanoparticles (LNPs) / mRNA therapeutics** — biophysical theory vs experimental delivery outcomes is well-documented and mechanistically interesting.
 
 ### Pipeline components
 
 | Component | Status | Notes |
 |-----------|--------|-------|
-| Pydantic schemas (Paper, Claim, Evidence, Gap, TopicProposal) | ✅ | Extensible, JSON-serializable |
-| Paper ingestion (Semantic Scholar + arXiv) | ✅ | 18 real papers cached as fixtures; S2 API ready |
-| Claim extractor (heuristic + LLM) | ✅ | Heuristic mode uses regex triggers; LLM mode uses OpenAI structured output |
-| Evidence/result extractor | ✅ | Metrics, limitations, observations |
-| Gap scorer (multi-axis) | ✅ | Magnitude × novelty × testability × impact → overall score |
-| Topic suggester | ✅ | 5 domain-specific proposals with hypotheses + experiments |
-| CLI (`python -m src run`) | ✅ | End-to-end: ingest → extract → score → suggest → report |
-| Report generator (Markdown) | ✅ | Self-contained `reports/latest_run.md` |
-| Test suite | ✅ | 18 pytest tests |
+| Pydantic schemas (Paper, Claim, Evidence, Gap, TopicProposal) | Done | JSON-serializable, stable IDs |
+| Ingestion (`src/ingest/`) | Done | Semantic Scholar client + arXiv helper + offline fixture fallback; caches under `data/raw/` and `data/processed/` |
+| Claim extractor (`src/extract/claims.py`) | Done | Heuristic (offline) + OpenAI structured JSON (Keychain-backed) |
+| Evidence extractor (`src/extract/evidence.py`) | Done | Results, metrics, limitations with quote spans |
+| Gap scorer (`src/gap/score.py`) | Done | Claim↔evidence alignment; magnitude / novelty / testability / impact |
+| Topic suggester (`src/topics/suggest.py`) | Done | 5 domain-linked proposals with hypotheses + experiments |
+| CLI | Done | `python -m src.cli run --limit 15` |
+| Markdown report | Done | `reports/latest_run.md` |
+| Tests | Done | 23 pytest tests (all passing) |
 
-### Results from first run (18 papers, heuristic mode)
+### Latest run results (15 papers, LLM extractor, 2026-07-29)
 
-- **31 gaps** identified across domains (LNP, endosomal escape, targeting, PK, immunogenicity)
-- **5 research topic proposals** generated, including:
-  1. *Rational design of ionizable lipids for extrahepatic nucleic acid delivery*
-  2. *Addressing gaps in pharmacokinetics for nucleic acid delivery*
-  3. *Addressing gaps in immunogenicity for nucleic acid delivery*
-  4. *Mechanistic understanding of LNP endosomal escape*
-  5. *Addressing gaps in delivery efficiency determinants*
+| Metric | Count |
+|--------|------:|
+| Papers | 15 |
+| Claims | 91 |
+| Evidence items | 102 |
+| Gaps scored | 47 |
+| Topic proposals | 5 |
 
-Top-ranked gap: *"The pKa of ionizable lipids correlates with in vivo potency, but the precise molecular requirements for efficient endosomal escape remain unknown"* — matching a known open question in the field.
+Heuristic-only offline mode (no API) on the same 15 papers: **27 claims / 56 evidence / 32 gaps / 5 topics** — so the demo still works without network keys.
 
-### Example topic proposal: Endosomal escape
+### Example findings (from latest report)
 
-> **Hypothesis:** Endosomal escape of LNPs proceeds primarily through membrane destabilization (ionizable lipid-facilitated flip-flop and bilayer disruption) rather than fusogenic mechanisms, and can be enhanced by helper lipids that lower the lamellar-to-hexagonal phase transition temperature.
+**High-scoring gap themes**
+- Endosomal escape improvements correlating with toxicity (delivery–safety tradeoff)
+- Difficulty of direct visualization of endosomal escape in living cells
+- Competing models: membrane destabilization vs fusion for LNP escape
+- Extrahepatic targeting still limited after systemic administration
+
+**Example topic proposal — endosomal escape mechanism**
+> **Hypothesis:** Endosomal escape of LNPs proceeds primarily through membrane destabilization (ionizable lipid-facilitated flip-flop / bilayer disruption) rather than purely fusogenic mechanisms, and can be enhanced by helper lipids that lower the lamellar-to-hexagonal transition temperature.
 >
-> **Experiments:** (1) Labelled lipid mixing vs. content release assays, (2) Cryo-ET of LNPs in endosomal compartments, (3) Vary helper lipid ratios and correlate with escape efficiency via FRET.
+> **Experiments:** (1) lipid-mixing vs content-release assays, (2) timed cryo-ET in endosomal compartments, (3) helper-lipid titration with FRET escape readouts.
 >
-> **Readout:** Quantitative fraction of delivered cargo reaching cytosol vs. lysosomal degradation.
+> **Readout:** Fraction of cargo reaching cytosol vs lysosomal loss.
+
+Other generated topics cover ligand avidity vs specificity for extrahepatic targeting, nucleoside-modification × LNP synergy for durable mRNA expression, and siRNA delivery outside the liver.
+
+### How to reproduce
+
+```bash
+# Offline demo (no keys)
+python -m src.cli run --limit 15 --fixture --mode heuristic
+
+# LLM extraction (uses Keychain / OPENAI_API_KEY if present)
+python -m src.cli run --limit 15 --fixture --mode llm
+```
+
+Outputs: `data/processed/*.jsonl`, `reports/latest_run.md`.
 
 ## Guarding against LLM memorization
 
-A key risk we discussed — the agent may "know" gaps from training data rather than from the papers. My mitigation strategy:
+1. **Citation-grounded extraction:** Every claim/evidence item carries `paper_id` + `quote_span`.
+2. **Dual path:** Fully offline heuristic extractor for baseline; LLM path is optional and model-agnostic (OpenAI-compatible).
+3. **Planned:** held-out **post-cutoff** papers as a memorization / generalization check (not yet run).
 
-1. **Citation-grounded extraction:** Claims and evidence are tagged with `paper_id` and `quote_span` — no claim enters the pipeline without a source paper.
-2. **Post-cutoff corpus:** The initial fixture set spans 2017–2022 papers. Papers published after the model's training cutoff would provide a natural memorization test.
-3. **Open/small models path:** The heuristic extractor requires no API key and runs fully offline. The pipeline architecture is model-agnostic.
+## What is not done yet (honest)
 
-## Next steps (Stage 1 — this week)
+- Live Semantic Scholar / arXiv pulls hit **HTTP 429** during last refetch; corpus for the demo is the curated 18-paper fixture (15 used via `--limit`). API clients are implemented and will expand the corpus when limits clear or an S2 key is added.
+- Gap alignment still uses lexical similarity (Jaccard + TF-cosine), not embeddings.
+- No formal human eval rubric yet for “is this gap good?”
+- Second domain (e.g. hybrid ncRNA) not started.
 
-- [ ] **Improve claim recall:** Heuristic mode only found 6 claims from 18 papers — need better triggers or hybrid search
-- [ ] **Embedding similarity** for gap alignment (replace Jaccard overlap with sentence embeddings)
-- [ ] **Memorization benchmark:** Run on a held-out post-cutoff paper and compare gap quality
-- [ ] **HTML report export** for easier reading
-- [ ] **Expand corpus** to 50+ papers with Semantic Scholar API (currently fixture-based)
-- [ ] Expand to second domain (e.g., hybrid ncRNA or protein engineering) for cross-domain validation
+## Proposed next steps
+
+1. Embedding-based claim–evidence alignment + clustering
+2. Memorization benchmark on post-cutoff held-out papers
+3. Expand to 50+ papers once live APIs are stable
+4. Lightweight HTML report for easier review
+5. Draft a simple human rubric (novelty, testability, biological impact)
 
 ## Open questions for you, Prof
 
-1. **Scope:** Is NA delivery/LNP the right primary domain to demo, or should we pivot to something more fundamental (e.g., protein folding prediction ↔ in vivo validation)?
-2. **Evaluation:** How should we measure whether a proposed gap is "good"? I'm thinking a human rubric for novelty, testability, and biological impact.
-3. **Memorization:** What level of citation-grounding rigor do you want? Strict (no generation without explicit source spans) or moderate (LLM-assisted but validated)?
-4. **Next meeting:** Should I present the full pipeline demo, or focus on specific gaps/topics found so far?
+1. **Scope:** Is NA delivery / LNP the right primary demo domain, or should we pivot closer to gene-editing efficiency / CBE–relevant mechanisms?
+2. **Evaluation:** Preferred way to judge gap/topic quality (rubric dimensions, gold labels, expert spot-checks)?
+3. **Memorization:** How strict should citation-grounding be (no generation without source spans vs LLM-assisted then validated)?
+4. **Meeting format:** Full pipeline demo vs deep-dive on 1–2 gaps/topics?
 
 ---
 
-*Report generated by the Research Gap Agent pipeline and assembled for supervisor review.*
+*Assembled from pipeline outputs (`reports/latest_run.md`, `data/processed/*.jsonl`) for the 30 July 2026 check-in.*

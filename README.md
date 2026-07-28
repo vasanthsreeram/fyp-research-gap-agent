@@ -1,57 +1,74 @@
-# FYP Research Gap Agent (Placeholder Name)
+# FYP Research Gap Agent
 
-**Project:** AI Agentic Framework for Identifying Theory-Practice Gaps in Research Literature
+**Project:** AI agentic framework for identifying theory↔experiment gaps in research literature and proposing high-impact, testable biology topics.
 
-**Status:** Starter repository for Vas's Final Year Project (FYP) at NTU. Can be renamed later (e.g., via GitHub settings or `git remote`).
+**Student:** Sreeram Vasanth (U2322909K) · **Supervisor meeting:** 30 July 2026, 14:00 SGT  
+**Repo:** https://github.com/vasanthsreeram/fyp-research-gap-agent
 
-## Purpose
-This framework uses AI agents to systematically search academic literature, compare theoretical predictions/results against experimental/practical findings, quantify gaps, and suggest high-impact research topics that bridge those gaps.
+## Status
 
-It aims to accelerate discovery by highlighting discrepancies between what theory predicts and what is observed in practice, then proposing actionable research directions.
+Stage 1 vertical slice is **shipped**. Stage 2 packaging + claim-recall + LLM path landed 2026-07-29.
 
-## Proposed Workflow
-1. **Ingestion**: Collect papers, preprints, datasets, code repos, and experimental results from sources like arXiv, Semantic Scholar, PubMed, conference proceedings, GitHub, etc.
-2. **Theory Extraction**: Parse and extract theoretical claims, models, equations, assumptions, and predicted outcomes.
-3. **Experiment/Practice Extraction**: Identify reported experimental setups, results, metrics, real-world deployments, limitations, and observed outcomes.
-4. **Comparison & Gap Scoring**: Align theory vs. practice pairs, score discrepancies (e.g., performance delta, assumption violations, scalability issues, reproducibility failures).
-5. **Gap Analysis & Topic Suggestion**: Cluster gaps, assess impact/potential (novelty, feasibility, field importance), and generate research topic proposals with rationale, related work, and suggested experiments.
-6. **Validation & Iteration**: Human-in-the-loop review, agent refinement, and export of structured reports or knowledge graphs.
+Latest LLM run (`--limit 15`): **15 papers → 91 claims → 102 evidence → 47 gaps → 5 topics**.  
+Offline heuristic on the same set: **27 / 56 / 32 / 5**. Tests: **23 passed**.
 
-## Modules / Components (Initial Plan)
-- **ingestion/**: Crawlers, API clients, PDF parsers, metadata fetchers (arXiv, CrossRef, etc.). Handles deduplication and versioning.
-- **theory_parser/** (in src/): NLP/LLM pipelines to extract claims, models, assumptions from text/equations.
-- **experiment_parser/**: Extract results tables, metrics, setups, code execution traces if available.
-- **comparison_engine/**: Alignment algorithms, similarity scoring, discrepancy detection (statistical + semantic).
-- **gap_scorer/**: Multi-dimensional scoring (magnitude, consistency, generalizability, reproducibility).
-- **topic_suggester/**: Generative agents that propose research questions, hypotheses, experiment designs based on gaps.
-- **orchestrator/**: Agentic workflow controller (LangGraph, CrewAI, or custom) coordinating the pipeline with memory, tools, and human feedback.
-- **evaluation/**: Benchmarks for gap detection accuracy, topic quality (expert review, citation potential proxies).
-- **data/**: Raw papers, processed JSON/graphs, embeddings, experiment logs.
-- **experiments/**: Notebooks, scripts, and results from running the framework on sample domains (e.g., ML optimization, materials science, biology).
-- **docs/**: Architecture diagrams, workflow specs, data schemas, API docs, FYP report sections.
+See [`docs/STATUS.md`](docs/STATUS.md) and [`docs/supervisor-update-draft.md`](docs/supervisor-update-draft.md).
 
-## Tech Stack (Starter)
-- Python 3.11+
-- LLM orchestration: LangChain / LangGraph or Semantic Kernel
-- Parsing: pdfplumber, PyMuPDF, unstructured.io, equation parsers (SymPy)
-- Storage: PostgreSQL + pgvector or Chroma/FAISS for embeddings; Neo4j for knowledge graphs
-- Agents: Custom or AutoGen/CrewAI
-- Evaluation: Custom metrics + human eval
+## Quick start
 
-See `requirements.txt` for initial dependencies.
+```bash
+python -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt
 
-## Project Brief
+# Offline end-to-end (no API keys)
+python -m src.cli run --limit 15 --fixture --mode heuristic
 
-See [docs/fyp-brief.md](docs/fyp-brief.md) for the call-captured FYP framing, first research questions, and early success criteria.
+# LLM extraction if OPENAI_API_KEY is set (or macOS Keychain service
+# openclaw/tgcallskill/openai-api-key)
+python -m src.cli run --limit 15 --fixture --mode llm
 
-## Next Steps for Vas
-1. Rename the repo if desired (GitHub → Settings → General → Repository name).
-2. Add real data samples and domain focus (e.g., your specific research area with Prof. Lerwen Liu).
-3. Implement ingestion module first (start with arXiv API + Semantic Scholar).
-4. Set up GitHub repo secrets for any API keys (OpenAI, Semantic Scholar, etc.).
-5. Create initial issues for each major module.
-6. Link to NTU FYP submission requirements and timeline.
+# Live ingest attempt (S2 + arXiv; falls back to fixture on failure)
+python -m src.cli run --limit 15 --refetch
 
----
+pytest -q
+```
 
-*Generated by Chippy for Vas's FYP handoff. Voice call context preserved.*
+Outputs:
+- `data/processed/papers.jsonl`, `claims.jsonl`, `evidence.jsonl`, `gaps.jsonl`, `topics.jsonl`
+- `reports/latest_run.md`
+
+## Architecture
+
+```
+ingest (S2 / arXiv / fixture)
+    → extract claims + evidence (heuristic | llm)
+    → gap align + multi-axis score
+    → topic suggest
+    → markdown report
+```
+
+| Package | Role |
+|---------|------|
+| `src/models.py` | Pydantic schemas |
+| `src/ingest/` | Semantic Scholar + arXiv + pipeline |
+| `src/extract/` | Claims, evidence, LLM helpers |
+| `src/gap/` | Gap detection + scoring |
+| `src/topics/` | Research topic proposals |
+| `src/cli.py` | Typer CLI |
+
+## Domain slice
+
+Nucleic acid delivery / lipid nanoparticles / mRNA delivery — experimentally rich, mechanism-heavy, aligned with supervisor guidance on NA chemistry and testable gaps.
+
+## Memorization safeguards (in progress)
+
+- All extracts carry `paper_id` + `quote_span`
+- Offline heuristic path requires no LLM
+- Planned: post-cutoff held-out paper benchmark
+
+## Docs
+
+- [`docs/fyp-brief.md`](docs/fyp-brief.md) — original framing
+- [`docs/STATUS.md`](docs/STATUS.md) — living board
+- [`docs/PROGRESS_LOG.md`](docs/PROGRESS_LOG.md) — build log
+- [`docs/supervisor-update-draft.md`](docs/supervisor-update-draft.md) — email/meeting bullets

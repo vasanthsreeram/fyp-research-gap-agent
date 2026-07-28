@@ -1,0 +1,13 @@
+{
+  "run_id": "run_f2c2ec7db50c",
+  "started_at": "2026-07-29T01:08:25.699574",
+  "finished_at": "2026-07-28T17:11:40.808239",
+  "domain": "nucleic_acid_delivery",
+  "n_papers": 15,
+  "n_claims": 91,
+  "n_evidence": 102,
+  "n_gaps": 47,
+  "n_topics": 5,
+  "extractor_mode": "llm",
+  "notes": ""
+}

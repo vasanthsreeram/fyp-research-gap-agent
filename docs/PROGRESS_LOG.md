@@ -1,47 +1,58 @@
 # FYP Research Gap Agent — PROGRESS LOG
 
-## Build log for overnight vertical slice (2026-07-23 → 2026-07-29)
+## Build log
 
-| Date | Commits | Milestone |
-|------|---------|-----------|
+| Date (SGT) | Commits / wave | Milestone |
+|------------|----------------|-----------|
 | 2026-06-29 | `25d3eec`, `ed90329` | Initial docs stub: README, fyp-brief, initial-plan |
 | 2026-07-01 | `3e7ccc7` | Prof meeting docs + STATUS board |
 | 2026-07-29 00:24 | `cfc2d9d` | Daily cron + call loop notes |
-| 2026-07-29 00:34 | **(this build)** | **Vertical slice: full code pipeline** |
+| 2026-07-29 00:34 | `484194f` | Stage 1 vertical slice (flat modules) |
+| 2026-07-29 01:11 | **wave 2 (this)** | Modular packages + claim recall + LLM run |
 
-### Build summary (2026-07-29 overnight)
+### Wave 2 summary (2026-07-29 01:11 SGT)
 
-**Files created/modified:**
+**Goal:** Maximize shipped code before supervisor email deadline 2026-07-30 14:00 SGT.
 
-| File | Purpose |
-|------|---------|
-| `src/models.py` | Pydantic schemas: Paper, Claim, Evidence, Gap, TopicProposal, RunManifest |
-| `src/ingest.py` | Semantic Scholar API + fixture fallback ingestion |
-| `src/extractors.py` | Heuristic + LLM claim/evidence extraction |
-| `src/gap_scorer.py` | Gap detection/scoring + topic suggestion |
-| `src/cli.py` | Typer CLI: run, status, fetch-papers commands |
-| `src/__main__.py` | `python -m src` entry point |
-| `src/fixtures/papers_fixture.jsonl` | 18 real-world papers on NA delivery/LNP/mRNA |
-| `tests/test_pipeline.py` | 18 pytest tests (models, extractors, scorer, fixture) |
-| `data/processed/papers.jsonl` | (cached after ingest) |
-| `data/processed/claims.jsonl` | (cached after extraction) |
-| `data/processed/evidence.jsonl` | (cached after extraction) |
-| `data/processed/gaps.jsonl` | (cached after gap scoring) |
-| `data/processed/topics.jsonl` | (cached after topic suggestion) |
-| `reports/latest_run.md` | (cached after pipeline run) |
+**Code structure (matches planned modules):**
 
-### Pipeline results
+| Path | Role |
+|------|------|
+| `src/models.py` | Paper, Claim, Evidence, Gap, TopicProposal, RunManifest |
+| `src/ingest/semantic_scholar.py` | S2 Graph API search + convert + raw cache |
+| `src/ingest/arxiv_client.py` | arXiv Atom API helper |
+| `src/ingest/pipeline.py` | Live merge → dedupe → fixture fallback → `data/processed/papers.jsonl` |
+| `src/extract/claims.py` | Higher-recall heuristic + LLM claims |
+| `src/extract/evidence.py` | Results / metrics / limitations |
+| `src/extract/llm_util.py` | Keychain `openclaw/tgcallskill/openai-api-key` + OpenAI client |
+| `src/extract/dispatch.py` | `extract_all(mode=auto\|llm\|heuristic)` |
+| `src/gap/score.py` | Align + multi-axis score (Jaccard + TF-cosine) |
+| `src/topics/suggest.py` | Domain-clustered topic proposals |
+| `src/cli.py` | `run --limit N`, `fetch-papers`, `status` |
+| `tests/test_pipeline.py` | 23 tests (schemas, extractors, scorer, fixture offline path) |
 
-| Metric | Heuristic mode | LLM mode |
-|--------|----------------|----------|
-| Papers ingested | 18 | 18 |
-| Claims extracted | 6 | — (running) |
-| Evidence extracted | 63 | — |
-| Gaps identified | 31 | — |
-| Topics proposed | 5 | — |
+**Compatibility shims:** `src/extractors.py`, `src/gap_scorer.py` re-export new packages.
+
+### Pipeline counts
+
+| Mode | Papers | Claims | Evidence | Gaps | Topics |
+|------|--------|--------|----------|------|--------|
+| Heuristic (v0.1 overnight) | 18 | 6 | 63 | 31 | 5 |
+| Heuristic (v0.2, limit 15) | 15 | **27** | 56 | 32 | 5 |
+| **LLM (v0.2, limit 15)** | **15** | **91** | **102** | **47** | **5** |
+
+Artifacts:
+- `data/processed/{papers,claims,evidence,gaps,topics}.jsonl`
+- `data/processed/run_manifest.json`
+- `data/raw/papers_selected.jsonl`
+- `reports/latest_run.md`
+
+### Live API note
+- S2 + arXiv both returned **HTTP 429** during refetch; fixture fallback engaged automatically. Clients + raw-cache paths are implemented and ready when rate limits clear / API key added (`S2_API_KEY`).
 
 ### Next coding session
-- [ ] Reduce false-positive claims (heuristic triggers too conservative → only 6 claims from 18 papers)
-- [ ] Improve gap domain clustering with embedding similarity
-- [ ] Add memorization guard: citation-grounded extracts only
-- [ ] Web-based report viewer or HTML export
+- [ ] Embedding similarity for gap alignment (sentence-transformers optional extra)
+- [ ] Memorization guard benchmark on post-cutoff papers
+- [ ] Backoff/retry + S2 API key for live corpus expansion to 50+
+- [ ] HTML report export
+- [ ] Second domain slice (hybrid ncRNA)

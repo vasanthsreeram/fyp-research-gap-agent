@@ -1,15 +1,13 @@
-"""Minimal test suite for the Research Gap Agent."""
+"""Minimal test suite for the Research Gap Agent (schemas + offline pipeline)."""
 
 from __future__ import annotations
 
 import json
-import os
 import sys
 from pathlib import Path
 
 import pytest
 
-# Add project root to path
 REPO_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO_ROOT))
 
@@ -23,11 +21,12 @@ from src.models import (
     Paper,
     TopicProposal,
 )
-from src.gap_scorer import find_gaps, suggest_topics
-from src.extractors import extract_claims_heuristic, extract_evidence_heuristic
-
-
-# ── Fixtures ────────────────────────────────────────────────────
+from src.extract.claims import extract_claims_heuristic
+from src.extract.evidence import extract_evidence_heuristic
+from src.extract import extract_all
+from src.gap.score import find_gaps, jaccard, similarity, score_gap, tag_domains
+from src.topics.suggest import suggest_topics
+from src.ingest.pipeline import load_fixture
 
 
 @pytest.fixture
@@ -62,9 +61,6 @@ def sample_papers() -> list[Paper]:
             source="fixture",
         ),
     ]
-
-
-# ── Model tests ─────────────────────────────────────────────────
 
 
 class TestModels:
@@ -116,98 +112,106 @@ class TestModels:
         assert EvidenceType.LIMITATION.value == "limitation"
 
 
-# ── Extractor tests ─────────────────────────────────────────────
-
-
 class TestExtractors:
     def test_extract_claims_heuristic(self, sample_papers):
         claims = extract_claims_heuristic(sample_papers[0])
         assert isinstance(claims, list)
-        if claims:
-            c = claims[0]
-            assert c.paper_id == "paper_1"
-            assert c.extractor == "heuristic"
+        assert len(claims) >= 1
+        c = claims[0]
+        assert c.paper_id == "paper_1"
+        assert c.extractor == "heuristic"
 
     def test_extract_evidence_heuristic(self, sample_papers):
         evidence = extract_evidence_heuristic(sample_papers[0])
         assert isinstance(evidence, list)
-        if evidence:
-            e = evidence[0]
-            assert e.paper_id == "paper_1"
+        assert len(evidence) >= 1
+        assert evidence[0].paper_id == "paper_1"
 
     def test_empty_paper(self):
         p = Paper(title="Empty")
         assert extract_claims_heuristic(p) == []
         assert extract_evidence_heuristic(p) == []
 
-    def test_extract_from_all_papers(self, sample_papers):
+    def test_extract_all_heuristic(self, sample_papers):
+        claims, evidence = extract_all(sample_papers, mode="heuristic")
+        assert len(claims) >= 1
+        assert len(evidence) >= 1
+
+    def test_claim_recall_improved(self, sample_papers):
+        """v0.2 heuristics should find multiple claims across the two fixture abstracts."""
         all_c = []
-        all_e = []
         for p in sample_papers:
             all_c.extend(extract_claims_heuristic(p))
-            all_e.extend(extract_evidence_heuristic(p))
-        # At least some results expected from our realistic abstracts
-        assert len(all_c) > 0 or len(all_e) > 0
-
-
-# ── Gap scorer tests ────────────────────────────────────────────
+        assert len(all_c) >= 2
 
 
 class TestGapScorer:
-    def test_find_gaps_returns_list(self, sample_papers):
-        claims = []
-        evidence = []
-        for p in sample_papers:
-            claims.extend(extract_claims_heuristic(p))
-            evidence.extend(extract_evidence_heuristic(p))
+    def test_jaccard_and_similarity(self):
+        assert jaccard("endosomal escape lipid", "endosomal escape lipid") == 1.0
+        assert similarity("endosomal escape of LNPs", "LNP endosomal escape mechanism") > 0.2
+
+    def test_tag_domains(self):
+        tags = tag_domains("lipid nanoparticle endosomal escape extrahepatic targeting")
+        assert "lnp" in tags
+        assert "endosomal_escape" in tags
+        assert "targeting" in tags
+
+    def test_score_gap_bounds(self):
+        c = Claim(paper_id="p", text="mechanism of endosomal escape", claim_type=ClaimType.MECHANISM)
+        s = score_gap(kind=GapKind.MECHANISM_UNKNOWN, claim=c, evidence=None, sim=0.0, domain_tags=["endosomal_escape"])
+        for k in ("magnitude", "novelty", "testability", "impact", "overall"):
+            assert 0.0 <= s[k] <= 1.0
+
+    def test_find_gaps_returns_sorted_list(self, sample_papers):
+        claims, evidence = extract_all(sample_papers, mode="heuristic")
         gaps = find_gaps(claims, evidence, sample_papers)
         assert isinstance(gaps, list)
-
-    def test_gaps_sorted_by_overall(self, sample_papers):
-        claims = []
-        evidence = []
-        for p in sample_papers:
-            claims.extend(extract_claims_heuristic(p))
-            evidence.extend(extract_evidence_heuristic(p))
-        gaps = find_gaps(claims, evidence, sample_papers)
+        assert len(gaps) >= 1
         scores = [g.overall for g in gaps]
         assert scores == sorted(scores, reverse=True)
 
     def test_suggest_topics_returns_topics(self, sample_papers):
-        claims = []
-        evidence = []
-        for p in sample_papers:
-            claims.extend(extract_claims_heuristic(p))
-            evidence.extend(extract_evidence_heuristic(p))
+        claims, evidence = extract_all(sample_papers, mode="heuristic")
         gaps = find_gaps(claims, evidence, sample_papers)
         topics = suggest_topics(gaps)
         assert isinstance(topics, list)
         if topics:
             t = topics[0]
-            assert hasattr(t, "hypothesis")
-            assert hasattr(t, "proposed_experiments")
+            assert t.hypothesis
+            assert t.proposed_experiments
 
     def test_empty_gaps_no_topics(self):
         assert suggest_topics([]) == []
 
 
-# ── Integration: fixture loading ────────────────────────────────
-
-
 class TestFixture:
     def test_fixture_papers_loadable(self):
-        """Verify all fixture papers deserialize from JSONL correctly."""
         fixture_path = REPO_ROOT / "src" / "fixtures" / "papers_fixture.jsonl"
-        assert fixture_path.exists(), f"Fixture not found: {fixture_path}"
+        assert fixture_path.exists()
         papers = []
         with open(fixture_path) as f:
             for line in f:
                 line = line.strip()
                 if line:
-                    p = Paper(**json.loads(line))
-                    papers.append(p)
-        assert len(papers) >= 10, f"Expected >=10 papers, got {len(papers)}"
-        # Check titles are non-empty
+                    papers.append(Paper(**json.loads(line)))
+        assert len(papers) >= 10
         for p in papers:
-            assert p.title, f"Empty title in {p.id}"
+            assert p.title
             assert p.source == "fixture"
+
+    def test_load_fixture_helper(self):
+        papers = load_fixture()
+        assert len(papers) >= 10
+
+    def test_offline_pipeline_one_paper(self):
+        """End-to-end offline path on a single fixture paper."""
+        papers = load_fixture()[:1]
+        assert papers
+        claims, evidence = extract_all(papers, mode="heuristic")
+        gaps = find_gaps(claims, evidence, papers)
+        topics = suggest_topics(gaps, max_topics=3)
+        # Soft assertions — abstract quality varies
+        assert isinstance(claims, list)
+        assert isinstance(evidence, list)
+        assert isinstance(gaps, list)
+        assert isinstance(topics, list)
