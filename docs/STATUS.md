@@ -33,7 +33,7 @@ Repo is still a **docs-only stub** (2 commits on 2026-07-01). No pipeline code y
 - [ ] Register BG4801 when eligible
 
 ## Last automated progress
-- None yet (cron just created 2026-07-29)
+- 2026-07-29: STATUS board committed (`7e1610c`); daily progress cron 10:00 SGT + daily voice call 21:00 SGT created. No code slice yet.
 
 ## Open questions for Vas (call)
 1. Confirm supervisor name/email and official FYP portal title/code
