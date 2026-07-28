@@ -10,6 +10,10 @@
 
 ---
 
+## Context (from our meeting)
+
+Following our discussion in early July about building an **AI-agentic framework for “researching about research”** — finding theory↔experiment gaps and proposing high-impact, experimentally testable biology topics, with care about **LLM memorization** of the literature — I’ve made early progress ahead of the formal August start. I’m anchoring this work to your lab’s gene-editing / nucleic-acid direction (including interest around **CBE/26/143** modelling gene editing efficiency with generative AI), using a first vertical slice in a related, experimentally rich domain.
+
 ## What I've built
 
 I've shipped the first **working vertical slice** of the Research Gap Agent — an AI pipeline that ingests papers, extracts claims and experimental evidence, quantifies theory↔experiment gaps, and proposes high-impact research topics.
