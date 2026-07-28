@@ -2,6 +2,9 @@
 Updated by daily progress cron + human/call notes.
 
 ## Identity
+- Supervisor: **Asst Prof Aaron Andrew Smargon** <aaron.smargon@ntu.edu.sg>
+- Portal interest: **CBE/26/143** Modelling gene editing efficiency with generative AI
+- Meeting notes: docs/MEETING_SMARGON.md (always cite this meeting in supervisor emails)
 - Student: Sreeram Vasanth (U2322909K)
 - Repo: https://github.com/vasanthsreeram/fyp-research-gap-agent
 - Local: /Users/admin/projects/fyp-research-gap-agent
@@ -36,10 +39,10 @@ Repo is still a **docs-only stub** (2 commits on 2026-07-01). No pipeline code y
 - 2026-07-29: STATUS board committed (`7e1610c`); daily progress cron 10:00 SGT + daily voice call 21:00 SGT created. No code slice yet.
 
 ## Open questions for Vas (call)
-1. Confirm supervisor name/email and official FYP portal title/code
-2. Confirm primary domain slice for v0 (pick ONE narrow sub-area)
-3. Preferred stack defaults: OpenAI vs local for extractors?
-4. Daily call time OK at 21:00 SGT?
+1. Supervisor locked: Smargon <aaron.smargon@ntu.edu.sg>; CBE/26/143 anchor
+2. v0 corpus: gene-editing efficiency / structure-function / NA delivery (flexible)
+3. Stack: OpenAI available via keychain; local optional later
+4. Call 2026-07-30 **10:30 SGT** email prep; daily 21:00 still on
 
 ## Daily loop
 - **10:00 SGT** — autonomous coding progress on next unchecked item; commit/push; update this file
