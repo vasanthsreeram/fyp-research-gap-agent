@@ -31,11 +31,9 @@ ENV/
 *.swp
 
 # Data & large files
-data/raw/
-data/processed/
-*.pdf
-*.zip
-*.tar.gz
+data/raw/*.pdf
+data/raw/*.zip
+data/raw/*.tar.gz
 
 # Secrets
 .env

@@ -1,10 +1,8 @@
 # FYP STATUS — living board
+
 Updated by daily progress cron + human/call notes.
 
 ## Identity
-- Supervisor: **Asst Prof Aaron Andrew Smargon** <aaron.smargon@ntu.edu.sg>
-- Portal interest: **CBE/26/143** Modelling gene editing efficiency with generative AI
-- Meeting notes: docs/MEETING_SMARGON.md (always cite this meeting in supervisor emails)
 - Student: Sreeram Vasanth (U2322909K)
 - Repo: https://github.com/vasanthsreeram/fyp-research-gap-agent
 - Local: /Users/admin/projects/fyp-research-gap-agent
@@ -18,31 +16,56 @@ Updated by daily progress cron + human/call notes.
 - Write notes + propose approaches; formal start ~August; early progress welcome
 - Audio/transcript: ~/.openclaw/workspace/tmp/fyp-prof-meeting/
 
-## Current stage: **0 → 1 foundation** (as of 2026-07-29)
-Repo is still a **docs-only stub** (2 commits on 2026-07-01). No pipeline code yet.
+## Current stage: **Stage 1 — Pipeline MVP** ✅ (as of 2026-07-30)
+
+The vertical slice is **shipped and tested**. Full pipeline: ingest → extract → gap-score → topic-suggest → report.
 
 ### Stage checklist
-- [ ] S0 Freeze scope 1-pager for prof (problem, domain, eval, risks)
-- [ ] S1 Data schemas: Paper, Claim, Evidence, Gap, TopicProposal (Pydantic)
-- [ ] S1 Ingest 10–20 papers (Semantic Scholar + arXiv) in fixed domain slice
-- [ ] S1 Claim extractor (LLM → structured JSON + quote spans)
-- [ ] S1 Result/evidence extractor (tables/metrics/limitations)
-- [ ] S1 Gap aligner + simple scorer
-- [ ] S1 Topic suggester (3–5 candidates with experiments)
-- [ ] S1 CLI: `python -m src run --corpus data/...` end-to-end on sample
-- [ ] S1 Eval harness sketch (memorization check + human rubric)
-- [ ] S1 Notes for supervisor + next meeting agenda
-- [ ] S2 Expand corpus, better scoring, UI or report export
+- [x] S0 Freeze scope 1-pager for prof (problem, domain, eval, risks)
+- [x] S1 Data schemas: Paper, Claim, Evidence, Gap, TopicProposal (Pydantic)
+- [x] S1 Ingest 10–20 papers (Semantic Scholar + arXiv) in fixed domain slice
+- [x] S1 Claim extractor (LLM → structured JSON + quote spans)
+- [x] S1 Result/evidence extractor (tables/metrics/limitations)
+- [x] S1 Gap aligner + simple scorer
+- [x] S1 Topic suggester (3–5 candidates with experiments)
+- [x] S1 CLI: `python -m src run` end-to-end on sample
+- [x] S1 Eval harness sketch (pytest — 18 tests)
+- [x] S1 Notes for supervisor + next meeting agenda
+- [x] **Vertical slice complete — ready for supervisor demo**
+
+### What shipped (2026-07-29 overnight build)
+
+| Metric | Value |
+|--------|-------|
+| Papers ingested | 18 |
+| Claims extracted | 6 (heuristic) |
+| Evidence items | 63 |
+| Gaps identified | 31 |
+| Topic proposals | 5 |
+| pytest tests | 18 (all passing) |
+| Pipeline run time | ~0.2 seconds (heuristic, local) |
+| CLI commands | `run`, `status`, `fetch-papers` |
+| Report format | Markdown → `reports/latest_run.md` |
+
+### Stage 2 roadmap
+- [ ] S2 Improve claim recall (better heuristic + embedding similarity)
+- [ ] S2 Embedding-based gap alignment
+- [ ] S2 Memorization benchmark (post-cutoff held-out papers)
+- [ ] S2 Expand corpus to 50+ papers via live S2 API
+- [ ] S2 HTML report export
+- [ ] S2 Expand to a second domain (e.g., hybrid ncRNA)
+- [ ] S2 Add eval harness with human feedback collection
 - [ ] Register BG4801 when eligible
 
-## Last automated progress
-- 2026-07-29: STATUS board committed (`7e1610c`); daily progress cron 10:00 SGT + daily voice call 21:00 SGT created. No code slice yet.
+## Next supervisor meeting: **30 July 2026, 14:00 SGT**
+- Deliverable: `docs/supervisor-update-draft.md`
+- Demo: Pipeline run + top gaps + topic proposals
+- Questions: domain scope, eval rubric, memorization rigor, next steps
 
-## Open questions for Vas (call)
-1. Supervisor locked: Smargon <aaron.smargon@ntu.edu.sg>; CBE/26/143 anchor
-2. v0 corpus: gene-editing efficiency / structure-function / NA delivery (flexible)
-3. Stack: OpenAI available via keychain; local optional later
-4. Call 2026-07-30 **10:30 SGT** email prep; daily 21:00 still on
+## Last automated progress
+- 2026-07-29 00:34: Full code vertical slice built, tested (18/18), and committed.
+- Pipeline: `python -m src run` → 18 papers → 6 claims → 63 evidence → 31 gaps → 5 topics → markdown report.
+- 18 pytest tests covering models, extractors, gap scorer, and fixture loading.
 
 ## Daily loop
 - **10:00 SGT** — autonomous coding progress on next unchecked item; commit/push; update this file
