@@ -1,28 +1,15 @@
 flowchart TB
-  Paper["Paper object<br/>title + abstract<br/>(text_blob)"]
-
-  Paper --> Mode{mode}
-
-  Mode -->|heuristic| H["Sentence split<br/>regex triggers:<br/>theory / mechanism / domain"]
-  Mode -->|llm| L["OpenAI chat.completions<br/>model = OPENAI_MODEL or gpt-4o-mini<br/>response_format = json_object"]
+  Paper[Paper title + abstract]
+  Paper --> Mode{extract mode}
+  Mode -->|heuristic| H[Sentence regex triggers]
+  Mode -->|llm| L[gpt-4o-mini JSON extract]
   Mode -->|auto| A{API key?}
   A -->|yes| L
   A -->|no| H
-
-  H --> ClaimH["Claim<br/>paper_id, claim_type, text,<br/>quote_span, confidence, tags<br/>extractor=heuristic"]
-
-  L --> Prompt["System: extract theory/mechanism claims<br/>User: Title + Abstract≤4000"]
-  Prompt --> JSON['{"claims":[{text, claim_type, confidence, tags}]}']
-  JSON --> ClaimL["Claim<br/>same schema<br/>extractor=llm"]
-  L -. fail .-> H
-
-  Paper --> ModeE{evidence mode}
-  ModeE -->|heuristic / llm| Ev["Evidence<br/>result / metric / limitation<br/>+ quote_span"]
-
-  ClaimH --> Align
-  ClaimL --> Align
+  H --> Claim[Claim + quote_span]
+  L --> Claim
+  Paper --> Ev[Evidence + quote_span]
+  Claim --> Align[gap score Jaccard + TF-cosine]
   Ev --> Align
-
-  Align["gap/score.py<br/>align claim ↔ evidence<br/>lexical similarity"]
-  Align --> Gap["Gap scored on<br/>magnitude · novelty · testability · impact"]
-  Gap --> Topics["topics/suggest.py<br/>3–5 TopicProposal<br/>hypothesis + experiments"]
+  Align --> Gap[Gap multi-axis scores]
+  Gap --> Topics[3-5 Topic proposals]

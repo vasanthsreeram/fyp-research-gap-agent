@@ -1,0 +1,172 @@
+# Research Gap Agent — pipeline architecture summary
+# Scope: modules + workflow only (no external tool inventory)
+name: research-gap-agent
+title: FYP Research Gap Agent
+version: "0.2"
+domain: nucleic-acid delivery / LNP / mRNA (primary demo corpus)
+
+modules:
+  models:
+    path: src/models.py
+    role: Shared Pydantic schemas
+    types:
+      - Paper
+      - Claim
+      - Evidence
+      - Gap
+      - TopicProposal
+      - RunManifest
+
+  ingest:
+    path: src/ingest/
+    role: Load or fetch papers into Paper list
+    files:
+      - pipeline.py          # orchestrates fixture vs live path
+      - semantic_scholar.py  # live paper search client
+      - arxiv_client.py      # live arXiv client
+    inputs:
+      - "CLI flags: --fixture | --refetch | --limit"
+    outputs:
+      - "list of Paper"
+      - data/processed/papers.jsonl
+
+  extract:
+    path: src/extract/
+    role: Claim and evidence extraction from papers
+    files:
+      - claims.py      # claim extraction (heuristic + LLM)
+      - evidence.py    # evidence/metrics/limitations
+      - dispatch.py    # mode auto|heuristic|llm
+      - llm_util.py    # LLM JSON helpers
+    inputs:
+      - "list of Paper"
+      - mode
+    outputs:
+      - "list of Claim"
+      - "list of Evidence"
+    steps:
+      - claim_extraction
+      - evidence_extraction
+
+  gap:
+    path: src/gap/
+    role: Align claims to evidence; score theory-experiment gaps
+    files:
+      - score.py
+    inputs:
+      - "list of Claim"
+      - "list of Evidence"
+      - papers
+    outputs:
+      - "list of Gap"
+    score_axes:
+      - magnitude
+      - novelty
+      - testability
+      - impact
+      - overall
+    gap_kinds:
+      - UNTESTED_CLAIM
+      - THEORY_VS_EXPERIMENT
+      - MECHANISM_UNKNOWN
+      - DELIVERY_BARRIER
+      - OTHER
+
+  topics:
+    path: src/topics/
+    role: Cluster gaps into testable topic proposals
+    files:
+      - suggest.py
+    inputs:
+      - "list of Gap"
+    outputs:
+      - "list of TopicProposal (typically top 5)"
+    fields:
+      - title
+      - hypothesis
+      - experiments
+      - expected_readout
+      - feasibility
+      - priority
+
+  cli:
+    path: src/cli.py
+    entrypoints:
+      - "python -m src.cli run"
+      - "python -m src run"
+    commands:
+      - run
+      - status
+      - fetch-papers
+    role: Wire modules end-to-end; write report and manifest
+
+  report:
+    path: reports/
+    primary: reports/latest_run.md
+    role: Markdown summary of counts, top gaps, topic proposals, run metadata
+    writer: src/cli.py (_build_markdown_report)
+
+  test_harness:
+    path: tests/test_pipeline.py
+    role: Pytest coverage for models, extract, gap, topics, fixture load
+    run: "python -m pytest tests/ -v"
+
+workflow:
+  id: e2e_pipeline
+  description: >
+    Papers in, then claims and evidence, then scored gaps, then topic
+    suggestions, then markdown report and demo-ready CLI output.
+  steps:
+    - id: 1_ingestion
+      module: ingest
+      action: Load fixture or fetch papers; dedupe; apply --limit
+      produces: papers
+
+    - id: 2_claim_extraction
+      module: extract
+      action: Extract structured claims (theory/mechanism/prediction/assumption)
+      produces: claims
+
+    - id: 3_evidence_extraction
+      module: extract
+      action: Extract evidence (experiment/result/metric/limitation/observation)
+      produces: evidence
+
+    - id: 4_gap_scoring
+      module: gap
+      action: Align claims to evidence; classify gap kind; multi-axis score; rank
+      produces: gaps
+
+    - id: 5_topic_suggestion
+      module: topics
+      action: Domain-cluster gaps; emit hypotheses and experiments
+      produces: topics
+
+    - id: 6_report_and_demo
+      modules:
+        - cli
+        - report
+        - test_harness
+      action: >
+        Write RunManifest and reports/latest_run.md; CLI prints summary;
+        pytest validates slice before demo
+      produces:
+        - report_md
+        - manifest
+        - test_pass
+
+data_flow:
+  - "Paper -> Claim"
+  - "Paper -> Evidence"
+  - "Claim + Evidence -> Gap"
+  - "Gap -> TopicProposal"
+  - "All + RunManifest -> report"
+
+demo:
+  offline: "python -m src.cli run --limit 15 --fixture --mode heuristic"
+  llm: "python -m src.cli run --limit 15 --fixture --mode llm"
+  tests: "python -m pytest tests/ -v"
+
+artifacts:
+  diagrams_md: docs/architecture-diagrams.md
+  this_yaml: docs/architecture-pipeline.yaml

@@ -1,21 +1,18 @@
 flowchart TB
-  subgraph S1["Stage 1 — vertical slice ✅"]
-    s1a[Schemas Paper/Claim/Evidence/Gap/Topic]
-    s1b[Ingest S2+arXiv+fixture]
-    s1c[Heuristic + LLM extractors]
-    s1d[Lexical gap scorer]
-    s1e[Topic suggester]
-    s1f[CLI + markdown report + 23 tests]
-    s1a --> s1b --> s1c --> s1d --> s1e --> s1f
+  subgraph S1[Stage 1 done]
+    a[Schemas]
+    b[Ingest]
+    c[Extract]
+    d[Gap score]
+    e[Topics]
+    f[CLI + tests]
+    a --> b --> c --> d --> e --> f
   end
-
-  subgraph S2["Stage 2 — packaging + quality"]
-    s2a[✅ Modular packages src/ingest|extract|gap|topics]
-    s2b[✅ Claim recall lift + LLM E2E]
-    s2c[⬜ Embedding gap alignment]
-    s2d[⬜ Memorization / post-cutoff held-out]
-    s2e[⬜ Corpus 50+ live]
-    s2f[⬜ HTML report + 2nd domain]
+  subgraph S2[Stage 2]
+    g[Modular packages done]
+    h[Claim recall + LLM done]
+    i[Embeddings todo]
+    j[Memorization bench todo]
+    k[Corpus 50+ todo]
   end
-
   S1 --> S2
