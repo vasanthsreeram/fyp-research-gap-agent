@@ -1,0 +1,9 @@
+name = "fyp-vasanth"
+main = "src/worker.js"
+compatibility_date = "2025-07-01"
+workers_dev = true
+
+[assets]
+directory = "./public"
+binding = "ASSETS"
+not_found_handling = "404-page"

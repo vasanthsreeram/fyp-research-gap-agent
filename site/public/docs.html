@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<meta name="robots" content="noindex,nofollow"/>
+<meta name="theme-color" content="#141413"/>
+<title>Docs · Research Gap Agent</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="/css/board.css"/>
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <div class="brand"><strong>Research Gap Agent</strong><span id="top-sub">Loading…</span></div>
+    <nav class="top-links">
+      <a href="/">Overview</a>
+      <a href="/results.html">Results</a>
+      <a href="/topics.html">Topics</a>
+      <a href="/method.html">Method</a>
+      <a href="/docs.html" class="active">Docs</a>
+    </nav>
+    <a class="icon-btn" href="/logout">Lock</a>
+  </header>
+  <div class="wrap">
+    <h1 class="page-title">Source docs</h1>
+    <p class="sub">STATUS, supervisor brief, latest run, architecture YAML.</p>
+    <div class="card docs"><div class="chip" style="margin-bottom:10px">STATUS.md</div><pre id="doc-status">…</pre></div>
+    <div class="card docs"><div class="chip" style="margin-bottom:10px">Supervisor brief</div><pre id="doc-draft">…</pre></div>
+    <div class="card docs"><div class="chip" style="margin-bottom:10px">Latest run</div><pre id="doc-run">…</pre></div>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:12px">
+      <a class="icon-btn" href="/data/architecture.yaml">architecture.yaml</a>
+      <a class="icon-btn" href="/data/bundle.json">bundle.json</a>
+      <a class="icon-btn" id="repo-link" href="https://github.com/vasanthsreeram/fyp-research-gap-agent" target="_blank" rel="noopener">GitHub</a>
+    </div>
+  </div>
+  <nav class="bottom-nav" aria-label="Primary">
+    <a href="/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 10.5L12 4l8 6.5V20a1 1 0 0 1-1 1h-5v-6H10v6H5a1 1 0 0 1-1-1v-9.5z"/></svg>Home</a>
+    <a href="/results.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19V5M4 19h16M8 16V9m4 7V7m4 9v-5"/></svg>Results</a>
+    <a href="/topics.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3l2.2 6.6H21l-5.4 4 2.1 6.4L12 16.5 6.3 20l2.1-6.4L3 9.6h6.8L12 3z"/></svg>Topics</a>
+    <a href="/method.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 9h8M8 12h8M8 15h5"/></svg>Method</a>
+    <a href="/docs.html" class="active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 6c0-1.7 3.6-3 8-3s8 1.3 8 3-3.6 3-8 3s8-1.3 8-3V6"/></svg>Docs</a>
+  </nav>
+</div>
+<script src="/js/common.js"></script>
+<script src="/js/page-docs.js"></script>
+</body>
+</html>

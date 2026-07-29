@@ -1,0 +1,130 @@
+# FYP Research Gap Agent — compact architecture (accurate to code as of 2026-07-29)
+# Repo: https://github.com/vasanthsreeram/fyp-research-gap-agent
+
+project:
+  name: fyp-research-gap-agent
+  student: Sreeram Vasanth (U2322909K)
+  supervisor: Asst Prof Aaron Smargon (NTU CBE)
+  meeting: 2026-07-30 14:00 Asia/Singapore
+  working_title: >
+    AI agents that find theory↔experiment gaps in literature and propose
+    high-impact, testable biology topics (with memorization safeguards).
+  domain_slice: nucleic_acid_delivery / LNP / mRNA therapeutics
+  stage: "S1 complete → S2 started"
+
+cli:
+  entry: "python -m src.cli run"
+  flags:
+    limit: "max papers"
+    fixture: "force offline fixture corpus"
+    mode: "heuristic | llm | auto"
+    refetch: "try live S2+arXiv, fall back to fixture on failure"
+
+pipeline:
+  steps:
+    - id: ingest
+      package: src/ingest/
+      modules: [semantic_scholar.py, arxiv_client.py, pipeline.py]
+      inputs:
+        - Semantic Scholar Graph API (optional S2_API_KEY)
+        - arXiv Atom API
+        - fixtures/papers_fixture.jsonl (offline fallback)
+      outputs:
+        - data/raw/* (API caches)
+        - data/processed/papers.jsonl
+      notes:
+        - Live 429 → automatic fixture fallback
+        - Paper = title + abstract (+ metadata). Full PDF parse not in S1.
+
+    - id: extract_claims
+      package: src/extract/claims.py
+      modes:
+        heuristic: >
+          Sentence split on abstract/title; theory/mechanism triggers +
+          domain patterns → Claim objects with quote_span
+        llm: >
+          Per-paper chat.completions JSON object from title+abstract
+          (≤4000 chars abstract). Fallback to heuristic on failure.
+      model_default: gpt-4o-mini
+      model_env: OPENAI_MODEL
+      key: OPENAI_API_KEY or Keychain openclaw/tgcallskill/openai-api-key
+      output: data/processed/claims.jsonl
+      schema_fields: [id, paper_id, claim_type, text, quote_span, confidence, tags, extractor]
+
+    - id: extract_evidence
+      package: src/extract/evidence.py
+      modes: [heuristic, llm]
+      model_default: gpt-4o-mini
+      what: results / metrics / limitations with quote spans
+      output: data/processed/evidence.jsonl
+      schema_fields: [id, paper_id, evidence_type, text, quote_span, metrics, extractor]
+
+    - id: gap_score
+      package: src/gap/score.py
+      method: >
+        Lexical align claim↔evidence (Jaccard + TF-cosine blend);
+        multi-axis scores: magnitude, novelty, testability, impact;
+        domain keyword tags (lnp, mrna, endosomal_escape, …)
+      not_yet: embedding / vector similarity (S2 planned)
+      output: data/processed/gaps.jsonl
+
+    - id: topic_suggest
+      package: src/topics/suggest.py
+      what: 3–5 TopicProposal clusters with hypothesis + experiments
+      output: data/processed/topics.jsonl
+
+    - id: report
+      package: src/cli.py
+      outputs:
+        - reports/latest_run.md
+        - data/processed/run_manifest.json
+
+data_model:
+  Paper: {text_blob: "title + abstract"}
+  Claim: {types: [theory, mechanism, prediction, assumption, other]}
+  Evidence: {types: [experiment, result, metric, limitation, observation, other]}
+  Gap: {kinds: [theory_vs_experiment, prediction_miss, untested_claim, mechanism_unknown, delivery_barrier, …]}
+  TopicProposal: {hypothesis, experiments, readout}
+
+llm_call_shape:
+  # Important: not "full PDF JSON dump" — per-paper title+abstract into structured JSON extractors
+  unit: one Paper at a time
+  request:
+    system: domain-scoped extraction instructions
+    user: "Title: …\n\nAbstract:\n…"
+    response_format: json_object
+  response_claims: '{"claims":[{"text","claim_type","confidence","tags"}]}'
+  grounding: paper_id + quote_span on every extract
+
+latest_run_llm_limit_15:
+  papers: 15
+  claims: 91
+  evidence: 102
+  gaps: 47
+  topics: 5
+  tests: 23_passed
+  run_id: run_f2c2ec7db50c
+
+stage_map:
+  S1_vertical_slice:
+    done:
+      - schemas
+      - ingest + fixture fallback
+      - claim/evidence extractors
+      - gap scorer
+      - topic suggester
+      - CLI + report
+      - pytest harness
+  S2_hardening:
+    done: [modular packages, claim recall lift, LLM E2E]
+    todo:
+      - embedding gap alignment
+      - memorization / post-cutoff held-out benchmark
+      - corpus 50+ via stable live APIs
+      - HTML report
+      - second domain slice
+
+demo:
+  offline: "python -m src.cli run --limit 15 --fixture --mode heuristic"
+  llm: "python -m src.cli run --limit 15 --fixture --mode llm"
+  live_attempt: "python -m src.cli run --limit 15 --refetch"
