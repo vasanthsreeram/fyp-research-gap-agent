@@ -35,8 +35,10 @@ def search(
     query: str,
     limit: int = 20,
     api_key: Optional[str] = None,
+    max_retries: int = 4,
+    backoff_s: float = 2.0,
 ) -> list[dict]:
-    """Search Semantic Scholar; return raw paper dicts."""
+    """Search Semantic Scholar; return raw paper dicts. Retries on HTTP 429/5xx."""
     url = f"{S2_BASE}/paper/search"
     params = urllib.parse.urlencode(
         {
@@ -46,17 +48,59 @@ def search(
         }
     )
     full_url = f"{url}?{params}"
-    headers = {"User-Agent": "FYP-ResearchGapAgent/0.2 (NTU)"}
+    headers = {"User-Agent": "FYP-ResearchGapAgent/0.3 (NTU)"}
     if api_key:
         headers["x-api-key"] = api_key
-    req = urllib.request.Request(full_url, headers=headers)
-    try:
-        with urllib.request.urlopen(req, timeout=20) as resp:
-            data = json.loads(resp.read().decode())
-    except (urllib.error.URLError, urllib.error.HTTPError, json.JSONDecodeError, OSError) as e:
-        logger.warning("S2 search failed for %r: %s", query[:50], e)
-        return []
-    return data.get("data") or []
+
+    last_err: Optional[BaseException] = None
+    for attempt in range(max_retries + 1):
+        req = urllib.request.Request(full_url, headers=headers)
+        try:
+            with urllib.request.urlopen(req, timeout=25) as resp:
+                data = json.loads(resp.read().decode())
+            return data.get("data") or []
+        except urllib.error.HTTPError as e:
+            last_err = e
+            # Retry rate limits and transient server errors
+            if e.code in (429, 500, 502, 503, 504) and attempt < max_retries:
+                sleep_for = backoff_s * (2**attempt)
+                # Honor Retry-After when present
+                ra = e.headers.get("Retry-After") if e.headers else None
+                if ra:
+                    try:
+                        sleep_for = max(sleep_for, float(ra))
+                    except ValueError:
+                        pass
+                logger.warning(
+                    "S2 HTTP %s for %r — retry %d/%d in %.1fs",
+                    e.code,
+                    query[:50],
+                    attempt + 1,
+                    max_retries,
+                    sleep_for,
+                )
+                time.sleep(sleep_for)
+                continue
+            logger.warning("S2 search failed for %r: %s", query[:50], e)
+            return []
+        except (urllib.error.URLError, json.JSONDecodeError, OSError) as e:
+            last_err = e
+            if attempt < max_retries:
+                sleep_for = backoff_s * (2**attempt)
+                logger.warning(
+                    "S2 error for %r (%s) — retry %d/%d in %.1fs",
+                    query[:50],
+                    e,
+                    attempt + 1,
+                    max_retries,
+                    sleep_for,
+                )
+                time.sleep(sleep_for)
+                continue
+            logger.warning("S2 search failed for %r: %s", query[:50], e)
+            return []
+    logger.warning("S2 search exhausted retries for %r: %s", query[:50], last_err)
+    return []
 
 
 def search_all(
@@ -64,7 +108,7 @@ def search_all(
     limit_per_query: int = 10,
     max_papers: int = 40,
     api_key: Optional[str] = None,
-    sleep_s: float = 1.1,
+    sleep_s: float = 1.25,
 ) -> list[dict]:
     """Run multiple queries, dedupe by paperId/DOI, cap at max_papers."""
     queries = queries or DEFAULT_QUERIES

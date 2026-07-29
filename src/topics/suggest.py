@@ -145,6 +145,35 @@ TEMPLATES: dict[str, dict] = {
         "readout": "Ranked elasticities per cascade step; validated 5× dose reduction via top lever.",
         "feasibility": "Requires careful assay development; high scientific payoff.",
     },
+    "hybrid_ncrna": {
+        "title": "Payload competition in bifunctional ncRNA–mRNA co-delivery nanoparticles",
+        "hypothesis": (
+            "When ncRNA and mRNA share a single LNP, endosomal escape capacity is a zero-sum resource; "
+            "optimizing mass ratio and staggered release chemistry can restore translation without "
+            "sacrificing silencing."
+        ),
+        "experiments": [
+            "Titrate ncRNA:mRNA mass ratios in matched LNPs and measure translation vs knockdown",
+            "Use orthogonal barcodes to quantify cytosolic arrival of each payload",
+            "Test delayed-release linker designs that temporally separate escape events",
+        ],
+        "readout": "Identify a ratio/chemistry window with ≥70% of single-payload translation and ≥50% target knockdown.",
+        "feasibility": "Standard formulation + reporter assays; moderate complexity.",
+    },
+    "gene_therapy": {
+        "title": "Non-hepatic gene editing via serum-stable hybrid DNA–LNP scaffolds",
+        "hypothesis": (
+            "DNA-organized ionizable lipid domains improve serum stability and spleen/immune-cell editing "
+            "without proportional increases in off-target genomic injury."
+        ),
+        "experiments": [
+            "Vary DNA scaffold fraction and measure serum stability + organ editing rates",
+            "Profile off-target indels and innate activation vs standard LNPs",
+            "Image endosomal membrane contacts with and without scaffold",
+        ],
+        "readout": "≥2× extrahepatic editing at matched liver exposure and ≤baseline off-target rate.",
+        "feasibility": "Requires editing readouts and careful scaffold manufacturing.",
+    },
 }
 
 

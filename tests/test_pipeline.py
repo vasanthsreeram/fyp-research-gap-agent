@@ -261,14 +261,16 @@ class TestFixture:
                 line = line.strip()
                 if line:
                     papers.append(Paper(**json.loads(line)))
-        assert len(papers) >= 10
+        assert len(papers) >= 25
         for p in papers:
             assert p.title
             assert p.source == "fixture"
+        # Held-out post-cutoff set for memorization bench
+        assert sum(1 for p in papers if (p.year or 0) >= 2024) >= 5
 
     def test_load_fixture_helper(self):
         papers = load_fixture()
-        assert len(papers) >= 10
+        assert len(papers) >= 25
 
     def test_offline_pipeline_one_paper(self):
         """End-to-end offline path on a single fixture paper."""
@@ -282,3 +284,72 @@ class TestFixture:
         assert isinstance(evidence, list)
         assert isinstance(gaps, list)
         assert isinstance(topics, list)
+
+
+class TestMemorization:
+    def test_quote_grounding_substring(self):
+        from src.eval.memorization import quote_is_grounded
+
+        blob = "Endosomal escape remains poorly understood in LNP delivery systems."
+        assert quote_is_grounded("Endosomal escape remains poorly understood", blob)
+        assert not quote_is_grounded("completely unrelated quantum finance claim", blob)
+
+    def test_benchmark_pass_on_heuristic_fixture(self):
+        from src.eval.memorization import run_memorization_benchmark
+
+        papers = load_fixture()  # full fixture includes 2024–2025 held-out set
+        claims, evidence = extract_all(papers, mode="heuristic")
+        report = run_memorization_benchmark(
+            papers, claims, evidence, cutoff_year=2024, run_closed_book=False
+        )
+        assert report.n_papers_total == len(papers)
+        assert report.n_post_cutoff >= 5
+        assert report.claim_grounding.rate >= 0.85
+        assert report.evidence_grounding.rate >= 0.85
+        assert report.overall_pass is True
+
+    def test_leakage_detector_flags_duplicate(self):
+        from src.eval.memorization import find_cross_era_leakage
+
+        pre = [
+            Paper(
+                id="pre1",
+                title="Old",
+                abstract="Unique phrase xylophone-vector endosomal flip about ionizable lipids.",
+                year=2020,
+            )
+        ]
+        post_claim = Claim(
+            paper_id="post1",
+            text="Unique phrase xylophone-vector endosomal flip about ionizable lipids appears again.",
+        )
+        hits = find_cross_era_leakage([post_claim], pre, threshold=0.5)
+        assert hits
+
+
+class TestReport:
+    def test_html_and_markdown_builders(self):
+        from src.models import RunManifest
+        from src.report import build_html_report, build_markdown_report
+
+        papers = load_fixture()[:2]
+        claims, evidence = extract_all(papers, mode="heuristic")
+        gaps = find_gaps(claims, evidence, papers, aligner="lexical")
+        topics = suggest_topics(gaps, max_topics=2)
+        m = RunManifest(
+            domain="nucleic_acid_delivery",
+            extractor_mode="heuristic",
+            aligner_mode="lexical",
+            n_papers=len(papers),
+            n_claims=len(claims),
+            n_evidence=len(evidence),
+            n_gaps=len(gaps),
+            n_topics=len(topics),
+        )
+        md = build_markdown_report(m, papers, claims, evidence, gaps, topics)
+        html = build_html_report(m, papers, claims, evidence, gaps, topics)
+        assert "Research Gap Agent" in md
+        assert str(len(papers)) in md
+        assert "<!DOCTYPE html>" in html
+        assert m.run_id in html
+        assert "Topic" in html or "topic" in html.lower()

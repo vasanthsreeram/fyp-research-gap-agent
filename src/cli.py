@@ -17,6 +17,7 @@ from zoneinfo import ZoneInfo
 import typer
 
 from src.models import Paper, RunManifest
+from src.report import build_html_report, build_markdown_report
 
 logging.basicConfig(
     level=logging.INFO,
@@ -66,95 +67,6 @@ def _load_papers(path: Optional[Path] = None) -> list[Paper]:
     return []
 
 
-def _build_markdown_report(
-    manifest: RunManifest,
-    papers: list[Paper],
-    claims: list,
-    evidence: list,
-    gaps: list,
-    topics: list,
-) -> str:
-    lines: list[str] = []
-    started = manifest.started_at
-    if started.tzinfo is None:
-        started_s = started.strftime("%Y-%m-%d %H:%M") + " UTC"
-    else:
-        started_s = started.astimezone(SGT).strftime("%Y-%m-%d %H:%M %Z")
-
-    lines += [
-        "# Research Gap Agent — Run Report",
-        "",
-        "| Field | Value |",
-        "|-------|-------|",
-        f"| **Run ID** | `{manifest.run_id}` |",
-        f"| **Domain** | {manifest.domain} |",
-        f"| **Date** | {started_s} |",
-        f"| **Papers** | {len(papers)} |",
-        f"| **Claims** | {len(claims)} |",
-        f"| **Evidence** | {len(evidence)} |",
-        f"| **Gaps** | {len(gaps)} |",
-        f"| **Topics** | {len(topics)} |",
-        f"| **Extractor** | {manifest.extractor_mode} |",
-        f"| **Aligner** | {manifest.aligner_mode} |",
-        "",
-        f"## Papers ({len(papers)})",
-        "",
-    ]
-    for i, p in enumerate(papers, 1):
-        lines.append(f"{i}. **{p.title}**")
-        if p.authors:
-            auth = ", ".join(p.authors[:5]) + (" et al." if len(p.authors) > 5 else "")
-            lines.append(f"   - Authors: {auth}")
-        if p.year:
-            lines.append(f"   - Year: {p.year}")
-        if p.source:
-            lines.append(f"   - Source: `{p.source}`")
-        if p.doi:
-            lines.append(f"   - DOI: [{p.doi}](https://doi.org/{p.doi})")
-        if p.arxiv_id:
-            lines.append(f"   - arXiv: [{p.arxiv_id}](https://arxiv.org/abs/{p.arxiv_id})")
-        lines.append("")
-
-    lines += [f"## Top Gaps ({len(gaps)})", ""]
-    for i, g in enumerate(gaps[:12], 1):
-        lines += [
-            f"### {i}. {g.title}",
-            f"- **Kind**: `{g.kind.value}`",
-            (
-                f"- **Score**: overall={g.overall:.2f} magnitude={g.magnitude:.2f} "
-                f"novelty={g.novelty:.2f} testability={g.testability:.2f} impact={g.impact:.2f}"
-            ),
-            f"- **Domains**: {', '.join(g.domain_tags) if g.domain_tags else '—'}",
-            f"- **Description**: {g.description[:350]}",
-            f"- **Rationale**: {g.rationale}",
-            "",
-        ]
-
-    lines += [f"## Research Topic Proposals ({len(topics)})", ""]
-    for i, t in enumerate(topics, 1):
-        lines += [
-            f"### {i}. {t.title}",
-            f"- **Priority**: {t.priority:.2f}",
-            f"- **Domains**: {', '.join(t.domain_tags) if t.domain_tags else '—'}",
-            f"- **Hypothesis**: {t.hypothesis}",
-            "- **Experiments**:",
-        ]
-        for j, exp in enumerate(t.proposed_experiments, 1):
-            lines.append(f"  {j}. {exp}")
-        lines += [
-            f"- **Expected Readout**: {t.expected_readout}",
-            f"- **Feasibility**: {t.feasibility_notes}",
-            f"- **Impact Rationale**: {t.impact_rationale}",
-            "",
-        ]
-
-    lines += [
-        "---",
-        f"*Report generated at {_now_sgt().strftime('%Y-%m-%d %H:%M %Z')}*",
-    ]
-    return "\n".join(lines)
-
-
 @app.command()
 def run(
     papers_path: Optional[Path] = typer.Option(None, "--papers", "-p", help="Path to papers.jsonl"),
@@ -172,6 +84,17 @@ def run(
     output: Optional[Path] = typer.Option(None, "--output", "-o", help="Output report path"),
     save: bool = typer.Option(True, "--save/--no-save", help="Save intermediate JSONL artifacts"),
     no_chroma: bool = typer.Option(False, "--no-chroma", help="Skip Chroma persistence for embeddings"),
+    report_format: str = typer.Option(
+        "both",
+        "--format",
+        help="Report format: md | html | both",
+    ),
+    mem_bench: bool = typer.Option(
+        True,
+        "--mem-bench/--no-mem-bench",
+        help="Run memorization/grounding benchmark after extract",
+    ),
+    cutoff_year: int = typer.Option(2024, "--cutoff-year", help="Post-cutoff year for mem bench"),
 ):
     """End-to-end pipeline: ingest → extract → gap-score → suggest → report."""
     # Eager keychain resolve for auto/llm mode
@@ -288,15 +211,57 @@ def run(
                 f.write(t.model_dump_json() + "\n")
         logger.info("Saved %d topics", len(all_topics))
 
-    # 5. Report
+    # 5. Memorization / grounding benchmark
+    mem_report = None
+    if mem_bench:
+        from src.eval.memorization import run_memorization_benchmark, save_report
+
+        mem_report = run_memorization_benchmark(
+            loaded_papers,
+            all_claims,
+            all_evidence,
+            cutoff_year=cutoff_year,
+            run_closed_book=False,
+        )
+        mem_path = REPORTS_DIR / "memorization_bench.md"
+        save_report(mem_report, mem_path)
+        logger.info(
+            "Mem bench: grounding claim=%.0f%% evid=%.0f%% leakage=%.0f%% overall=%s",
+            100 * mem_report.claim_grounding.rate,
+            100 * mem_report.evidence_grounding.rate,
+            100 * mem_report.leakage_rate,
+            "PASS" if mem_report.overall_pass else "FAIL",
+        )
+
+    # 6. Report
     REPORTS_DIR.mkdir(parents=True, exist_ok=True)
     manifest.finished_at = _now_sgt().replace(tzinfo=None)
-    markdown = _build_markdown_report(
-        manifest, loaded_papers, all_claims, all_evidence, all_gaps, all_topics
-    )
+    fmt = (report_format or "both").lower().strip()
     report_path = output or (REPORTS_DIR / "latest_run.md")
-    report_path.write_text(markdown)
-    logger.info("Report → %s", report_path)
+    written: list[Path] = []
+
+    if fmt in ("md", "both", "markdown"):
+        md_path = report_path if report_path.suffix.lower() in {".md", ".markdown"} else report_path.with_suffix(".md")
+        md_path.write_text(
+            build_markdown_report(
+                manifest, loaded_papers, all_claims, all_evidence, all_gaps, all_topics
+            )
+        )
+        written.append(md_path)
+        logger.info("Report → %s", md_path)
+
+    if fmt in ("html", "both"):
+        if output and str(output).lower().endswith(".html"):
+            html_path = output
+        else:
+            html_path = REPORTS_DIR / "latest_run.html"
+        html_path.write_text(
+            build_html_report(
+                manifest, loaded_papers, all_claims, all_evidence, all_gaps, all_topics
+            )
+        )
+        written.append(html_path)
+        logger.info("HTML report → %s", html_path)
 
     # Manifest
     if save:
@@ -311,7 +276,13 @@ def run(
     )
     print(f"  Gaps: {len(all_gaps)} | Topics: {len(all_topics)}")
     print(f"  Extractor: {manifest.extractor_mode} | Aligner: {manifest.aligner_mode}")
-    print(f"  Report: {report_path}")
+    if mem_report is not None:
+        print(
+            f"  Mem-bench: {'PASS' if mem_report.overall_pass else 'FAIL'} "
+            f"(claim-ground {mem_report.claim_grounding.rate:.0%}, "
+            f"post-cutoff n={mem_report.n_post_cutoff})"
+        )
+    print(f"  Reports: {', '.join(str(p) for p in written)}")
     print(f"{'=' * 60}\n")
 
     print("── Top 5 Gaps ──")
@@ -344,6 +315,47 @@ def fetch_papers(
     print(f"Ingested {len(papers)} papers")
     for p in papers[:8]:
         print(f"  - [{p.source}] {p.title[:90]}")
+
+
+@app.command("mem-bench")
+def mem_bench_cmd(
+    papers_path: Optional[Path] = typer.Option(None, "--papers", "-p", help="Path to papers.jsonl"),
+    mode: str = typer.Option("heuristic", "--mode", "-m", help="Extraction mode"),
+    cutoff_year: int = typer.Option(2024, "--cutoff-year"),
+    closed_book: bool = typer.Option(False, "--closed-book", help="Run optional LLM closed-book probe"),
+    limit: int = typer.Option(30, "--limit", "-n"),
+    use_fixture: bool = typer.Option(True, "--fixture/--no-fixture", help="Load fixture corpus"),
+):
+    """Run memorization/grounding benchmark (offline-first)."""
+    from src.eval.memorization import run_memorization_benchmark, save_report
+    from src.extract import extract_all
+    from src.ingest import ingest_papers
+
+    if papers_path:
+        papers = _load_papers(papers_path)[:limit]
+    elif use_fixture:
+        papers = ingest_papers(use_fixture=True, save=False, limit=limit)
+    else:
+        papers = _load_papers()[:limit]
+        if not papers:
+            papers = ingest_papers(use_fixture=True, save=False, limit=limit)
+
+    if not papers:
+        raise typer.Exit(1)
+
+    claims, evidence = extract_all(papers, mode=mode)
+    report = run_memorization_benchmark(
+        papers,
+        claims,
+        evidence,
+        cutoff_year=cutoff_year,
+        run_closed_book=closed_book,
+    )
+    out = REPORTS_DIR / "memorization_bench.md"
+    save_report(report, out)
+    print(report.to_markdown())
+    print(f"\nSaved → {out}")
+    raise typer.Exit(0 if report.overall_pass else 2)
 
 
 def main() -> None:

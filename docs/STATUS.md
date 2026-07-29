@@ -16,9 +16,9 @@ Updated by daily progress cron + human/call notes.
 - Write notes + propose approaches; formal start ~August; early progress welcome
 - Audio/transcript: ~/.openclaw/workspace/tmp/fyp-prof-meeting/
 
-## Current stage: **Stage 2** (2026-07-29 10:05 SGT)
+## Current stage: **Stage 2** (2026-07-30 07:38 SGT)
 
-Embedding-based gap alignment shipped (sentence-transformers MiniLM + optional Chroma). Lexical path remains default fallback.
+Memorization/grounding bench + HTML report + expanded fixture corpus (30 papers, 7 post-2024 held-out). Embedding aligner remains default when deps present.
 
 ### Stage checklist
 - [x] S0 Freeze scope 1-pager for prof (problem, domain, eval, risks)
@@ -29,65 +29,69 @@ Embedding-based gap alignment shipped (sentence-transformers MiniLM + optional C
 - [x] S1 Gap aligner + simple scorer (Jaccard+TF cosine blend)
 - [x] S1 Topic suggester (3–5 candidates with experiments)
 - [x] S1 CLI: `python -m src.cli run --limit 15` end-to-end
-- [x] S1 Eval harness sketch (pytest — 23 tests)
+- [x] S1 Eval harness sketch (pytest)
 - [x] S1 Notes for supervisor + next meeting agenda
 - [x] **Vertical slice complete — ready for supervisor demo**
 - [x] S2 Modular package split (`src/ingest`, `src/extract`, `src/gap`, `src/topics`)
 - [x] S2 Claim recall lift (heuristic 6→27 on 15 papers; LLM 91 claims)
 - [x] **S2 Embedding-based gap alignment (sentence-transformers / chroma)**
-- [ ] S2 Memorization benchmark (post-cutoff held-out papers)
-- [ ] S2 Expand corpus to 50+ papers via live S2 API (currently rate-limited 429; fixture used)
-- [ ] S2 HTML report export
-- [ ] S2 Expand to a second domain (e.g., hybrid ncRNA)
+- [x] **S2 Memorization benchmark (quote grounding + post-cutoff leakage + optional closed-book)**
+- [x] **S2 HTML report export** (`reports/latest_run.html`)
+- [x] S2 Fixture corpus expanded to 30 (7 post-2024 held-out; hybrid ncRNA / gene-editing slices)
+- [ ] S2 Expand corpus to 50+ papers via live S2 API (backoff/retry shipped; still rate-limit sensitive without key)
+- [ ] S2 Full second-domain eval pack (hybrid ncRNA templates started)
 - [ ] S2 Add eval harness with human feedback collection
 - [ ] Register BG4801 when eligible
 
-### What shipped (2026-07-29 morning — embedding aligner)
+### What shipped (2026-07-30 morning — mem-bench + HTML + corpus)
 
-| Metric | Heuristic + lexical | Heuristic + embedding |
-|--------|---------------------|------------------------|
-| Papers | 15 | 15 |
-| Claims | 27 | 27 |
-| Evidence | 56 | 56 |
-| Gaps | 32 | **30** |
-| Topics | 5 | 5 |
-| pytest | 30 passed | 30 passed |
-| Aligner | Jaccard+TF | MiniLM cosine + Chroma index |
-| Report | `reports/latest_run.md` | same |
+| Metric | Value |
+|--------|-------|
+| Papers | **30** (fixture; 7 year≥2024 held-out) |
+| Claims | **50** |
+| Evidence | **105** |
+| Gaps | **56** |
+| Topics | **5** |
+| pytest | **34 passed** |
+| Aligner | MiniLM cosine + Chroma |
+| Mem-bench | **PASS** — claim/evidence grounding 100%, leakage 0% |
+| Reports | `reports/latest_run.md`, `reports/latest_run.html`, `reports/memorization_bench.md` |
 
-**Embedding stack**
+**New modules**
 ```
-src/gap/embeddings.py   # ST encode, cosine, optional Chroma persist
-src/gap/score.py          # aligner=auto|lexical|embedding
-CLI: --aligner auto|lexical|embedding  [--no-chroma]
-Model: sentence-transformers/all-MiniLM-L6-v2
-Index: data/processed/chroma_gap_index/ (gitignored)
+src/eval/memorization.py   # quote grounding, year held-out, cross-era leakage, optional closed-book LLM
+src/report.py              # markdown + self-contained HTML builders
+CLI: run --format md|html|both --mem-bench --cutoff-year
+CLI: mem-bench             # standalone benchmark command
+S2 client: exponential backoff on 429/5xx + Retry-After
 ```
 
-**Demo command**
+**Demo commands**
 ```bash
-python -m src.cli run --limit 15 --fixture --mode heuristic --aligner embedding
-python -m src.cli run --limit 15 --fixture --mode heuristic --aligner lexical
-python -m src.cli run --limit 15 --fixture --mode llm --aligner auto
+python -m src.cli run --limit 30 --fixture --mode heuristic --aligner embedding --format both
+python -m src.cli mem-bench --fixture --limit 30 --cutoff-year 2024
+python -m pytest tests/ -q
+open reports/latest_run.html
 ```
 
-### Latest embedding run (run_6f4509f60aa4)
-- Top gaps: extrahepatic targeting barrier; fundamental advances needed; <2% cargo to cytosol; non-hepatic delivery; scale-up efficiency drop
-- Top topics: innate immune decoupling; ligand avidity vs specificity; PK of repeat-dose LNP; endosomal escape mechanism; cascade bottleneck analysis
-- Kind mix (embedding): 15 theory_vs_experiment, 7 delivery_barrier, 6 other, 1 mechanism_unknown, 1 untested_claim
+### Latest run (`run_382657f2bd94`)
+- Top gaps: extrahepatic + endosomal escape co-limitation; bulk extrahepatic targeting; nano-bio interaction fundamentals; brain delivery barrier; untested bifunctional ncRNA co-delivery claim
+- Top topics: ligand avidity vs specificity; innate immune decoupling; endosomal escape mechanism; cascade bottleneck analysis; rational ionizable lipids for extrahepatic delivery
+- Mem-bench: 23 pre / 7 post cutoff; grounding 50/50 claims, 105/105 evidence
 
 ### Known blockers
-- Semantic Scholar + arXiv returned HTTP 429 during live ingest (2026-07-29 ~01:08 SGT); pipeline correctly fell back to fixture.
-- OpenAI key resolved from Keychain `openclaw/tgcallskill/openai-api-key` (not committed).
-- First embedding run downloads MiniLM weights (~90MB) via HuggingFace.
+- Live Semantic Scholar / arXiv still fragile without API key (429s); fixture path is demo-reliable. Backoff/retry added.
+- OpenAI key resolved from Keychain `openclaw/tgcallskill/openai-api-key` (not committed) for LLM extract / optional closed-book probe.
+- Closed-book LLM memorization probe not run in default cron path (offline-first); enable with `mem-bench --closed-book`.
 
 ## Next supervisor meeting: **30 July 2026, 14:00 SGT**
 - Deliverable: `docs/supervisor-update-draft.md`
-- Demo: Pipeline run + top gaps + topic proposals (+ show embedding vs lexical)
-- Questions: domain scope, eval rubric, memorization rigor, next steps
+- Demo: Pipeline run + top gaps + topics + HTML report + memorization bench PASS
+- Board: https://fyp.vasanth.my
+- Questions: domain scope (LNP vs hybrid ncRNA weight), eval rubric, memorization rigor, next steps
 
 ## Last automated progress
-- 2026-07-29 10:05 SGT — S2 embedding gap alignment: `src/gap/embeddings.py` (MiniLM + Chroma), CLI `--aligner`, 30/30 tests, E2E fixture run 15→27→56→30 gaps→5 topics.
+- 2026-07-30 07:38 SGT — S2 mem-bench + HTML report + fixture 18→30; E2E 30→50→105→56 gaps→5 topics; 34 tests; mem PASS.
 
 ## Daily loop
 - **10:00 SGT** — autonomous coding progress on next unchecked item; commit/push; update this file

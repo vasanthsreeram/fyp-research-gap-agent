@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Research Gap Agent — run_382657f2bd94</title>
+<style>
+  :root {
+    --bg: #0b1220; --card: #121a2b; --text: #e7eefc; --muted: #9db0d0;
+    --accent: #6ea8fe; --accent2: #3dd6c6; --line: #243047;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+    background: radial-gradient(1200px 600px at 10% -10%, #1a2744, var(--bg));
+    color: var(--text); line-height: 1.55;
+  }
+  main { max-width: 960px; margin: 0 auto; padding: 2rem 1.25rem 4rem; }
+  h1 { font-size: 1.6rem; margin: 0 0 .25rem; }
+  h2 { margin-top: 2rem; border-bottom: 1px solid var(--line); padding-bottom: .4rem; }
+  h3 { margin: 0 0 .5rem; font-size: 1.05rem; }
+  .sub { color: var(--muted); margin-bottom: 1.25rem; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: .75rem; }
+  .stat { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: .9rem 1rem; }
+  .stat b { display: block; font-size: 1.4rem; color: var(--accent2); }
+  .stat span { color: var(--muted); font-size: .85rem; }
+  .card {
+    background: var(--card); border: 1px solid var(--line); border-radius: 14px;
+    padding: 1rem 1.1rem; margin: .75rem 0;
+  }
+  .card.highlight { border-color: #2a4d6f; box-shadow: inset 0 0 0 1px rgba(110,168,254,.15); }
+  .tags { display: flex; gap: .5rem; flex-wrap: wrap; margin-bottom: .5rem; }
+  .tag, .score {
+    font-size: .75rem; padding: .15rem .55rem; border-radius: 999px;
+    background: #1b283f; color: var(--accent); border: 1px solid #2a3d5c;
+  }
+  .score { color: var(--accent2); }
+  .muted { color: var(--muted); font-size: .92rem; }
+  .meta { color: var(--muted); font-size: .85rem; margin-top: .15rem; }
+  a { color: var(--accent); }
+  ol.papers { padding-left: 1.1rem; }
+  ol.papers li { margin: .55rem 0; }
+  .bar-row { display: grid; grid-template-columns: 140px 1fr 40px; gap: .5rem; align-items: center; margin: .35rem 0; }
+  .bar-label { color: var(--muted); font-size: .85rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .bar-track { background: #1b283f; border-radius: 999px; height: 8px; overflow: hidden; }
+  .bar-fill { background: linear-gradient(90deg, var(--accent2), var(--accent)); height: 100%; }
+  .bar-n { text-align: right; font-variant-numeric: tabular-nums; font-size: .85rem; }
+  footer { margin-top: 2.5rem; color: var(--muted); font-size: .85rem; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Research Gap Agent — Run Report</h1>
+  <p class="sub">Run <code>run_382657f2bd94</code> · 2026-07-30 07:38 SGT · domain nucleic_acid_delivery</p>
+
+  <div class="grid">
+    <div class="stat"><b>30</b><span>Papers</span></div>
+    <div class="stat"><b>50</b><span>Claims</span></div>
+    <div class="stat"><b>105</b><span>Evidence</span></div>
+    <div class="stat"><b>56</b><span>Gaps</span></div>
+    <div class="stat"><b>5</b><span>Topics</span></div>
+    <div class="stat"><b>heuristic</b><span>Extractor</span></div>
+    <div class="stat"><b>embedding</b><span>Aligner</span></div>
+  </div>
+
+  <h2>Pipeline funnel</h2>
+  <div class="card"><div class="bar-row"><span class="bar-label">Papers</span><div class="bar-track"><div class="bar-fill" style="width:28%"></div></div><span class="bar-n">30</span></div>
+<div class="bar-row"><span class="bar-label">Claims</span><div class="bar-track"><div class="bar-fill" style="width:47%"></div></div><span class="bar-n">50</span></div>
+<div class="bar-row"><span class="bar-label">Evidence</span><div class="bar-track"><div class="bar-fill" style="width:100%"></div></div><span class="bar-n">105</span></div>
+<div class="bar-row"><span class="bar-label">Gaps</span><div class="bar-track"><div class="bar-fill" style="width:53%"></div></div><span class="bar-n">56</span></div>
+<div class="bar-row"><span class="bar-label">Topics</span><div class="bar-track"><div class="bar-fill" style="width:4%"></div></div><span class="bar-n">5</span></div></div>
+
+  <h2>Gap kinds</h2>
+  <div class="card"><div class="bar-row"><span class="bar-label">theory_vs_experiment</span><div class="bar-track"><div class="bar-fill" style="width:100%"></div></div><span class="bar-n">28</span></div>
+<div class="bar-row"><span class="bar-label">delivery_barrier</span><div class="bar-track"><div class="bar-fill" style="width:46%"></div></div><span class="bar-n">13</span></div>
+<div class="bar-row"><span class="bar-label">other</span><div class="bar-track"><div class="bar-fill" style="width:35%"></div></div><span class="bar-n">10</span></div>
+<div class="bar-row"><span class="bar-label">untested_claim</span><div class="bar-track"><div class="bar-fill" style="width:14%"></div></div><span class="bar-n">4</span></div>
+<div class="bar-row"><span class="bar-label">mechanism_unknown</span><div class="bar-track"><div class="bar-fill" style="width:3%"></div></div><span class="bar-n">1</span></div></div>
+
+  <h2>Papers (30)</h2>
+  <ol class="papers">
+    <li><strong>Lipid nanoparticles for mRNA delivery</strong><div class='meta'>2021 · Nature Reviews Materials · fixture <a href="https://doi.org/10.1038/s41578-021-00358-0" target="_blank" rel="noopener">10.1038/s41578-021-00358-0</a></div></li><li><strong>Ionizable lipid nanoparticles for RNA delivery: design, mechanism, and applications</strong><div class='meta'>2017 · Molecular Therapy · fixture <a href="https://doi.org/10.1080/17425247.2017.1264387" target="_blank" rel="noopener">10.1080/17425247.2017.1264387</a></div></li><li><strong>Combinatorial design of ionizable lipids for lipid nanoparticle delivery of mRNA</strong><div class='meta'>2022 · Nano Letters · fixture <a href="https://doi.org/10.1021/acs.nanolett.2c01542" target="_blank" rel="noopener">10.1021/acs.nanolett.2c01542</a></div></li><li><strong>Endosomal escape of lipid nanoparticles: a mechanistic investigation</strong><div class='meta'>2020 · Nano Letters · fixture <a href="https://doi.org/10.1021/acs.nanolett.0c02526" target="_blank" rel="noopener">10.1021/acs.nanolett.0c02526</a></div></li><li><strong>Extrahepatic targeting of lipid nanoparticles in vivo</strong><div class='meta'>2021 · Nature Nanotechnology · fixture <a href="https://doi.org/10.1038/s41565-021-00902-5" target="_blank" rel="noopener">10.1038/s41565-021-00902-5</a></div></li><li><strong>CRISPR-Cas9 lipid nanoparticle systems for in vivo gene editing</strong><div class='meta'>2018 · Cell Reports · fixture <a href="https://doi.org/10.1016/j.celrep.2018.02.025" target="_blank" rel="noopener">10.1016/j.celrep.2018.02.025</a></div></li><li><strong>Structure-activity relationships of ionizable lipids for lipid nanoparticle delivery</strong><div class='meta'>2020 · PNAS · fixture <a href="https://doi.org/10.1073/pnas.1911276116" target="_blank" rel="noopener">10.1073/pnas.1911276116</a></div></li><li><strong>Biodistribution and pharmacokinetics of lipid nanoparticle-formulated mRNA</strong><div class='meta'>2018 · Molecular Therapy · fixture <a href="https://doi.org/10.1016/j.ymthe.2018.05.012" target="_blank" rel="noopener">10.1016/j.ymthe.2018.05.012</a></div></li><li><strong>Small interfering RNA delivery via lipid nanoparticles for liver target engagement</strong><div class='meta'>2018 · New England Journal of Medicine · fixture <a href="https://doi.org/10.1056/NEJMoa1716153" target="_blank" rel="noopener">10.1056/NEJMoa1716153</a></div></li><li><strong>mRNA vaccines against COVID-19: a perspective on LNP formulation design</strong><div class='meta'>2020 · Nature Reviews Drug Discovery · fixture <a href="https://doi.org/10.1038/s41573-020-0073-2" target="_blank" rel="noopener">10.1038/s41573-020-0073-2</a></div></li><li><strong>Nucleoside-modified mRNA-LNP therapeutics beyond vaccines: protein replacement and gene editing</strong><div class='meta'>2021 · Journal of Controlled Release · fixture <a href="https://doi.org/10.1016/j.jconrel.2021.03.035" target="_blank" rel="noopener">10.1016/j.jconrel.2021.03.035</a></div></li><li><strong>Advances in lipid nanoparticle delivery of nucleic acids and beyond</strong><div class='meta'>2021 · Nature Reviews Drug Discovery · fixture <a href="https://doi.org/10.1038/s41573-021-00234-2" target="_blank" rel="noopener">10.1038/s41573-021-00234-2</a></div></li><li><strong>Rapidly adaptable nanoparticle platforms for mRNA delivery to the lung</strong><div class='meta'>2021 · PNAS · fixture <a href="https://doi.org/10.1073/pnas.2106632118" target="_blank" rel="noopener">10.1073/pnas.2106632118</a></div></li><li><strong>Lipid nanoparticle chemistry: from RNA delivery to the next generation of therapeutics</strong><div class='meta'>2019 · Nature Reviews Materials · fixture <a href="https://doi.org/10.1038/s41578-019-0132-7" target="_blank" rel="noopener">10.1038/s41578-019-0132-7</a></div></li><li><strong>The endosomal escape of lipid nanoparticles: mechanisms and strategies for improvement</strong><div class='meta'>2021 · Accounts of Chemical Research · fixture <a href="https://doi.org/10.1021/acs.accounts.1c00236" target="_blank" rel="noopener">10.1021/acs.accounts.1c00236</a></div></li><li><strong>Designing lipid nanoparticles for targeted delivery of nucleic acids to the brain</strong><div class='meta'>2020 · Journal of Controlled Release · fixture <a href="https://doi.org/10.1016/j.jconrel.2020.06.018" target="_blank" rel="noopener">10.1016/j.jconrel.2020.06.018</a></div></li><li><strong>Immunogenicity of lipid nanoparticle-formulated mRNA: mechanisms and mitigation strategies</strong><div class='meta'>2022 · Nature Immunology · fixture <a href="https://doi.org/10.1038/s41590-022-01202-3" target="_blank" rel="noopener">10.1038/s41590-022-01202-3</a></div></li><li><strong>Microfluidic production of lipid nanoparticles for nucleic acid delivery</strong><div class='meta'>2020 · Molecular Therapy · fixture <a href="https://doi.org/10.1016/j.ymthe.2020.03.023" target="_blank" rel="noopener">10.1016/j.ymthe.2020.03.023</a></div></li><li><strong>SORT LNPs enable multi-organ mRNA delivery via selective organ targeting lipids</strong><div class='meta'>2020 · Nature Nanotechnology · fixture <a href="https://doi.org/10.1038/s41565-020-0669-6" target="_blank" rel="noopener">10.1038/s41565-020-0669-6</a></div></li><li><strong>Hybrid nucleic acid nanostructures for programmable intracellular delivery</strong><div class='meta'>2023 · ACS Nano · fixture <a href="https://doi.org/10.1021/acsnano.3c01234" target="_blank" rel="noopener">10.1021/acsnano.3c01234</a></div></li><li><strong>Quantitative single-cell map of LNP uptake, endosomal progression, and mRNA translation</strong><div class='meta'>2023 · Molecular Therapy · fixture <a href="https://doi.org/10.1016/j.ymthe.2023.04.018" target="_blank" rel="noopener">10.1016/j.ymthe.2023.04.018</a></div></li><li><strong>Machine-guided design of degradable ionizable lipids for redosable mRNA LNPs</strong><div class='meta'>2023 · Nature Biotechnology · fixture <a href="https://doi.org/10.1038/s41587-023-01750-7" target="_blank" rel="noopener">10.1038/s41587-023-01750-7</a></div></li><li><strong>Lung-selective polymeric nanoparticles for inhaled mRNA: barriers beyond formulation</strong><div class='meta'>2022 · Journal of Controlled Release · fixture <a href="https://doi.org/10.1016/j.jconrel.2022.08.041" target="_blank" rel="noopener">10.1016/j.jconrel.2022.08.041</a></div></li><li><strong>Zwitterionic ionizable lipids reduce complement activation while preserving hepatic mRNA expression</strong><div class='meta'>2024 · Nature Materials · fixture <a href="https://doi.org/10.1038/s41563-024-01999-0" target="_blank" rel="noopener">10.1038/s41563-024-01999-0</a></div></li><li><strong>In situ PROTAC mRNA LNPs for controllable degradation of hepatic disease targets</strong><div class='meta'>2024 · Cell · fixture <a href="https://doi.org/10.1016/j.cell.2024.03.021" target="_blank" rel="noopener">10.1016/j.cell.2024.03.021</a></div></li><li><strong>Base-edited HSC mobilization via mRNA-LNP delivery of engraftment enhancers</strong><div class='meta'>2024 · Blood · fixture <a href="https://doi.org/10.1182/blood.2023024567" target="_blank" rel="noopener">10.1182/blood.2023024567</a></div></li><li><strong>Spatially barcoded lipid nanoparticles reveal neighborhood-dependent tropism in solid tumors</strong><div class='meta'>2025 · Nature Biotechnology · fixture <a href="https://doi.org/10.1038/s41587-025-02501-2" target="_blank" rel="noopener">10.1038/s41587-025-02501-2</a></div></li><li><strong>Circular RNA LNPs with orthogonal ionizable lipids for durable extrahepatic expression</strong><div class='meta'>2025 · Science Translational Medicine · fixture <a href="https://doi.org/10.1126/scitranslmed.adk2025" target="_blank" rel="noopener">10.1126/scitranslmed.adk2025</a></div></li><li><strong>Bifunctional ncRNA-mRNA co-delivery reveals interference between RISC loading and translation</strong><div class='meta'>2025 · Nature Nanotechnology · fixture <a href="https://doi.org/10.1038/s41565-025-01888-4" target="_blank" rel="noopener">10.1038/s41565-025-01888-4</a></div></li><li><strong>Serum-stable DNA-ionizable lipid hybrid nanoparticles for gene editing outside the liver</strong><div class='meta'>2024 · ACS Nano · fixture <a href="https://doi.org/10.1021/acsnano.4c05501" target="_blank" rel="noopener">10.1021/acsnano.4c05501</a></div></li>
+  </ol>
+
+  <h2>Top gaps</h2>
+  <article class="card">
+  <h3>1. Limitation: Nevertheless, extrahepatic delivery was not achieved, and endosomal escape remai</h3>
+  <div class="tags"><span class="tag">delivery_barrier</span>
+  <span class="score">overall 0.78</span></div>
+  <p>Acknowledged limitation: &quot;Nevertheless, extrahepatic delivery was not achieved, and endosomal escape remained below 4% of internalized dose.&quot; [Machine-guided design of degradable ionizable lipids for redosable mRNA LNPs]</p>
+  <p class="muted">Unmatched author-stated limitation — candidate open problem.</p>
+</article><article class="card">
+  <h3>2. Limitation: Extrahepatic targeting of lipid nanoparticles in vivo  Clinical use of lipid nan</h3>
+  <div class="tags"><span class="tag">delivery_barrier</span>
+  <span class="score">overall 0.77</span></div>
+  <p>Acknowledged limitation: &quot;Extrahepatic targeting of lipid nanoparticles in vivo  Clinical use of lipid nanoparticles (LNPs) is limited by their predominant accumulation in the liver after systemic administration.&quot; [Extrahepatic targeting of lipid nanoparticles in vivo]</p>
+  <p class="muted">Unmatched author-stated limitation — candidate open problem.</p>
+</article><article class="card">
+  <h3>3. Limitation: These findings underscore the need for fundamental advances in understanding nan</h3>
+  <div class="tags"><span class="tag">delivery_barrier</span>
+  <span class="score">overall 0.73</span></div>
+  <p>Acknowledged limitation: &quot;These findings underscore the need for fundamental advances in understanding nano-bio interactions to achieve extrahepatic targeting.&quot; [Extrahepatic targeting of lipid nanoparticles in vivo]</p>
+  <p class="muted">Unmatched author-stated limitation — candidate open problem.</p>
+</article><article class="card">
+  <h3>4. Limitation: Designing lipid nanoparticles for targeted delivery of nucleic acids to the brai</h3>
+  <div class="tags"><span class="tag">delivery_barrier</span>
+  <span class="score">overall 0.73</span></div>
+  <p>Acknowledged limitation: &quot;Designing lipid nanoparticles for targeted delivery of nucleic acids to the brain  The blood-brain barrier (BBB) prevents most LNP-formulated nucleic acids from reaching the brain parenchyma.&quot; [Designing lipid nanoparticles for targeted delivery of nucleic acids to the brai]</p>
+  <p class="muted">Unmatched author-stated limitation — candidate open problem.</p>
+</article><article class="card">
+  <h3>5. Untested: We proposed that physical co-delivery would synchronize knockdown and replacemen</h3>
+  <div class="tags"><span class="tag">untested_claim</span>
+  <span class="score">overall 0.72</span></div>
+  <p>Claim without matching experimental evidence: &quot;We proposed that physical co-delivery would synchronize knockdown and replacement.&quot; [Bifunctional ncRNA-mRNA co-delivery reveals interference between RISC loading an]</p>
+  <p class="muted">Claim confidence 0.55, best evidence sim 0.17 (embedding). Claim type=theory, kind=untested_claim.</p>
+</article><article class="card">
+  <h3>6. Limitation: We observed that less than 2% of LNP-encapsulated cargo reaches the cytosol, sug</h3>
+  <div class="tags"><span class="tag">delivery_barrier</span>
+  <span class="score">overall 0.72</span></div>
+  <p>Acknowledged limitation: &quot;We observed that less than 2% of LNP-encapsulated cargo reaches the cytosol, suggesting endosomal entrapment is the dominant barrier.&quot; [The endosomal escape of lipid nanoparticles: mechanisms and strategies for impro]</p>
+  <p class="muted">Unmatched author-stated limitation — candidate open problem.</p>
+</article><article class="card">
+  <h3>7. Limitation: Major unresolved challenges include achieving efficient delivery to non-hepatic </h3>
+  <div class="tags"><span class="tag">delivery_barrier</span>
+  <span class="score">overall 0.70</span></div>
+  <p>Acknowledged limitation: &quot;Major unresolved challenges include achieving efficient delivery to non-hepatic tissues, overcoming biological barriers such as the mucus and blood-brain barriers, and reducing immunogenicity.&quot; [Advances in lipid nanoparticle delivery of nucleic acids and beyond]</p>
+  <p class="muted">Unmatched author-stated limitation — candidate open problem.</p>
+</article><article class="card">
+  <h3>8. Limitation: However, delivery efficiency decreased by 80% when scaling from mice to rabbits,</h3>
+  <div class="tags"><span class="tag">delivery_barrier</span>
+  <span class="score">overall 0.70</span></div>
+  <p>Acknowledged limitation: &quot;However, delivery efficiency decreased by 80% when scaling from mice to rabbits, and repeat administration resulted in diminished returns due to innate immune activation.&quot; [Rapidly adaptable nanoparticle platforms for mRNA delivery to the lung]</p>
+  <p class="muted">Unmatched author-stated limitation — candidate open problem.</p>
+</article><article class="card">
+  <h3>9. Limitation: Decoupling immunogenicity from delivery remains a major challenge.</h3>
+  <div class="tags"><span class="tag">delivery_barrier</span>
+  <span class="score">overall 0.70</span></div>
+  <p>Acknowledged limitation: &quot;Decoupling immunogenicity from delivery remains a major challenge.&quot; [Immunogenicity of lipid nanoparticle-formulated mRNA: mechanisms and mitigation ]</p>
+  <p class="muted">Unmatched author-stated limitation — candidate open problem.</p>
+</article><article class="card">
+  <h3>10. Limitation: However, microfluidic manufacturing has not been validated for the wide range of</h3>
+  <div class="tags"><span class="tag">delivery_barrier</span>
+  <span class="score">overall 0.70</span></div>
+  <p>Acknowledged limitation: &quot;However, microfluidic manufacturing has not been validated for the wide range of lipid compositions being explored in preclinical studies, particularly for compositions incorporating targeting ligands&quot; [Microfluidic production of lipid nanoparticles for nucleic acid delivery]</p>
+  <p class="muted">Unmatched author-stated limitation — candidate open problem.</p>
+</article><article class="card">
+  <h3>11. Untested: Despite extensive SAR studies, fundamental questions remain: the precise molecul</h3>
+  <div class="tags"><span class="tag">untested_claim</span>
+  <span class="score">overall 0.69</span></div>
+  <p>Claim without matching experimental evidence: &quot;Despite extensive SAR studies, fundamental questions remain: the precise molecular requirements for efficient endosomal escape are unknown, the role o&quot; [Lipid nanoparticle chemistry: from RNA delivery to the next generation of therap]</p>
+  <p class="muted">Claim confidence 0.55, best evidence sim 0.00 (embedding). Claim type=mechanism, kind=untested_claim.</p>
+</article><article class="card">
+  <h3>12. Mechanism gap: Important gaps remain: the role of lipid shape in membrane curvature induction d</h3>
+  <div class="tags"><span class="tag">mechanism_unknown</span>
+  <span class="score">overall 0.68</span></div>
+  <p>Mechanism claim lacks strong experimental support: &quot;Important gaps remain: the role of lipid shape in membrane curvature induction during endosomal escape is poorly charact&quot; [Structure-activity relationships of ionizable lipids for lipid nanoparticle deli]</p>
+  <p class="muted">Claim confidence 0.55, best evidence sim 0.38 (embedding). Claim type=mechanism, kind=mechanism_unknown.</p>
+</article>
+
+  <h2>Topic proposals</h2>
+  <article class="card highlight">
+  <h3>1. Ligand-displaying LNPs for extrahepatic targeting: avidity vs specificity</h3>
+  <div class="tags"><span class="score">priority 0.66</span>
+  <span class="tag">targeting</span></div>
+  <p><strong>Hypothesis.</strong> Multivalent display of low-affinity targeting ligands (e.g., mannose, transferrin, or anti-CD3 scFv) on LNP surfaces achieves higher tissue selectivity than high-affinity monovalent targeting, due to reduced off-target uptake by liver macrophages.</p>
+  <p><strong>Experiments</strong></p>
+  <ol><li>Synthesize LNPs with controlled densities of selected ligands (0–100% surface coverage)</li><li>Quantify uptake in target vs off-target cells with flow cytometry</li><li>Test in vivo biodistribution with reporter mRNAs in xenograft or disease models</li></ol>
+  <p><strong>Readout.</strong> Target-to-liver uptake ratio; ≥5× improvement over non-targeted LNPs.</p>
+</article><article class="card highlight">
+  <h3>2. Decoupling innate immune activation from LNP delivery potency</h3>
+  <div class="tags"><span class="score">priority 0.65</span>
+  <span class="tag">immunogenicity</span></div>
+  <p><strong>Hypothesis.</strong> Ionizable lipid structure independently drives TLR/inflammasome activation versus endosomal escape; lipids can be optimized for high delivery with low reactogenicity.</p>
+  <p><strong>Experiments</strong></p>
+  <ol><li>Screen ionizable lipids for IL-6/IFN reporter activation in vitro</li><li>Correlate innate activation with endosomal escape efficiency</li><li>Validate low-inflammation high-potency candidates in mice</li></ol>
+  <p><strong>Readout.</strong> ≥2× potency/inflammation ratio vs SM-102 or MC3 reference LNPs.</p>
+</article><article class="card highlight">
+  <h3>3. Mechanistic understanding of LNP endosomal escape: fusion vs destabilization</h3>
+  <div class="tags"><span class="score">priority 0.65</span>
+  <span class="tag">endosomal_escape</span></div>
+  <p><strong>Hypothesis.</strong> Endosomal escape of LNPs proceeds primarily through membrane destabilization (ionizable lipid-facilitated flip-flop and bilayer disruption) rather than fusogenic mechanisms, and can be enhanced by helper lipids that lower the lamellar-to-hexagonal phase transition temperature.</p>
+  <p><strong>Experiments</strong></p>
+  <ol><li>Labelled lipid mixing vs content release assays to distinguish fusion from destabilization</li><li>Cryo-ET of LNPs in endosomal compartments at timed intervals after uptake</li><li>Vary helper lipid ratios and correlate with endosomal escape efficiency via FRET</li></ol>
+  <p><strong>Readout.</strong> Quantitative fraction of delivered cargo reaching cytosol vs lysosomal degradation.</p>
+</article><article class="card highlight">
+  <h3>4. Quantitative bottleneck analysis of the LNP delivery cascade</h3>
+  <div class="tags"><span class="score">priority 0.64</span>
+  <span class="tag">delivery_efficiency</span></div>
+  <p><strong>Hypothesis.</strong> Endosomal escape—not uptake or encapsulation—is the dominant loss term in the delivery cascade for most clinical-like LNP compositions, and 10× escape gains are necessary and sufficient for transformative dose reduction.</p>
+  <p><strong>Experiments</strong></p>
+  <ol><li>Build a quantitative cascade map (injection→uptake→escape→translation) with barcoded mRNA</li><li>Perturb each step independently and measure sensitivity of protein output</li><li>Identify the step with highest elasticity for dose reduction</li></ol>
+  <p><strong>Readout.</strong> Ranked elasticities per cascade step; validated 5× dose reduction via top lever.</p>
+</article><article class="card highlight">
+  <h3>5. Rational design of ionizable lipids for extrahepatic nucleic acid delivery</h3>
+  <div class="tags"><span class="score">priority 0.62</span>
+  <span class="tag">lnp</span></div>
+  <p><strong>Hypothesis.</strong> Systematic variation of ionizable lipid headgroup and tail architecture can achieve tissue-specific LNP tropism beyond the liver, enabling extravascular mRNA and siRNA delivery.</p>
+  <p><strong>Experiments</strong></p>
+  <ol><li>Synthesize a focused library of 20–30 ionizable lipids varying pKa and tail unsaturation</li><li>Screen LNPs for in vitro transfection across hepatocyte, endothelial, and immune cell lines</li><li>Validate top 5 candidates in vivo via IV administration with luminescent reporter mRNA</li><li>Quantify biodistribution by organ-specific luciferase expression and RT-qPCR</li></ol>
+  <p><strong>Readout.</strong> Ratio of extrahepatic-to-liver protein expression; top candidate achieves ≥2× extrahepatic selectivity.</p>
+</article>
+
+  <footer>Generated 2026-07-30 07:38 +08 · FYP Research Gap Agent</footer>
+</main>
+</body>
+</html>

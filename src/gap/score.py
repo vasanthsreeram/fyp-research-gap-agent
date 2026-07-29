@@ -30,16 +30,17 @@ AlignerMode = Literal["auto", "lexical", "embedding"]
 
 DOMAIN_KEYWORDS: dict[str, list[str]] = {
     "lnp": ["lipid nanoparticle", "lnp", "ionizable lipid", "lipidoid"],
-    "mrna": ["mrna", "messenger rna", "in vitro transcript", "nucleoside-modified"],
+    "mrna": ["mrna", "messenger rna", "in vitro transcript", "nucleoside-modified", "circrna", "circular rna"],
     "sirna": ["sirna", "small interfering", "rnai", "gene silencing"],
     "endosomal_escape": ["endosom", "endosomal escape", "endocytosis", "intracellular traff"],
-    "targeting": ["targeted delivery", "extrahepatic", "tissue-specific", "tissue specific", "ligand-target"],
+    "targeting": ["targeted delivery", "extrahepatic", "tissue-specific", "tissue specific", "ligand-target", "sort lipid"],
     "delivery_efficiency": ["delivery efficiency", "encapsulation", "transfection"],
     "vaccine": ["vaccine", "immunization", "adjuvant", "neutralizing antibody"],
-    "gene_therapy": ["gene therapy", "gene editing", "crispr", "therapeutic gene"],
+    "gene_therapy": ["gene therapy", "gene editing", "crispr", "therapeutic gene", "base-edit", "cas9"],
     "pks": ["pharmacokinetic", "biodistribution", "clearance", "half-life"],
-    "immunogenicity": ["immunogenicity", "immune response", "innate immune", "reactogenic"],
+    "immunogenicity": ["immunogenicity", "immune response", "innate immune", "reactogenic", "complement"],
     "corona": ["protein corona", "opsonization", "serum protein"],
+    "hybrid_ncrna": ["ncrna", "non-coding rna", "bifunctional", "hybrid nucleic", "risc loading"],
 }
 
 

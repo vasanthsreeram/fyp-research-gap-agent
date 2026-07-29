@@ -54,3 +54,5 @@ experiments/logs/
 data/processed/chroma_gap_index/
 .cache/
 *.chroma/
+
+site/public/diagrams/*.html
