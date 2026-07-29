@@ -1,0 +1,42 @@
+erDiagram
+  PAPER ||--o{ CLAIM : has
+  PAPER ||--o{ EVIDENCE : has
+  CLAIM ||--o{ GAP : aligned_to
+  EVIDENCE ||--o{ GAP : supports
+  GAP ||--o{ TOPIC : clusters_into
+
+  PAPER {
+    string id
+    string title
+    string abstract
+    string source
+    string doi
+  }
+  CLAIM {
+    string id
+    string paper_id
+    enum claim_type
+    string text
+    string quote_span
+    float confidence
+    string extractor
+  }
+  EVIDENCE {
+    string id
+    string paper_id
+    enum evidence_type
+    string text
+    string quote_span
+  }
+  GAP {
+    string id
+    enum kind
+    float novelty
+    float testability
+    float impact
+  }
+  TOPIC {
+    string id
+    string hypothesis
+    list experiments
+  }

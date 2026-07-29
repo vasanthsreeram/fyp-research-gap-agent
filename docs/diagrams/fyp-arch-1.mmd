@@ -1,0 +1,59 @@
+flowchart LR
+  subgraph Sources
+    S2[Semantic Scholar API]
+    AX[arXiv API]
+    FX[fixtures/papers_fixture.jsonl]
+  end
+
+  subgraph Ingest["src/ingest/"]
+    IP[pipeline.ingest_papers]
+    DD[dedupe + limit]
+    IP --> DD
+  end
+
+  S2 --> IP
+  AX --> IP
+  FX -. fallback on 429 / empty .-> IP
+
+  P[(data/processed/papers.jsonl<br/>Paper: title+abstract)]
+  DD --> P
+
+  subgraph Extract["src/extract/"]
+    DISP[dispatch.extract_all]
+    CL[claims.py]
+    EV[evidence.py]
+    DISP --> CL
+    DISP --> EV
+  end
+
+  P --> DISP
+
+  C[(claims.jsonl)]
+  E[(evidence.jsonl)]
+  CL --> C
+  EV --> E
+
+  subgraph Gap["src/gap/"]
+    SC[score.py<br/>Jaccard + TF-cosine<br/>multi-axis scores]
+  end
+
+  C --> SC
+  E --> SC
+  G[(gaps.jsonl)]
+  SC --> G
+
+  subgraph Topics["src/topics/"]
+    TS[suggest.py]
+  end
+
+  G --> TS
+  T[(topics.jsonl)]
+  TS --> T
+
+  R[reports/latest_run.md]
+  M[run_manifest.json]
+  C --> R
+  E --> R
+  G --> R
+  T --> R
+  P --> R

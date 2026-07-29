@@ -1,0 +1,30 @@
+sequenceDiagram
+  participant U as You / CLI
+  participant C as src/cli.py
+  participant I as ingest
+  participant X as extract
+  participant LLM as OpenAI gpt-4o-mini
+  participant G as gap/score
+  participant T as topics
+  participant FS as data/ + reports/
+
+  U->>C: run --limit 15 --mode llm
+  C->>I: ingest_papers(fixture|live)
+  alt live APIs OK
+    I-->>C: Paper[] from S2/arXiv
+  else 429 / empty
+    I-->>C: Paper[] from fixture
+  end
+  C->>FS: papers.jsonl
+  loop each Paper
+    C->>X: extract_claims + extract_evidence
+    X->>LLM: title+abstract → JSON
+    LLM-->>X: claims[] / evidence[]
+  end
+  C->>FS: claims.jsonl, evidence.jsonl
+  C->>G: align + multi-axis score
+  G-->>C: Gap[]
+  C->>FS: gaps.jsonl
+  C->>T: suggest topics
+  T-->>C: TopicProposal[]
+  C->>FS: topics.jsonl + latest_run.md
