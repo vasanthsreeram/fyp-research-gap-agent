@@ -95,6 +95,7 @@ def _build_markdown_report(
         f"| **Gaps** | {len(gaps)} |",
         f"| **Topics** | {len(topics)} |",
         f"| **Extractor** | {manifest.extractor_mode} |",
+        f"| **Aligner** | {manifest.aligner_mode} |",
         "",
         f"## Papers ({len(papers)})",
         "",
@@ -159,11 +160,18 @@ def run(
     papers_path: Optional[Path] = typer.Option(None, "--papers", "-p", help="Path to papers.jsonl"),
     domain: str = typer.Option("nucleic_acid_delivery", "--domain", "-d", help="Research domain"),
     mode: str = typer.Option("auto", "--mode", "-m", help="Extraction mode: heuristic | llm | auto"),
+    aligner: str = typer.Option(
+        "auto",
+        "--aligner",
+        "-a",
+        help="Gap aligner: auto | lexical | embedding (sentence-transformers + chroma)",
+    ),
     use_fixture: bool = typer.Option(False, "--fixture", "-f", help="Force fixture (offline) mode"),
     limit: int = typer.Option(15, "--limit", "-n", help="Max papers to process"),
     refetch: bool = typer.Option(False, "--refetch", help="Force re-ingest even if cache exists"),
     output: Optional[Path] = typer.Option(None, "--output", "-o", help="Output report path"),
     save: bool = typer.Option(True, "--save/--no-save", help="Save intermediate JSONL artifacts"),
+    no_chroma: bool = typer.Option(False, "--no-chroma", help="Skip Chroma persistence for embeddings"),
 ):
     """End-to-end pipeline: ingest → extract → gap-score → suggest → report."""
     # Eager keychain resolve for auto/llm mode
@@ -179,11 +187,19 @@ def run(
     manifest = RunManifest(
         domain=domain,
         extractor_mode=mode,
+        aligner_mode=aligner,
         # Store naive SGT wall-clock for readable reports (labeled in markdown).
         started_at=started_sgt.replace(tzinfo=None),
     )
     logger.info("=== FYP Research Gap Agent — run %s ===", manifest.run_id)
-    logger.info("Domain=%s mode=%s fixture=%s limit=%d", domain, mode, use_fixture, limit)
+    logger.info(
+        "Domain=%s mode=%s aligner=%s fixture=%s limit=%d",
+        domain,
+        mode,
+        aligner,
+        use_fixture,
+        limit,
+    )
 
     # 1. Papers
     loaded_papers: list[Paper] = []
@@ -237,15 +253,29 @@ def run(
         logger.info("Saved claims/evidence → %s", PROC_DIR)
 
     # 3. Gaps
-    from src.gap.score import find_gaps
+    from src.gap.score import find_gaps, resolve_aligner
 
-    all_gaps = find_gaps(all_claims, all_evidence, loaded_papers)
+    try:
+        resolved_aligner = resolve_aligner(aligner)  # type: ignore[arg-type]
+    except RuntimeError as e:
+        logger.error("%s", e)
+        raise typer.Exit(1) from e
+    manifest.aligner_mode = resolved_aligner
+
+    all_gaps = find_gaps(
+        all_claims,
+        all_evidence,
+        loaded_papers,
+        aligner=resolved_aligner,  # type: ignore[arg-type]
+        use_chroma=not no_chroma,
+        chroma_dir=(PROC_DIR / "chroma_gap_index") if save and not no_chroma else None,
+    )
     manifest.n_gaps = len(all_gaps)
     if save:
         with open(PROC_DIR / "gaps.jsonl", "w") as f:
             for g in all_gaps:
                 f.write(g.model_dump_json() + "\n")
-        logger.info("Saved %d gaps", len(all_gaps))
+        logger.info("Saved %d gaps (aligner=%s)", len(all_gaps), resolved_aligner)
 
     # 4. Topics
     from src.topics.suggest import suggest_topics
@@ -280,7 +310,7 @@ def run(
         f"Evidence: {len(all_evidence)}"
     )
     print(f"  Gaps: {len(all_gaps)} | Topics: {len(all_topics)}")
-    print(f"  Extractor: {manifest.extractor_mode}")
+    print(f"  Extractor: {manifest.extractor_mode} | Aligner: {manifest.aligner_mode}")
     print(f"  Report: {report_path}")
     print(f"{'=' * 60}\n")
 

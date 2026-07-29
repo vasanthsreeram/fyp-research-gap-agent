@@ -16,9 +16,9 @@ Updated by daily progress cron + human/call notes.
 - Write notes + propose approaches; formal start ~August; early progress welcome
 - Audio/transcript: ~/.openclaw/workspace/tmp/fyp-prof-meeting/
 
-## Current stage: **Stage 1 complete → Stage 2 started** (2026-07-29 01:11 SGT)
+## Current stage: **Stage 2** (2026-07-29 10:05 SGT)
 
-Modular package layout + higher-recall extractors + live LLM path shipped. Offline heuristic path still works without keys.
+Embedding-based gap alignment shipped (sentence-transformers MiniLM + optional Chroma). Lexical path remains default fallback.
 
 ### Stage checklist
 - [x] S0 Freeze scope 1-pager for prof (problem, domain, eval, risks)
@@ -34,7 +34,7 @@ Modular package layout + higher-recall extractors + live LLM path shipped. Offli
 - [x] **Vertical slice complete — ready for supervisor demo**
 - [x] S2 Modular package split (`src/ingest`, `src/extract`, `src/gap`, `src/topics`)
 - [x] S2 Claim recall lift (heuristic 6→27 on 15 papers; LLM 91 claims)
-- [ ] S2 Embedding-based gap alignment (sentence-transformers / chroma)
+- [x] **S2 Embedding-based gap alignment (sentence-transformers / chroma)**
 - [ ] S2 Memorization benchmark (post-cutoff held-out papers)
 - [ ] S2 Expand corpus to 50+ papers via live S2 API (currently rate-limited 429; fixture used)
 - [ ] S2 HTML report export
@@ -42,51 +42,52 @@ Modular package layout + higher-recall extractors + live LLM path shipped. Offli
 - [ ] S2 Add eval harness with human feedback collection
 - [ ] Register BG4801 when eligible
 
-### What shipped (2026-07-29 overnight wave 2)
+### What shipped (2026-07-29 morning — embedding aligner)
 
-| Metric | Heuristic (limit 15) | LLM (limit 15) |
-|--------|----------------------|----------------|
+| Metric | Heuristic + lexical | Heuristic + embedding |
+|--------|---------------------|------------------------|
 | Papers | 15 | 15 |
-| Claims | 27 | **91** |
-| Evidence | 56 | **102** |
-| Gaps | 32 | **47** |
+| Claims | 27 | 27 |
+| Evidence | 56 | 56 |
+| Gaps | 32 | **30** |
 | Topics | 5 | 5 |
-| pytest | 23 passed | 23 passed |
-| CLI | `python -m src.cli run --limit 15` | same |
+| pytest | 30 passed | 30 passed |
+| Aligner | Jaccard+TF | MiniLM cosine + Chroma index |
 | Report | `reports/latest_run.md` | same |
 
-**Package layout**
+**Embedding stack**
 ```
-src/models.py
-src/cli.py
-src/ingest/{semantic_scholar.py, arxiv_client.py, pipeline.py}
-src/extract/{claims.py, evidence.py, dispatch.py, llm_util.py}
-src/gap/score.py
-src/topics/suggest.py
+src/gap/embeddings.py   # ST encode, cosine, optional Chroma persist
+src/gap/score.py          # aligner=auto|lexical|embedding
+CLI: --aligner auto|lexical|embedding  [--no-chroma]
+Model: sentence-transformers/all-MiniLM-L6-v2
+Index: data/processed/chroma_gap_index/ (gitignored)
 ```
 
 **Demo command**
 ```bash
-python -m src.cli run --limit 15 --fixture --mode heuristic   # offline
-python -m src.cli run --limit 15 --fixture --mode llm         # Keychain OpenAI
-python -m src.cli run --limit 15 --refetch                    # live S2+arXiv (falls back on 429)
+python -m src.cli run --limit 15 --fixture --mode heuristic --aligner embedding
+python -m src.cli run --limit 15 --fixture --mode heuristic --aligner lexical
+python -m src.cli run --limit 15 --fixture --mode llm --aligner auto
 ```
 
-### Latest LLM run (run_f2c2ec7db50c)
-- Top gaps: endosomal-escape toxicity tradeoff; visualization of escape; fusion vs destabilization mechanism
-- Top topics: mRNA nucleoside×LNP synergy; ligand avidity vs specificity; endosomal escape mechanism; vaccine-domain gaps; siRNA extrahepatic barrier
+### Latest embedding run (run_6f4509f60aa4)
+- Top gaps: extrahepatic targeting barrier; fundamental advances needed; <2% cargo to cytosol; non-hepatic delivery; scale-up efficiency drop
+- Top topics: innate immune decoupling; ligand avidity vs specificity; PK of repeat-dose LNP; endosomal escape mechanism; cascade bottleneck analysis
+- Kind mix (embedding): 15 theory_vs_experiment, 7 delivery_barrier, 6 other, 1 mechanism_unknown, 1 untested_claim
 
 ### Known blockers
-- Semantic Scholar + arXiv returned HTTP 429 during live ingest (2026-07-29 ~01:08 SGT); pipeline correctly fell back to 18-paper fixture (truncated to `--limit 15`).
+- Semantic Scholar + arXiv returned HTTP 429 during live ingest (2026-07-29 ~01:08 SGT); pipeline correctly fell back to fixture.
 - OpenAI key resolved from Keychain `openclaw/tgcallskill/openai-api-key` (not committed).
+- First embedding run downloads MiniLM weights (~90MB) via HuggingFace.
 
 ## Next supervisor meeting: **30 July 2026, 14:00 SGT**
 - Deliverable: `docs/supervisor-update-draft.md`
-- Demo: Pipeline run + top gaps + topic proposals
+- Demo: Pipeline run + top gaps + topic proposals (+ show embedding vs lexical)
 - Questions: domain scope, eval rubric, memorization rigor, next steps
 
 ## Last automated progress
-- 2026-07-29 01:11 SGT — Wave 2: modular packages, claim-recall lift, LLM end-to-end (15 papers → 91 claims → 102 evidence → 47 gaps → 5 topics), 23/23 tests, docs refreshed.
+- 2026-07-29 10:05 SGT — S2 embedding gap alignment: `src/gap/embeddings.py` (MiniLM + Chroma), CLI `--aligner`, 30/30 tests, E2E fixture run 15→27→56→30 gaps→5 topics.
 
 ## Daily loop
 - **10:00 SGT** — autonomous coding progress on next unchecked item; commit/push; update this file

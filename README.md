@@ -7,10 +7,10 @@
 
 ## Status
 
-Stage 1 vertical slice is **shipped**. Stage 2 packaging + claim-recall + LLM path landed 2026-07-29.
+Stage 1 vertical slice shipped. Stage 2: modular packages, claim-recall, LLM path, **embedding gap alignment**.
 
-Latest LLM run (`--limit 15`): **15 papers → 91 claims → 102 evidence → 47 gaps → 5 topics**.  
-Offline heuristic on the same set: **27 / 56 / 32 / 5**. Tests: **23 passed**.
+Latest embedding run (`--limit 15 --aligner embedding`): **15 papers → 27 claims → 56 evidence → 30 gaps → 5 topics**.  
+Tests: **30 passed**.
 
 See [`docs/STATUS.md`](docs/STATUS.md) and [`docs/supervisor-update-draft.md`](docs/supervisor-update-draft.md).
 
@@ -20,12 +20,15 @@ See [`docs/STATUS.md`](docs/STATUS.md) and [`docs/supervisor-update-draft.md`](d
 python -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
 
-# Offline end-to-end (no API keys)
-python -m src.cli run --limit 15 --fixture --mode heuristic
+# Offline end-to-end (lexical aligner; no heavy model download if you skip ST)
+python -m src.cli run --limit 15 --fixture --mode heuristic --aligner lexical
+
+# Embedding aligner (sentence-transformers MiniLM + optional Chroma)
+python -m src.cli run --limit 15 --fixture --mode heuristic --aligner embedding
 
 # LLM extraction if OPENAI_API_KEY is set (or macOS Keychain service
-# openclaw/tgcallskill/openai-api-key)
-python -m src.cli run --limit 15 --fixture --mode llm
+# openclaw/tgcallskill/openai-api-key); auto picks embedding when available
+python -m src.cli run --limit 15 --fixture --mode llm --aligner auto
 
 # Live ingest attempt (S2 + arXiv; falls back to fixture on failure)
 python -m src.cli run --limit 15 --refetch
@@ -35,6 +38,7 @@ pytest -q
 
 Outputs:
 - `data/processed/papers.jsonl`, `claims.jsonl`, `evidence.jsonl`, `gaps.jsonl`, `topics.jsonl`
+- `data/processed/chroma_gap_index/` (embedding runs; gitignored)
 - `reports/latest_run.md`
 
 ## Architecture
@@ -42,7 +46,7 @@ Outputs:
 ```
 ingest (S2 / arXiv / fixture)
     → extract claims + evidence (heuristic | llm)
-    → gap align + multi-axis score
+    → gap align (lexical | embedding) + multi-axis score
     → topic suggest
     → markdown report
 ```
@@ -52,7 +56,7 @@ ingest (S2 / arXiv / fixture)
 | `src/models.py` | Pydantic schemas |
 | `src/ingest/` | Semantic Scholar + arXiv + pipeline |
 | `src/extract/` | Claims, evidence, LLM helpers |
-| `src/gap/` | Gap detection + scoring |
+| `src/gap/` | Lexical + embedding alignment, scoring, Chroma index |
 | `src/topics/` | Research topic proposals |
 | `src/cli.py` | Typer CLI |
 

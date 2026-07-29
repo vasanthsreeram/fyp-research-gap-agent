@@ -24,7 +24,15 @@ from src.models import (
 from src.extract.claims import extract_claims_heuristic
 from src.extract.evidence import extract_evidence_heuristic
 from src.extract import extract_all
-from src.gap.score import find_gaps, jaccard, similarity, score_gap, tag_domains
+from src.gap.score import (
+    find_gaps,
+    jaccard,
+    resolve_aligner,
+    similarity,
+    score_gap,
+    tag_domains,
+)
+from src.gap.embeddings import embeddings_available, cosine_sim
 from src.topics.suggest import suggest_topics
 from src.ingest.pipeline import load_fixture
 
@@ -182,6 +190,65 @@ class TestGapScorer:
 
     def test_empty_gaps_no_topics(self):
         assert suggest_topics([]) == []
+
+    def test_find_gaps_lexical_explicit(self, sample_papers):
+        claims, evidence = extract_all(sample_papers, mode="heuristic")
+        gaps = find_gaps(claims, evidence, sample_papers, aligner="lexical")
+        assert len(gaps) >= 1
+        assert any("lexical" in g.rationale for g in gaps)
+
+    def test_resolve_aligner_lexical(self):
+        assert resolve_aligner("lexical") == "lexical"
+
+
+class TestEmbeddings:
+    def test_cosine_sim_identical(self):
+        v = [1.0, 0.0, 0.0]
+        assert abs(cosine_sim(v, v) - 1.0) < 1e-6
+
+    def test_cosine_sim_orthogonal(self):
+        assert abs(cosine_sim([1.0, 0.0], [0.0, 1.0])) < 1e-6
+
+    @pytest.mark.skipif(not embeddings_available(), reason="sentence-transformers not installed")
+    def test_embed_and_match_related_texts(self):
+        from src.gap.embeddings import embed_texts, pairwise_best_matches
+
+        a = embed_texts(["endosomal escape of lipid nanoparticles"])
+        b = embed_texts(["LNP endosomal escape is inefficient"])
+        c = embed_texts(["stock market volatility and interest rates"])
+        assert cosine_sim(a[0], b[0]) > cosine_sim(a[0], c[0])
+
+        matches = pairwise_best_matches(
+            ["ionizable lipids promote endosomal escape"],
+            [
+                "stock prices rose today",
+                "endosomal escape via ionizable lipid protonation",
+                "weather forecast cloudy",
+            ],
+        )
+        assert matches[0][0] == 1
+        assert matches[0][1] > 0.3
+
+    @pytest.mark.skipif(not embeddings_available(), reason="sentence-transformers not installed")
+    def test_find_gaps_embedding(self, sample_papers, tmp_path):
+        claims, evidence = extract_all(sample_papers, mode="heuristic")
+        gaps = find_gaps(
+            claims,
+            evidence,
+            sample_papers,
+            aligner="embedding",
+            use_chroma=True,
+            chroma_dir=tmp_path / "chroma",
+        )
+        assert isinstance(gaps, list)
+        assert len(gaps) >= 1
+        assert any("embedding" in g.rationale for g in gaps)
+        scores = [g.overall for g in gaps]
+        assert scores == sorted(scores, reverse=True)
+
+    @pytest.mark.skipif(not embeddings_available(), reason="sentence-transformers not installed")
+    def test_resolve_aligner_auto_prefers_embedding(self):
+        assert resolve_aligner("auto") == "embedding"
 
 
 class TestFixture:

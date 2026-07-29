@@ -1,4 +1,10 @@
-"""Gap aligner + multi-axis scorer (theory ↔ experiment)."""
+"""Gap aligner + multi-axis scorer (theory ↔ experiment).
+
+Alignment backends:
+  - lexical: Jaccard + TF-cosine blend (always available)
+  - embedding: sentence-transformers cosine (+ optional Chroma index)
+  - auto: embedding if deps present, else lexical
+"""
 
 from __future__ import annotations
 
@@ -6,6 +12,8 @@ import logging
 import math
 import re
 from collections import Counter
+from pathlib import Path
+from typing import Literal, Optional
 
 from src.models import (
     Claim,
@@ -17,6 +25,8 @@ from src.models import (
 )
 
 logger = logging.getLogger(__name__)
+
+AlignerMode = Literal["auto", "lexical", "embedding"]
 
 DOMAIN_KEYWORDS: dict[str, list[str]] = {
     "lnp": ["lipid nanoparticle", "lnp", "ionizable lipid", "lipidoid"],
@@ -68,11 +78,39 @@ def _tf_cosine(text_a: str, text_b: str) -> float:
     return dot / (na * nb)
 
 
-def similarity(text_a: str, text_b: str) -> float:
+def similarity_lexical(text_a: str, text_b: str) -> float:
     """Blend Jaccard + TF cosine for stabler alignment than Jaccard alone."""
     j = jaccard(text_a, text_b)
     c = _tf_cosine(text_a, text_b)
     return 0.45 * j + 0.55 * c
+
+
+# Back-compat alias used by tests / older imports
+def similarity(text_a: str, text_b: str) -> float:
+    return similarity_lexical(text_a, text_b)
+
+
+def resolve_aligner(mode: AlignerMode = "auto") -> str:
+    """Return concrete aligner name: 'embedding' or 'lexical'."""
+    if mode == "lexical":
+        return "lexical"
+    if mode == "embedding":
+        from src.gap.embeddings import embeddings_available
+
+        if not embeddings_available():
+            raise RuntimeError(
+                "aligner=embedding requested but sentence-transformers is not installed"
+            )
+        return "embedding"
+    # auto
+    try:
+        from src.gap.embeddings import embeddings_available
+
+        if embeddings_available():
+            return "embedding"
+    except Exception:
+        pass
+    return "lexical"
 
 
 def score_gap(
@@ -145,11 +183,120 @@ def score_gap(
     }
 
 
+def _best_evidence_matches_lexical(
+    claims: list[Claim],
+    ev_by_paper: dict[str, list[Evidence]],
+) -> dict[str, tuple[Optional[Evidence], float]]:
+    """claim_id → (best Evidence | None, sim)."""
+    out: dict[str, tuple[Optional[Evidence], float]] = {}
+    for claim in claims:
+        ev_for_paper = ev_by_paper.get(claim.paper_id, [])
+        best_ev: Evidence | None = None
+        best_sim = 0.0
+        for ev in ev_for_paper:
+            sim = similarity_lexical(claim.text, ev.text)
+            if sim > best_sim:
+                best_sim = sim
+                best_ev = ev
+        out[claim.id] = (best_ev, best_sim)
+    return out
+
+
+def _best_evidence_matches_embedding(
+    claims: list[Claim],
+    evidence: list[Evidence],
+    ev_by_paper: dict[str, list[Evidence]],
+    *,
+    use_chroma: bool = True,
+    persist_dir: Optional[Path] = None,
+) -> dict[str, tuple[Optional[Evidence], float]]:
+    """
+    Embed all claims + evidence once; match each claim to best same-paper evidence.
+    Optionally also build a Chroma index of all evidence for inspectability / reuse.
+    """
+    from src.gap.embeddings import (
+        build_chroma_index,
+        cosine_sim,
+        default_persist_dir,
+        embed_texts,
+    )
+
+    out: dict[str, tuple[Optional[Evidence], float]] = {
+        c.id: (None, 0.0) for c in claims
+    }
+    if not claims:
+        return out
+
+    # Optional persistent index of *all* evidence (cross-paper retrieval later)
+    if use_chroma and evidence:
+        try:
+            pdir = Path(persist_dir) if persist_dir else Path(default_persist_dir())
+            build_chroma_index(
+                texts=[e.text for e in evidence],
+                ids=[e.id for e in evidence],
+                metadatas=[
+                    {"paper_id": e.paper_id, "evidence_type": e.evidence_type.value}
+                    for e in evidence
+                ],
+                collection_name="evidence",
+                persist_dir=pdir,
+                reset=True,
+            )
+        except Exception as e:  # non-fatal
+            logger.warning("Chroma index build failed (non-fatal): %s", e)
+
+    # Per-paper batch encode for same-paper alignment (primary path)
+    # Group claims by paper for efficient encoding
+    claims_by_paper: dict[str, list[Claim]] = {}
+    for c in claims:
+        claims_by_paper.setdefault(c.paper_id, []).append(c)
+
+    for paper_id, paper_claims in claims_by_paper.items():
+        paper_ev = ev_by_paper.get(paper_id, [])
+        if not paper_ev:
+            continue
+        c_texts = [c.text for c in paper_claims]
+        e_texts = [e.text for e in paper_ev]
+        try:
+            c_vecs = embed_texts(c_texts)
+            e_vecs = embed_texts(e_texts)
+        except Exception as e:
+            logger.warning(
+                "Embedding failed for paper %s, falling back to lexical: %s",
+                paper_id,
+                e,
+            )
+            for c in paper_claims:
+                best_ev, best_sim = None, 0.0
+                for ev in paper_ev:
+                    sim = similarity_lexical(c.text, ev.text)
+                    if sim > best_sim:
+                        best_sim, best_ev = sim, ev
+                out[c.id] = (best_ev, best_sim)
+            continue
+
+        for ci, claim in enumerate(paper_claims):
+            best_i, best_s = -1, -1.0
+            for ei, ev_vec in enumerate(e_vecs):
+                s = cosine_sim(c_vecs[ci], ev_vec)
+                if s > best_s:
+                    best_s, best_i = s, ei
+            if best_i >= 0:
+                out[claim.id] = (paper_ev[best_i], float(max(0.0, best_s)))
+
+    return out
+
+
 def find_gaps(
     claims: list[Claim],
     evidence: list[Evidence],
     papers: list[Paper],
     similarity_threshold: float = 0.12,
+    *,
+    aligner: AlignerMode = "auto",
+    embedding_threshold: Optional[float] = None,
+    use_chroma: bool = True,
+    chroma_dir: Optional[Path] = None,
 ) -> list[Gap]:
     """
     Align claims with evidence and surface:
@@ -157,35 +304,54 @@ def find_gaps(
       - claim vs limitation mismatches
       - mechanism claims lacking support
       - unmatched author-stated limitations
+
+    `aligner`: auto | lexical | embedding
+    Embedding cosine sims run higher than lexical blends; default embedding
+    threshold is 0.35 (override via embedding_threshold).
     """
     paper_map = {p.id: p for p in papers}
     ev_by_paper: dict[str, list[Evidence]] = {}
     for e in evidence:
         ev_by_paper.setdefault(e.paper_id, []).append(e)
 
+    concrete = resolve_aligner(aligner)
+    logger.info("Gap aligner: %s (requested=%s)", concrete, aligner)
+
+    if concrete == "embedding":
+        thr = (
+            embedding_threshold
+            if embedding_threshold is not None
+            else max(similarity_threshold, 0.35)
+        )
+        matches = _best_evidence_matches_embedding(
+            claims,
+            evidence,
+            ev_by_paper,
+            use_chroma=use_chroma,
+            persist_dir=chroma_dir,
+        )
+        # Mechanism weak-support cutoff scales with embedding sims
+        mech_weak = 0.55
+    else:
+        thr = similarity_threshold
+        matches = _best_evidence_matches_lexical(claims, ev_by_paper)
+        mech_weak = 0.35
+
     gaps: list[Gap] = []
     seen_sigs: set[tuple[str, str]] = set()
 
     for claim in claims:
         paper = paper_map.get(claim.paper_id)
-        paper_title = (paper.title[:80] if paper else "unknown")
-        ev_for_paper = ev_by_paper.get(claim.paper_id, [])
+        paper_title = paper.title[:80] if paper else "unknown"
+        best_ev, best_sim = matches.get(claim.id, (None, 0.0))
 
-        best_ev: Evidence | None = None
-        best_sim = 0.0
-        for ev in ev_for_paper:
-            sim = similarity(claim.text, ev.text)
-            if sim > best_sim:
-                best_sim = sim
-                best_ev = ev
-
-        if best_ev is None or best_sim < similarity_threshold:
+        if best_ev is None or best_sim < thr:
             gap_kind = GapKind.UNTESTED_CLAIM
         elif best_ev.evidence_type == EvidenceType.LIMITATION:
             gap_kind = GapKind.THEORY_VS_EXPERIMENT
         elif claim.claim_type.value == "mechanism":
             # Mechanism claim with only weak/non-limitation evidence still a gap
-            if best_sim < 0.35 or best_ev.evidence_type in (
+            if best_sim < mech_weak or best_ev.evidence_type in (
                 EvidenceType.OBSERVATION,
                 EvidenceType.OTHER,
             ):
@@ -200,8 +366,12 @@ def find_gaps(
             continue
         seen_sigs.add(sig)
 
-        domain_tags = list(set(tag_domains(claim.text) + (tag_domains(best_ev.text) if best_ev else [])))
-        scores = score_gap(kind=gap_kind, claim=claim, evidence=best_ev, sim=best_sim, domain_tags=domain_tags)
+        domain_tags = list(
+            set(tag_domains(claim.text) + (tag_domains(best_ev.text) if best_ev else []))
+        )
+        scores = score_gap(
+            kind=gap_kind, claim=claim, evidence=best_ev, sim=best_sim, domain_tags=domain_tags
+        )
 
         if gap_kind == GapKind.UNTESTED_CLAIM:
             title = f"Untested: {claim.text[:80]}"
@@ -235,8 +405,8 @@ def find_gaps(
                 overall=scores["overall"],
                 domain_tags=domain_tags,
                 rationale=(
-                    f"Claim confidence {claim.confidence:.2f}, best evidence sim {best_sim:.2f}. "
-                    f"Claim type={claim.claim_type.value}, kind={gap_kind.value}."
+                    f"Claim confidence {claim.confidence:.2f}, best evidence sim {best_sim:.2f} "
+                    f"({concrete}). Claim type={claim.claim_type.value}, kind={gap_kind.value}."
                 ),
             )
         )
@@ -251,7 +421,10 @@ def find_gaps(
         domain_tags = tag_domains(ev.text)
         kind = (
             GapKind.DELIVERY_BARRIER
-            if any(k in ev.text.lower() for k in ("delivery", "endosom", "target", "barrier", "bottleneck"))
+            if any(
+                k in ev.text.lower()
+                for k in ("delivery", "endosom", "target", "barrier", "bottleneck")
+            )
             else GapKind.OTHER
         )
         scores = score_gap(kind=kind, claim=None, evidence=ev, sim=0.0, domain_tags=domain_tags)
@@ -273,5 +446,11 @@ def find_gaps(
         )
 
     gaps.sort(key=lambda g: g.overall, reverse=True)
-    logger.info("Found %d gaps from %d claims + %d evidence", len(gaps), len(claims), len(evidence))
+    logger.info(
+        "Found %d gaps from %d claims + %d evidence (aligner=%s)",
+        len(gaps),
+        len(claims),
+        len(evidence),
+        concrete,
+    )
     return gaps

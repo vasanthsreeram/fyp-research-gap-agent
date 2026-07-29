@@ -141,4 +141,5 @@ class RunManifest(BaseModel):
     n_gaps: int = 0
     n_topics: int = 0
     extractor_mode: str = "heuristic"
+    aligner_mode: str = "auto"  # auto | lexical | embedding (resolved value recorded at finish)
     notes: str = ""

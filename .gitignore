@@ -46,7 +46,11 @@ Thumbs.db
 
 # Jupyter
 .ipynb_checkpoints/
-
 # Experiments outputs
 experiments/outputs/
 experiments/logs/
+
+# Embedding / vector store caches
+data/processed/chroma_gap_index/
+.cache/
+*.chroma/

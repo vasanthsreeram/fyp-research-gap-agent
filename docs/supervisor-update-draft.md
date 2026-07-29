@@ -32,11 +32,11 @@ Prototype scoped to **nucleic acid delivery / lipid nanoparticles (LNPs) / mRNA 
 | Ingestion (`src/ingest/`) | Done | Semantic Scholar client + arXiv helper + offline fixture fallback; caches under `data/raw/` and `data/processed/` |
 | Claim extractor (`src/extract/claims.py`) | Done | Heuristic (offline) + OpenAI structured JSON (Keychain-backed) |
 | Evidence extractor (`src/extract/evidence.py`) | Done | Results, metrics, limitations with quote spans |
-| Gap scorer (`src/gap/score.py`) | Done | Claim↔evidence alignment; magnitude / novelty / testability / impact |
+| Gap scorer (`src/gap/score.py` + `embeddings.py`) | Done | Lexical (Jaccard+TF) **and** embedding aligner (MiniLM + optional Chroma); multi-axis scores |
 | Topic suggester (`src/topics/suggest.py`) | Done | 5 domain-linked proposals with hypotheses + experiments |
-| CLI | Done | `python -m src.cli run --limit 15` |
+| CLI | Done | `python -m src.cli run --limit 15 --aligner embedding` |
 | Markdown report | Done | `reports/latest_run.md` |
-| Tests | Done | 23 pytest tests (all passing) |
+| Tests | Done | 30 pytest tests (all passing) |
 
 ### Latest run results (15 papers, LLM extractor, 2026-07-29)
 
@@ -49,6 +49,8 @@ Prototype scoped to **nucleic acid delivery / lipid nanoparticles (LNPs) / mRNA 
 | Topic proposals | 5 |
 
 Heuristic-only offline mode (no API) on the same 15 papers: **27 claims / 56 evidence / 32 gaps / 5 topics** — so the demo still works without network keys.
+
+Embedding aligner on the same heuristic extracts (2026-07-29 morning): **30 gaps** via MiniLM cosine + Chroma evidence index (`--aligner embedding`), with slightly tighter claim↔evidence matches than pure lexical overlap.
 
 ### Example findings (from latest report)
 
@@ -70,11 +72,14 @@ Other generated topics cover ligand avidity vs specificity for extrahepatic targ
 ### How to reproduce
 
 ```bash
-# Offline demo (no keys)
-python -m src.cli run --limit 15 --fixture --mode heuristic
+# Offline demo (no keys) — lexical aligner
+python -m src.cli run --limit 15 --fixture --mode heuristic --aligner lexical
+
+# Embedding aligner (sentence-transformers MiniLM + Chroma)
+python -m src.cli run --limit 15 --fixture --mode heuristic --aligner embedding
 
 # LLM extraction (uses Keychain / OPENAI_API_KEY if present)
-python -m src.cli run --limit 15 --fixture --mode llm
+python -m src.cli run --limit 15 --fixture --mode llm --aligner auto
 ```
 
 Outputs: `data/processed/*.jsonl`, `reports/latest_run.md`.
@@ -88,17 +93,17 @@ Outputs: `data/processed/*.jsonl`, `reports/latest_run.md`.
 ## What is not done yet (honest)
 
 - Live Semantic Scholar / arXiv pulls hit **HTTP 429** during last refetch; corpus for the demo is the curated 18-paper fixture (15 used via `--limit`). API clients are implemented and will expand the corpus when limits clear or an S2 key is added.
-- Gap alignment still uses lexical similarity (Jaccard + TF-cosine), not embeddings.
 - No formal human eval rubric yet for “is this gap good?”
 - Second domain (e.g. hybrid ncRNA) not started.
+- Memorization held-out benchmark not yet run.
 
 ## Proposed next steps
 
-1. Embedding-based claim–evidence alignment + clustering
-2. Memorization benchmark on post-cutoff held-out papers
-3. Expand to 50+ papers once live APIs are stable
-4. Lightweight HTML report for easier review
-5. Draft a simple human rubric (novelty, testability, biological impact)
+1. Memorization benchmark on post-cutoff held-out papers
+2. Expand to 50+ papers once live APIs are stable
+3. Lightweight HTML report for easier review
+4. Draft a simple human rubric (novelty, testability, biological impact)
+5. Optional second domain slice (hybrid ncRNA)
 
 ## Open questions for you, Prof
 
