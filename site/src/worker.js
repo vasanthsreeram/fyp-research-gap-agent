@@ -5,6 +5,21 @@
 const COOKIE = "fyp_session";
 const MAX_AGE = 7 * 86400;
 
+/** Pretty path → asset file */
+const ROUTES = {
+  "/": "/index.html",
+  "/index.html": "/index.html",
+  "/overview": "/index.html",
+  "/results": "/results.html",
+  "/results.html": "/results.html",
+  "/topics": "/topics.html",
+  "/topics.html": "/topics.html",
+  "/method": "/method.html",
+  "/method.html": "/method.html",
+  "/docs": "/docs.html",
+  "/docs.html": "/docs.html",
+};
+
 function b64url(buf) {
   const bytes = buf instanceof ArrayBuffer ? new Uint8Array(buf) : buf;
   let s = "";
@@ -85,7 +100,7 @@ function loginPage(error = "") {
 </head>
 <body class="login">
 <form class="login-card" method="POST" action="/login" autocomplete="current-password">
-  <div class="kicker" style="font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:10px">Private research · BG4801</div>
+  <div style="font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:10px">Private research · BG4801</div>
   <h1>Research Gap Agent</h1>
   <p>Passphrase-gated multi-page progress board.</p>
   <label for="password">Passphrase</label>
@@ -96,17 +111,34 @@ function loginPage(error = "") {
 </body></html>`;
 }
 
-const PUBLIC_PREFIXES = ["/css/", "/js/", "/data/", "/diagrams/", "/favicon"];
+function isStaticPath(pathname) {
+  return (
+    pathname.startsWith("/css/") ||
+    pathname.startsWith("/js/") ||
+    pathname.startsWith("/data/") ||
+    pathname.startsWith("/diagrams/")
+  );
+}
+
+async function asset(env, request, path) {
+  const u = new URL(path, "https://assets.local");
+  // Prefer ASSETS.fetch with path-only Request (Workers Assets API)
+  const res = await env.ASSETS.fetch(new Request(u.toString(), request));
+  return res;
+}
 
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
+    let path = url.pathname;
+    if (path.length > 1 && path.endsWith("/")) path = path.slice(0, -1);
+
     const secret = env.SESSION_SECRET || env.SITE_PASSWORD || "dev";
     const password = env.SITE_PASSWORD || "";
     const cookies = parseCookies(request.headers.get("Cookie") || "");
     const session = await verifySession(cookies[COOKIE], secret);
 
-    if (url.pathname === "/logout") {
+    if (path === "/logout") {
       return new Response(null, {
         status: 302,
         headers: {
@@ -116,7 +148,7 @@ export default {
       });
     }
 
-    if (url.pathname === "/login" && request.method === "POST") {
+    if (path === "/login" && request.method === "POST") {
       const form = await request.formData();
       const pw = String(form.get("password") || "");
       if (!password || pw !== password) {
@@ -138,11 +170,11 @@ export default {
       });
     }
 
-    // Allow static assets only when authenticated (except nothing public)
+    // CSS for login always allowed
     if (!session) {
-      // Still serve CSS for login page
-      if (url.pathname === "/css/board.css") {
-        return env.ASSETS.fetch(request);
+      if (path === "/css/board.css") {
+        const res = await asset(env, request, path);
+        return res;
       }
       return new Response(loginPage(), {
         headers: {
@@ -153,21 +185,35 @@ export default {
       });
     }
 
-    // Authenticated: map / to index.html
-    let assetUrl = url;
-    if (url.pathname === "/" || url.pathname === "") {
-      assetUrl = new URL("/index.html", url.origin);
+    // Static assets
+    if (isStaticPath(path)) {
+      const res = await asset(env, request, path);
+      if (res.status === 404) return new Response("Not found: " + path, { status: 404 });
+      const headers = new Headers(res.headers);
+      headers.set("X-Robots-Tag", "noindex");
+      return new Response(res.body, { status: res.status, headers });
     }
 
-    const res = await env.ASSETS.fetch(new Request(assetUrl, request));
-    if (res.status === 404) {
+    // HTML pages (pretty or .html)
+    const file = ROUTES[path];
+    if (!file) {
       return new Response("Not found", { status: 404 });
     }
-    const headers = new Headers(res.headers);
-    headers.set("X-Robots-Tag", "noindex, nofollow");
-    if (url.pathname.endsWith(".html") || url.pathname === "/") {
-      headers.set("Cache-Control", "no-store");
+
+    let res = await asset(env, request, file);
+    // Retry once on flaky asset miss
+    if (res.status === 404) {
+      await new Promise((r) => setTimeout(r, 50));
+      res = await asset(env, request, file);
     }
-    return new Response(res.body, { status: res.status, headers });
+    if (res.status === 404) {
+      return new Response("Page missing: " + file, { status: 404 });
+    }
+    const headers = new Headers(res.headers);
+    headers.set("Content-Type", "text/html; charset=utf-8");
+    headers.set("Cache-Control", "no-store");
+    headers.set("X-Robots-Tag", "noindex, nofollow");
+    headers.set("X-FYP-Page", file);
+    return new Response(res.body, { status: 200, headers });
   },
 };
