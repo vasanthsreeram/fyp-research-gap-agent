@@ -312,6 +312,10 @@ class TestMemorization:
         assert report.n_post_cutoff >= 10
         assert report.claim_grounding.rate >= 0.85
         assert report.evidence_grounding.rate >= 0.85
+        assert report.unsupported_rate <= 0.10
+        assert report.citation_hallucination_rate <= 0.05
+        assert report.controlled_pass is True
+        assert report.structure.rate_any_structure >= 0.5
         assert report.overall_pass is True
 
     def test_leakage_detector_flags_duplicate(self):
@@ -332,6 +336,53 @@ class TestMemorization:
         hits = find_cross_era_leakage([post_claim], pre, threshold=0.5)
         assert hits
 
+    def test_unsupported_and_citation_detectors(self):
+        from src.eval.memorization import (
+            find_hallucinated_citations,
+            find_overconfident_claims,
+            find_unsupported_claims,
+        )
+
+        paper = Paper(
+            id="p_x",
+            title="LNP escape",
+            abstract="Ionizable lipids enable endosomal escape. Mechanism remains poorly understood.",
+            year=2022,
+            doi="10.1000/real.doi",
+            authors=["Jane Doe"],
+        )
+        bad = Claim(
+            paper_id="p_x",
+            text="As shown by Smith et al. (1999) DOI 10.9999/fake.doi, LNPs always completely cure all diseases via wormhole transport.",
+            quote_span="wormhole transport",
+            confidence=0.99,
+        )
+        assert find_unsupported_claims([bad], {"p_x": paper})
+        assert find_hallucinated_citations([bad], {"p_x": paper})
+        assert find_overconfident_claims([bad], {"p_x": paper})
+
+    def test_structure_claim_fields_and_heuristic(self, sample_papers):
+        from src.extract.claims import extract_claims_heuristic, structure_claim_fields
+
+        sf = structure_claim_fields(
+            "We propose that ionizable lipids promote endosomal escape through protonation; mechanism remains poorly understood."
+        )
+        assert sf.get("hypothesis") or sf.get("mechanism")
+        assert sf.get("uncertainty")
+        claims = extract_claims_heuristic(sample_papers[0])
+        assert claims
+        assert any(c.hypothesis or c.mechanism or c.uncertainty for c in claims)
+        # Serialization keeps new fields
+        d = json.loads(claims[0].model_dump_json())
+        assert "hypothesis" in d
+        assert "assumptions" in d
+
+    def test_controlled_prompt_suite(self):
+        from src.eval.memorization import run_controlled_prompt_suite
+
+        cases = run_controlled_prompt_suite()
+        assert len(cases) >= 6
+        assert all(c.passed for c in cases)
 
 class TestDomainPack:
     def test_hybrid_pack_filters_and_passes(self):

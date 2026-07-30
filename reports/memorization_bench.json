@@ -19,11 +19,90 @@
   },
   "leakage_hits": [],
   "leakage_rate": 0.0,
+  "unsupported_hits": [],
+  "unsupported_rate": 0.0,
+  "citation_hits": [],
+  "citation_hallucination_rate": 0.0,
+  "overconfidence_hits": [],
+  "overconfidence_rate": 0.0,
+  "structure": {
+    "n_claims": 88,
+    "n_with_hypothesis": 55,
+    "n_with_evidence": 39,
+    "n_with_mechanism": 35,
+    "n_with_assumptions": 0,
+    "n_with_uncertainty": 33,
+    "n_fully_slotted": 18,
+    "rate_hypothesis": 0.625,
+    "rate_any_structure": 1.0
+  },
   "closed_book": [],
   "closed_book_flagged": 0,
+  "controlled_cases": [
+    {
+      "case_id": "ctrl_grounded_heuristic",
+      "name": "heuristic claims grounded in source",
+      "passed": true,
+      "detail": "n_claims=2"
+    },
+    {
+      "case_id": "ctrl_structure_slots",
+      "name": "structured hypothesis/mechanism/uncertainty present",
+      "passed": true,
+      "detail": "hyp=1 mech=2 unc=1"
+    },
+    {
+      "case_id": "ctrl_unsupported_detector",
+      "name": "flags invented unsupported claim",
+      "passed": true,
+      "detail": "hits=1"
+    },
+    {
+      "case_id": "ctrl_citation_detector",
+      "name": "flags hallucinated DOI/cite",
+      "passed": true,
+      "detail": "hits=3 kinds=['doi', 'year', 'cite']"
+    },
+    {
+      "case_id": "ctrl_overconfidence_detector",
+      "name": "flags absolute + high-confidence claim",
+      "passed": true,
+      "detail": "hits=1"
+    },
+    {
+      "case_id": "ctrl_structure_fn",
+      "name": "structure_claim_fields fills hypothesis/mechanism",
+      "passed": true,
+      "detail": "{'hypothesis': 'We propose that ionizable lipids promote', 'evidence': None, 'mechanism': 'We propose that ionizable lipids promote', 'assumptions': [], 'uncertainty': None}"
+    },
+    {
+      "case_id": "ctrl_supported_passes",
+      "name": "grounded claim not flagged unsupported",
+      "passed": true,
+      "detail": "hits=0"
+    }
+  ],
+  "controlled_pass": true,
   "pass_grounding": true,
   "pass_leakage": true,
+  "pass_unsupported": true,
+  "pass_citations": true,
+  "pass_overconfidence": true,
   "overall_pass": true,
-  "notes": [],
-  "generated_at": "2026-07-30T02:05:52.799648Z"
+  "notes": [
+    "Prefer open/small models (e.g. gpt-4o-mini, local GGUF) for closed-book probes; set OPENAI_MODEL. Offline path stays model-free."
+  ],
+  "recommended_metrics": [
+    "Claim quote-grounding rate (\u226585% pass)",
+    "Evidence quote-grounding rate (\u226585% pass)",
+    "Cross-era leakage rate on post-cutoff claims (\u226415% pass)",
+    "Unsupported-claim rate (\u226410% pass)",
+    "Hallucinated-citation rate (\u22645% pass)",
+    "Overconfidence flag rate (\u226420% advisory; \u226435% hard fail)",
+    "Structure coverage: % claims with hypothesis; % with \u22653 slots",
+    "Post-cutoff slice size (n papers year\u2265cutoff; target \u226510)",
+    "Closed-book title\u2192abstract overlap flag rate (optional; open/small models preferred)",
+    "Controlled synthetic suite pass (all cases)"
+  ],
+  "generated_at": "2026-07-30T13:09:39.263988Z"
 }

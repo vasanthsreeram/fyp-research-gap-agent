@@ -7,12 +7,12 @@
 
 ## Status
 
-Stage 2: modular packages, claim-recall, LLM path, embedding gap alignment, memorization bench, **52-paper corpus**, **dual-domain pack eval**, **human feedback harness**.
+Stage 2: modular packages, claim-recall, LLM path, embedding gap alignment, **memorization safeguards v2**, **52-paper corpus**, **dual-domain pack eval**, **human feedback harness**.
 
-Latest embedding run (`--limit 52 --aligner embedding`): **52 papers → 88 claims → 160 evidence → 89 gaps → 5 topics**.  
-Domain pack **PASS** (LNP core / hybrid ncRNA / gene editing). Mem-bench **PASS**. Tests: **37 passed**.
+Latest heuristic extract on fixture: **52 papers → 88 structured claims → 160 evidence**.  
+Mem-bench **PASS** (ground 100%, unsup/cite/over/leak 0%, controlled 7/7). Domain pack **PASS**. Tests: **40 passed**.
 
-See [`docs/STATUS.md`](docs/STATUS.md) and [`docs/supervisor-update-draft.md`](docs/supervisor-update-draft.md).
+See [`docs/STATUS.md`](docs/STATUS.md), [`docs/memorization-eval.md`](docs/memorization-eval.md), and [`docs/supervisor-update-draft.md`](docs/supervisor-update-draft.md).
 
 ## Quick start
 
@@ -26,8 +26,10 @@ python -m src.cli run --limit 52 --fixture --mode heuristic --aligner embedding 
 # Domain pack eval (LNP core vs hybrid ncRNA)
 python -m src.cli domain-pack --limit 52 --fixture
 
-# Memorization / grounding bench
+# Memorization / grounding bench (expanded)
 python -m src.cli mem-bench --fixture --limit 52 --cutoff-year 2024
+# optional closed-book with small model:
+# OPENAI_MODEL=gpt-4o-mini python -m src.cli mem-bench --fixture --closed-book
 
 # Human feedback on a gap/topic
 python -m src.cli feedback-add --type gap --id gap_xxx --rating 5 --labels surprising,testable
@@ -75,13 +77,18 @@ Second pack: hybrid/bifunctional ncRNA, gene-editing delivery — experimentally
 ## Memorization safeguards
 
 - All extracts carry `paper_id` + `quote_span`
+- Claims structured into **hypothesis / evidence / mechanism / assumptions / uncertainty**
 - Offline heuristic path requires no LLM
 - Post-cutoff held-out papers (21× ≥2024 in fixture) + cross-era leakage check
-- Optional closed-book LLM probe: `mem-bench --closed-book`
+- Detectors: unsupported claims, hallucinated citations (DOI/arXiv/cite-year), overconfidence
+- Controlled synthetic suite locked in pytest (7 cases)
+- Optional closed-book LLM probe: `mem-bench --closed-book` (prefer open/small models via `OPENAI_MODEL`)
+- Plan + metrics: [`docs/memorization-eval.md`](docs/memorization-eval.md)
 
 ## Docs
 
 - [`docs/fyp-brief.md`](docs/fyp-brief.md) — original framing
 - [`docs/STATUS.md`](docs/STATUS.md) — living board
 - [`docs/PROGRESS_LOG.md`](docs/PROGRESS_LOG.md) — build log
+- [`docs/memorization-eval.md`](docs/memorization-eval.md) — mem safeguards plan, tests, metrics
 - [`docs/supervisor-update-draft.md`](docs/supervisor-update-draft.md) — email/meeting bullets

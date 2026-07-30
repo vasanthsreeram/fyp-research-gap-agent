@@ -16,9 +16,9 @@ Updated by daily progress cron + human/call notes.
 - Write notes + propose approaches; formal start ~August; early progress welcome
 - Audio/transcript: ~/.openclaw/workspace/tmp/fyp-prof-meeting/
 
-## Current stage: **Stage 2** (2026-07-30 11:01 SGT)
+## Current stage: **Stage 2** (2026-07-30 21:10 SGT)
 
-Corpus 52 + dual-domain pack eval (LNP core vs hybrid ncRNA) + human feedback harness. Mem-bench still PASS on expanded held-out set (21 post-2024). **Re-verified E2E before 14:00 supervisor email** (`run_d4b35242b895`).
+Wave 6 — **memorization safeguards v2**: structured claims + expanded mem harness (unsupported / hallucinated cites / overconfidence / controlled suite). Docs: `docs/memorization-eval.md`.
 
 ### Stage checklist
 - [x] S0 Freeze scope 1-pager for prof (problem, domain, eval, risks)
@@ -41,73 +41,68 @@ Corpus 52 + dual-domain pack eval (LNP core vs hybrid ncRNA) + human feedback ha
 - [x] **S2 Expand corpus to 50+ papers** (fixture offline path; 52 papers, 21 post-2024) — live S2 still rate-limit sensitive without key
 - [x] **S2 Full second-domain eval pack** (`src/eval/domain_pack.py`; LNP core / hybrid ncRNA / gene editing gates)
 - [x] **S2 Add eval harness with human feedback collection** (`feedback-add` / `feedback-summary`; JSONL store)
+- [x] **S2 Memorization safeguards v2** — unsupported claims, hallucinated citations, overconfidence, structured claim slots, controlled suite (`docs/memorization-eval.md`)
 - [ ] Register BG4801 when eligible
 - [ ] Live S2 API key path for non-fixture 50+ refresh
-- [ ] Closed-book LLM mem probe on held-out titles (optional)
+- [ ] Closed-book LLM mem probe on held-out titles (optional; run with small/open model)
 - [ ] Richer hybrid-specific topic ranking (pack-aware suggester)
 
-### What shipped (2026-07-30 11:01 SGT — pre-meeting re-verify)
+### What shipped (2026-07-30 21:10 SGT — wave 6 mem safeguards)
 
 | Metric | Value |
 |--------|-------|
 | Papers | **52** (fixture; **21** year≥2024 held-out) |
-| Claims | **88** |
+| Claims (heuristic) | **88** (structured slots filled) |
 | Evidence | **160** |
-| Gaps | **89** |
-| Topics | **5** |
-| pytest | **37 passed** |
-| Aligner | MiniLM cosine + Chroma |
-| Mem-bench | **PASS** — grounding 100%/100%, leakage 0% |
-| Domain pack | **PASS** — lnp_core 33p/75g · hybrid_ncrna 23p/34g · gene_editing 10p/19g |
-| Feedback | schema + CLI; 2 demo seed ratings |
-| Reports | `latest_run.md/html`, `memorization_bench.md`, `domain_pack.md`, `feedback_summary.md` |
-| Latest run | `run_d4b35242b895` (heuristic extract, embedding aligner) |
+| pytest | **40 passed** (was 37) |
+| Mem-bench | **PASS** — ground 100%/100%, unsup 0%, cite 0%, over 0%, leak 0%, controlled 7/7 |
+| Structure | hyp=62%, any=100%, full(≥3 slots)=18/88 |
+| Docs | `docs/memorization-eval.md` plan + metrics + how-to-run |
 
-**New modules (Stage 2)**
+**New / updated (wave 6)**
 ```
-src/eval/domain_pack.py   # dual/triple domain coverage gates
-src/eval/feedback.py      # Likert + labels JSONL harness
-src/eval/memorization.py  # quote grounding + leakage + optional closed-book
-models.FeedbackRecord     # feedback schema
-CLI: domain-pack | feedback-add | feedback-summary | mem-bench
-CLI run: --domain-pack/--no-domain-pack --aligner embedding|lexical
-fixtures: 30 → 52 (hybrid ncRNA / editing / async escape focus)
-site/: passphrase-gated multi-page board → https://fyp.vasanth.my
+src/models.py              # Claim: hypothesis, evidence, mechanism, assumptions, uncertainty
+src/extract/claims.py      # structure_claim_fields + grounded quote_span + LLM schema
+src/eval/memorization.py   # unsupported / citation / overconfidence / structure / controlled suite
+src/cli.py                 # mem-bench --controlled; richer mem metrics in run
+tests/test_pipeline.py     # +3 mem/structure tests
+docs/memorization-eval.md  # plan, test cases, recommended metrics
 ```
 
 **Demo commands**
 ```bash
-python -m src.cli run --limit 52 --fixture --mode heuristic --aligner embedding --format both
-python -m src.cli domain-pack --limit 52 --fixture --aligner lexical
 python -m src.cli mem-bench --fixture --limit 52 --cutoff-year 2024
-python -m src.cli feedback-add --type gap --id gap_xxx --rating 5 --labels surprising,testable
-python -m src.cli feedback-summary
+python -m src.cli run --limit 52 --fixture --mode heuristic --aligner embedding --format both
 python -m pytest tests/ -q
-open reports/latest_run.html
+# optional closed-book (API key; prefer small model):
+# OPENAI_MODEL=gpt-4o-mini python -m src.cli mem-bench --fixture --limit 21 --closed-book
+open reports/memorization_bench.md
 ```
 
-### Latest run (`run_d4b35242b895`)
-- Top gaps: extrahepatic + endosomal escape co-limitation; bulk extrahepatic targeting; minimal extrahepatic after ADAR guides; nano-bio fundamentals; brain delivery barrier
-- Hybrid pack gaps: payload co-delivery untested sync claim; PNA endosomal entrapment; structured RNA manufacturing; RNP competition under-tested
-- Top topics: ligand avidity; innate immune decoupling; endosomal escape mechanism; cascade bottleneck; multi-dose PK
-- Mem-bench: 31 pre / 21 post cutoff; grounding 88/88 claims, 160/160 evidence; leakage 0%
+### Latest mem-bench (wave 6)
+- Cutoff 2024 · pre=31 · post=21
+- Claim grounding 88/88 · Evidence 160/160
+- Unsupported 0 · Hallucinated citations 0 · Overconfidence 0 · Leakage 0
+- Controlled synthetic suite 7/7 PASS
+- Structure coverage: hypothesis 62%, any slot 100%
 
 ### Known blockers / honesty notes
 - **Prototype stage** — heuristic extractor + fixture corpus for reliable offline demos; not a production lit-mining system.
 - Live Semantic Scholar / arXiv still fragile without API key (429s); fixture path is demo-reliable. Backoff/retry added.
 - OpenAI key resolved from Keychain `openclaw/tgcallskill/openai-api-key` (not committed) for LLM extract / optional closed-book probe.
-- Closed-book LLM memorization probe not run in default cron path (offline-first); enable with `mem-bench --closed-book`.
+- Closed-book LLM memorization probe not run in default cron path (offline-first); enable with `mem-bench --closed-book`. Prefer open/small models.
+- Detectors are **proxy safeguards**, not proof of non-memorization — see `docs/memorization-eval.md`.
 - Hybrid pack still shares many LNP-tagged topics — pack-aware topic ranking is next polish.
 - Do not claim wet-lab results; software/methods/prototype only.
 
 ## Next supervisor meeting: **30 July 2026, 14:00 SGT**
 - Deliverable: `docs/EMAIL_TO_SUPERVISOR.md` + `docs/supervisor-update-draft.md`
-- Demo: Pipeline run (52) + dual-domain pack PASS + HTML report + mem-bench PASS + feedback CLI
+- Demo: Pipeline run (52) + dual-domain pack + HTML report + **mem-bench v2** + feedback CLI
 - Board: https://fyp.vasanth.my
 - Questions: domain scope (LNP vs hybrid ncRNA weight), eval rubric labels, memorization rigor, next steps
 
 ## Last automated progress
-- 2026-07-30 11:01 SGT — Pre-meeting E2E re-run `run_d4b35242b895`: 52→88→160→89 gaps→5 topics; mem PASS; domain pack PASS; 37 tests; email draft written for 14:00 send.
+- 2026-07-30 21:10 SGT — Wave 6 memorization safeguards: structured claims + unsupported/citation/overconfidence detectors + controlled suite; mem PASS; 40 tests; `docs/memorization-eval.md`.
 
 ## Daily loop
 - **10:00 SGT** — autonomous coding progress on next unchecked item; commit/push; update this file

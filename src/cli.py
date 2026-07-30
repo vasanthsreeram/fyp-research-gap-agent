@@ -227,13 +227,17 @@ def run(
             all_evidence,
             cutoff_year=cutoff_year,
             run_closed_book=False,
+            run_controlled=True,
         )
         mem_path = REPORTS_DIR / "memorization_bench.md"
         save_report(mem_report, mem_path)
         logger.info(
-            "Mem bench: grounding claim=%.0f%% evid=%.0f%% leakage=%.0f%% overall=%s",
+            "Mem bench: ground c=%.0f%% e=%.0f%% unsup=%.0f%% cite=%.0f%% over=%.0f%% leak=%.0f%% overall=%s",
             100 * mem_report.claim_grounding.rate,
             100 * mem_report.evidence_grounding.rate,
+            100 * mem_report.unsupported_rate,
+            100 * mem_report.citation_hallucination_rate,
+            100 * mem_report.overconfidence_rate,
             100 * mem_report.leakage_rate,
             "PASS" if mem_report.overall_pass else "FAIL",
         )
@@ -284,7 +288,9 @@ def run(
     if mem_report is not None:
         print(
             f"  Mem-bench: {'PASS' if mem_report.overall_pass else 'FAIL'} "
-            f"(claim-ground {mem_report.claim_grounding.rate:.0%}, "
+            f"(ground {mem_report.claim_grounding.rate:.0%}, "
+            f"unsup {mem_report.unsupported_rate:.0%}, "
+            f"cite {mem_report.citation_hallucination_rate:.0%}, "
             f"post-cutoff n={mem_report.n_post_cutoff})"
         )
     print(f"  Reports: {', '.join(str(p) for p in written)}")
@@ -348,6 +354,7 @@ def mem_bench_cmd(
     mode: str = typer.Option("heuristic", "--mode", "-m", help="Extraction mode"),
     cutoff_year: int = typer.Option(2024, "--cutoff-year"),
     closed_book: bool = typer.Option(False, "--closed-book", help="Run optional LLM closed-book probe"),
+    controlled: bool = typer.Option(True, "--controlled/--no-controlled", help="Run synthetic controlled cases"),
     limit: int = typer.Option(50, "--limit", "-n"),
     use_fixture: bool = typer.Option(True, "--fixture/--no-fixture", help="Load fixture corpus"),
 ):
@@ -375,6 +382,7 @@ def mem_bench_cmd(
         evidence,
         cutoff_year=cutoff_year,
         run_closed_book=closed_book,
+        run_controlled=controlled,
     )
     out = REPORTS_DIR / "memorization_bench.md"
     save_report(report, out)

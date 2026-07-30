@@ -11,51 +11,53 @@
 | 2026-07-29 01:11 | wave 2 | Modular packages + claim recall + LLM run |
 | 2026-07-29 10:05 | wave 3 | Embedding gap alignment (MiniLM + Chroma) |
 | 2026-07-30 07:38 | wave 4 | Memorization bench + HTML report + corpus 30 |
-| 2026-07-30 10:06 | **wave 5** | Corpus 52 + domain pack + human feedback |
+| 2026-07-30 10:06 | wave 5 | Corpus 52 + domain pack + human feedback |
 | 2026-07-30 11:01 | pre-meeting | E2E re-verify `run_d4b35242b895` + supervisor email draft |
+| 2026-07-30 21:10 | **wave 6** | Mem safeguards v2: structured claims + detectors + controlled suite |
 
-### Wave 5 summary (2026-07-30 10:06 SGT)
+### Wave 6 summary (2026-07-30 21:10 SGT)
 
-**Goal:** Close remaining Stage-2 checklist items before 14:00 supervisor meeting — 50+ corpus, second-domain pack, feedback harness.
+**Goal:** Memorization safeguards depth — distinguish memorization vs grounded reasoning; structured claims; eval metrics doc.
 
 **New / updated:**
 | Path | Role |
 |------|------|
-| `src/fixtures/papers_fixture.jsonl` | 30 → **52** (21× year≥2024; 19 hybrid/ncRNA-tagged) |
-| `src/eval/domain_pack.py` | LNP core / hybrid ncRNA / gene editing coverage gates |
-| `src/eval/feedback.py` | Likert 1–5 + labels JSONL store + summary |
-| `src/models.py` | `FeedbackRecord`, `FeedbackTargetType` |
-| `src/cli.py` | `domain-pack`, `feedback-add`, `feedback-summary`; run `--domain-pack` |
-| `src/extract/claims.py` | Domain tags: hybrid_ncrna, sirna, gene_therapy, immunogenicity |
-| `src/gap/score.py` | Expanded hybrid_ncrna keyword list |
-| `src/topics/suggest.py` | Templates: ncrna kinetic gating, async_escape |
-| `tests/test_pipeline.py` | 34 → **37** tests |
-| `reports/domain_pack.md` | Pack eval artifact |
-| `reports/feedback_summary.md` | Feedback aggregate |
+| `src/models.py` | Claim slots: hypothesis, evidence, mechanism, assumptions, uncertainty |
+| `src/extract/claims.py` | `structure_claim_fields`, better quote grounding, LLM JSON schema |
+| `src/eval/memorization.py` | unsupported / citation / overconfidence / structure / controlled suite |
+| `src/cli.py` | `mem-bench --controlled/--no-controlled`; richer run logs |
+| `tests/test_pipeline.py` | 37 → **40** tests |
+| `docs/memorization-eval.md` | Plan, test cases, recommended metrics, how-to-run |
+| `reports/memorization_bench.md` | Expanded report |
 
-**Pipeline counts (heuristic extract, limit 52, embedding aligner):**
+**Mem-bench (heuristic, limit 52, cutoff 2024):**
 
 | Metric | Value |
 |--------|-------|
-| Papers | 52 |
-| Claims | 88 |
-| Evidence | 160 |
-| Gaps | 89 |
-| Topics | 5 |
-| Mem-bench | PASS (100%/100% ground, 0% leak, post-cutoff n=21) |
-| Domain pack | PASS (core 33/75, hybrid 23/34, editing 10/19) |
-| pytest | 37 passed |
+| Papers | 52 (pre 31 / post 21) |
+| Claim / evidence grounding | 100% / 100% |
+| Unsupported / cite / over / leak | 0% / 0% / 0% / 0% |
+| Structure | hyp 62% · any 100% · full≥3 18/88 |
+| Controlled suite | 7/7 PASS |
+| Overall | **PASS** |
+| pytest | 40 passed |
 
-### Wave 4 summary (2026-07-30 07:38 SGT)
+**How to run:**
+```bash
+python -m src.cli mem-bench --fixture --limit 52 --cutoff-year 2024
+python -m pytest tests/test_pipeline.py::TestMemorization -q
+```
 
-Memorization bench + HTML report + corpus 18→30. See prior STATUS.
+### Wave 5 summary (2026-07-30 10:06 SGT)
+
+Corpus 52 + domain pack + feedback harness. See prior STATUS.
 
 ### Live API note
 - S2 + arXiv previously returned **HTTP 429**; backoff/retry now in client. Fixture fallback remains default for demos without key.
 
 ### Next coding session
 - [ ] Live corpus expansion with S2 API key
-- [ ] Run closed-book LLM probe on held-out titles and log risk
+- [ ] Run closed-book LLM probe on held-out titles with small/open model and log risk
 - [ ] Pack-aware topic ranking (prefer hybrid templates on hybrid gaps)
 - [ ] Optional: deploy refreshed `site/public/data` bundle to fyp.vasanth.my
 - [ ] Collect real supervisor ratings via feedback CLI after meeting

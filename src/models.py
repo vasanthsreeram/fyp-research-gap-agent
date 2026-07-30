@@ -66,7 +66,12 @@ class Paper(BaseModel):
 
 
 class Claim(BaseModel):
-    """A theoretical / mechanistic claim extracted from a paper."""
+    """A theoretical / mechanistic claim extracted from a paper.
+
+    Structured fields (hypothesis / evidence / mechanism / assumptions /
+    uncertainty) support grounded gap reasoning and memorization audits.
+    `text` remains the primary free-form claim string for scoring.
+    """
 
     id: str = Field(default_factory=lambda: _id("claim"))
     paper_id: str
@@ -76,6 +81,12 @@ class Claim(BaseModel):
     confidence: float = Field(default=0.5, ge=0.0, le=1.0)
     tags: list[str] = Field(default_factory=list)
     extractor: str = "heuristic"  # heuristic | llm
+    # Structured claim decomposition (optional; empty when not filled)
+    hypothesis: Optional[str] = None
+    evidence: Optional[str] = None  # supporting evidence stated in-paper
+    mechanism: Optional[str] = None
+    assumptions: list[str] = Field(default_factory=list)
+    uncertainty: Optional[str] = None  # hedges, unknowns, limits of claim
 
 
 class Evidence(BaseModel):
