@@ -11,7 +11,8 @@
 | 2026-07-29 01:11 | wave 2 | Modular packages + claim recall + LLM run |
 | 2026-07-29 10:05 | wave 3 | Embedding gap alignment (MiniLM + Chroma) |
 | 2026-07-30 07:38 | wave 4 | Memorization bench + HTML report + corpus 30 |
-| 2026-07-30 10:06 | **wave 5 (this)** | Corpus 52 + domain pack + human feedback |
+| 2026-07-30 10:06 | **wave 5** | Corpus 52 + domain pack + human feedback |
+| 2026-07-30 11:01 | pre-meeting | E2E re-verify `run_d4b35242b895` + supervisor email draft |
 
 ### Wave 5 summary (2026-07-30 10:06 SGT)
 

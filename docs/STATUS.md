@@ -16,9 +16,9 @@ Updated by daily progress cron + human/call notes.
 - Write notes + propose approaches; formal start ~August; early progress welcome
 - Audio/transcript: ~/.openclaw/workspace/tmp/fyp-prof-meeting/
 
-## Current stage: **Stage 2** (2026-07-30 10:06 SGT)
+## Current stage: **Stage 2** (2026-07-30 11:01 SGT)
 
-Corpus 52 + dual-domain pack eval (LNP core vs hybrid ncRNA) + human feedback harness. Mem-bench still PASS on expanded held-out set (21 post-2024).
+Corpus 52 + dual-domain pack eval (LNP core vs hybrid ncRNA) + human feedback harness. Mem-bench still PASS on expanded held-out set (21 post-2024). **Re-verified E2E before 14:00 supervisor email** (`run_d4b35242b895`).
 
 ### Stage checklist
 - [x] S0 Freeze scope 1-pager for prof (problem, domain, eval, risks)
@@ -46,7 +46,7 @@ Corpus 52 + dual-domain pack eval (LNP core vs hybrid ncRNA) + human feedback ha
 - [ ] Closed-book LLM mem probe on held-out titles (optional)
 - [ ] Richer hybrid-specific topic ranking (pack-aware suggester)
 
-### What shipped (2026-07-30 10:06 SGT — corpus 52 + domain pack + feedback)
+### What shipped (2026-07-30 11:01 SGT — pre-meeting re-verify)
 
 | Metric | Value |
 |--------|-------|
@@ -61,15 +61,18 @@ Corpus 52 + dual-domain pack eval (LNP core vs hybrid ncRNA) + human feedback ha
 | Domain pack | **PASS** — lnp_core 33p/75g · hybrid_ncrna 23p/34g · gene_editing 10p/19g |
 | Feedback | schema + CLI; 2 demo seed ratings |
 | Reports | `latest_run.md/html`, `memorization_bench.md`, `domain_pack.md`, `feedback_summary.md` |
+| Latest run | `run_d4b35242b895` (heuristic extract, embedding aligner) |
 
-**New modules**
+**New modules (Stage 2)**
 ```
 src/eval/domain_pack.py   # dual/triple domain coverage gates
 src/eval/feedback.py      # Likert + labels JSONL harness
+src/eval/memorization.py  # quote grounding + leakage + optional closed-book
 models.FeedbackRecord     # feedback schema
-CLI: domain-pack | feedback-add | feedback-summary
-CLI run: --domain-pack/--no-domain-pack
+CLI: domain-pack | feedback-add | feedback-summary | mem-bench
+CLI run: --domain-pack/--no-domain-pack --aligner embedding|lexical
 fixtures: 30 → 52 (hybrid ncRNA / editing / async escape focus)
+site/: passphrase-gated multi-page board → https://fyp.vasanth.my
 ```
 
 **Demo commands**
@@ -83,26 +86,28 @@ python -m pytest tests/ -q
 open reports/latest_run.html
 ```
 
-### Latest run (`run_9c4ac94a48a9`)
+### Latest run (`run_d4b35242b895`)
 - Top gaps: extrahepatic + endosomal escape co-limitation; bulk extrahepatic targeting; minimal extrahepatic after ADAR guides; nano-bio fundamentals; brain delivery barrier
 - Hybrid pack gaps: payload co-delivery untested sync claim; PNA endosomal entrapment; structured RNA manufacturing; RNP competition under-tested
 - Top topics: ligand avidity; innate immune decoupling; endosomal escape mechanism; cascade bottleneck; multi-dose PK
-- Mem-bench: 31 pre / 21 post cutoff; grounding 88/88 claims, 160/160 evidence
+- Mem-bench: 31 pre / 21 post cutoff; grounding 88/88 claims, 160/160 evidence; leakage 0%
 
-### Known blockers
+### Known blockers / honesty notes
+- **Prototype stage** — heuristic extractor + fixture corpus for reliable offline demos; not a production lit-mining system.
 - Live Semantic Scholar / arXiv still fragile without API key (429s); fixture path is demo-reliable. Backoff/retry added.
 - OpenAI key resolved from Keychain `openclaw/tgcallskill/openai-api-key` (not committed) for LLM extract / optional closed-book probe.
 - Closed-book LLM memorization probe not run in default cron path (offline-first); enable with `mem-bench --closed-book`.
 - Hybrid pack still shares many LNP-tagged topics — pack-aware topic ranking is next polish.
+- Do not claim wet-lab results; software/methods/prototype only.
 
 ## Next supervisor meeting: **30 July 2026, 14:00 SGT**
-- Deliverable: `docs/supervisor-update-draft.md`
+- Deliverable: `docs/EMAIL_TO_SUPERVISOR.md` + `docs/supervisor-update-draft.md`
 - Demo: Pipeline run (52) + dual-domain pack PASS + HTML report + mem-bench PASS + feedback CLI
 - Board: https://fyp.vasanth.my
 - Questions: domain scope (LNP vs hybrid ncRNA weight), eval rubric labels, memorization rigor, next steps
 
 ## Last automated progress
-- 2026-07-30 10:06 SGT — Corpus 30→52; domain pack eval PASS (core/hybrid/editing); human feedback harness; E2E 52→88→160→89 gaps→5 topics; mem PASS (21 post-cutoff); 37 tests.
+- 2026-07-30 11:01 SGT — Pre-meeting E2E re-run `run_d4b35242b895`: 52→88→160→89 gaps→5 topics; mem PASS; domain pack PASS; 37 tests; email draft written for 14:00 send.
 
 ## Daily loop
 - **10:00 SGT** — autonomous coding progress on next unchecked item; commit/push; update this file
