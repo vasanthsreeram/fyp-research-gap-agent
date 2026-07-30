@@ -16,13 +16,17 @@ Following our early-July discussion on an AI framework for finding theory↔expe
 **Passphrase:** `TheoryMeetsBench-LNP-26`  
 **Code:** https://github.com/vasanthsreeram/fyp-research-gap-agent  
 
-**In short:** pipeline ingests papers → extracts claims/evidence (with quote spans) → aligns gaps (lexical or MiniLM embeddings) → proposes testable topics. Domain slice: NA delivery / LNP / mRNA, with early hybrid ncRNA / gene-editing fixture papers.
+**In short:** pipeline ingests papers → extracts claims/evidence (with quote spans) → aligns gaps (lexical or MiniLM embeddings) → proposes testable topics. Domain slice: NA delivery / LNP / mRNA **plus** a second-domain pack on hybrid/bifunctional ncRNA and gene-editing delivery.
 
-**Latest offline demo run (30 papers):** **50 claims, 105 evidence, 56 gaps, 5 topics** · extractor heuristic · aligner embedding · **34 tests green**.
+**Latest offline demo run (52 papers):** **88 claims, 160 evidence, 89 gaps, 5 topics** · extractor heuristic · aligner embedding · **37 tests green**.
 
-**Memorization safeguards (your July note):** quote-span grounding **100%** on claims and evidence; **7 post-2024 held-out** papers; cross-era leakage **0%**; overall mem-bench **PASS**. Optional closed-book LLM probe is wired but off by default for offline demos.
+**Dual-domain pack (PASS):** LNP-core 33 papers / 75 gaps · hybrid ncRNA 23 / 34 · gene editing 10 / 19 (16 of 23 hybrid papers are post-2024).
 
-**Still open:** live API rate limits (fixture corpus for reliable demos; S2 backoff/retry added), human eval rubric, deeper second-domain pack, BG4801 registration when eligible.
+**Memorization safeguards (your July note):** quote-span grounding **100%** on claims and evidence; **21 post-2024 held-out** papers; cross-era leakage **0%**; overall mem-bench **PASS**. Optional closed-book LLM probe is wired but off by default for offline demos.
+
+**Human eval harness:** CLI to rate gaps/topics (1–5 + labels like `surprising`, `testable`, `high_impact`) → JSONL + summary report — ready for a shared rubric today.
+
+**Still open:** live API rate limits without S2 key (fixture corpus for reliable demos), pack-aware topic ranking polish, BG4801 registration when eligible.
 
 Happy to adjust domain scope or evaluation criteria today.
 
@@ -35,6 +39,7 @@ Sreeram Vasanth (U2322909K)
 
 1. **Not a search engine** — outputs are scored gaps + experiment-backed topic proposals.
 2. **Grounding** — every extract keeps a quote span; bench fails if spans don’t match source text.
-3. **Held-out years** — 2024–2025 fixtures used as post-cutoff slice for leakage checks.
-4. **Alignment** — show embedding vs lexical if useful (`--aligner embedding|lexical`).
-5. **Ask:** weight on pure LNP delivery vs hybrid/bifunctional ncRNA; preferred eval rubric for “surprising / high-impact”.
+3. **Held-out years** — 21 papers from 2024–2025 used as post-cutoff slice for leakage checks.
+4. **Two domain packs** — show `reports/domain_pack.md`: core LNP vs hybrid ncRNA yield.
+5. **Feedback labels** — propose rubric: surprising / high_impact / testable / incremental / memorization_risk.
+6. **Ask:** weight on pure LNP delivery vs hybrid/bifunctional ncRNA; which labels matter for “surprising”.

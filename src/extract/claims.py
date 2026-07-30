@@ -78,6 +78,10 @@ def _domain_tags(sent: str) -> list[str]:
         "targeting": r"\b(target|extrahepatic|tissue[- ]specific)\b",
         "pka": r"\bpka\b",
         "corona": r"\bprotein corona\b",
+        "hybrid_ncrna": r"\b(ncrna|non-coding|bifunctional|hybrid nucleic|lncrna|circrna|ribozyme|rna origami)\b",
+        "sirna": r"\b(sirna|rnai|gene silencing)\b",
+        "gene_therapy": r"\b(crispr|cas9|cas13|gene edit|base edit|adar)\b",
+        "immunogenicity": r"\b(immunogen|innate immune|tlr|reactogen|complement)\b",
     }
     low = sent.lower()
     for tag, pat in mapping.items():

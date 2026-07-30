@@ -1,18 +1,18 @@
 {
   "cutoff_year": 2024,
-  "n_papers_total": 30,
-  "n_pre_cutoff": 23,
-  "n_post_cutoff": 7,
+  "n_papers_total": 52,
+  "n_pre_cutoff": 31,
+  "n_post_cutoff": 21,
   "claim_grounding": {
-    "n_items": 50,
-    "n_grounded": 50,
+    "n_items": 88,
+    "n_grounded": 88,
     "n_missing_quote": 0,
     "rate": 1.0,
     "ungrounded_ids": []
   },
   "evidence_grounding": {
-    "n_items": 105,
-    "n_grounded": 105,
+    "n_items": 160,
+    "n_grounded": 160,
     "n_missing_quote": 0,
     "rate": 1.0,
     "ungrounded_ids": []
@@ -25,5 +25,5 @@
   "pass_leakage": true,
   "overall_pass": true,
   "notes": [],
-  "generated_at": "2026-07-29T23:38:18.635885Z"
+  "generated_at": "2026-07-30T02:05:52.799648Z"
 }

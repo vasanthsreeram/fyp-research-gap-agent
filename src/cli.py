@@ -95,6 +95,11 @@ def run(
         help="Run memorization/grounding benchmark after extract",
     ),
     cutoff_year: int = typer.Option(2024, "--cutoff-year", help="Post-cutoff year for mem bench"),
+    domain_pack: bool = typer.Option(
+        True,
+        "--domain-pack/--no-domain-pack",
+        help="Run LNP-core vs hybrid-ncRNA domain pack eval",
+    ),
 ):
     """End-to-end pipeline: ingest → extract → gap-score → suggest → report."""
     # Eager keychain resolve for auto/llm mode
@@ -285,6 +290,26 @@ def run(
     print(f"  Reports: {', '.join(str(p) for p in written)}")
     print(f"{'=' * 60}\n")
 
+    # 7. Domain pack eval (LNP core vs hybrid ncRNA)
+    if domain_pack:
+        from src.eval.domain_pack import run_domain_pack_eval, save_domain_pack_report
+
+        dreport = run_domain_pack_eval(
+            loaded_papers,
+            all_claims,
+            all_evidence,
+            all_gaps,
+            all_topics,
+            cutoff_year=cutoff_year,
+        )
+        dpath = save_domain_pack_report(dreport, REPORTS_DIR / "domain_pack.md")
+        logger.info(
+            "Domain pack: overall=%s | %s",
+            "PASS" if dreport.overall_pass else "FAIL",
+            ", ".join(f"{p.pack_id}:{p.n_papers}p/{p.n_gaps}g" for p in dreport.packs),
+        )
+        print(f"  Domain-pack: {'PASS' if dreport.overall_pass else 'FAIL'} → {dpath}")
+
     print("── Top 5 Gaps ──")
     for i, g in enumerate(all_gaps[:5], 1):
         print(f"  {i}. [{g.overall:.2f}] {g.title[:100]}")
@@ -323,7 +348,7 @@ def mem_bench_cmd(
     mode: str = typer.Option("heuristic", "--mode", "-m", help="Extraction mode"),
     cutoff_year: int = typer.Option(2024, "--cutoff-year"),
     closed_book: bool = typer.Option(False, "--closed-book", help="Run optional LLM closed-book probe"),
-    limit: int = typer.Option(30, "--limit", "-n"),
+    limit: int = typer.Option(50, "--limit", "-n"),
     use_fixture: bool = typer.Option(True, "--fixture/--no-fixture", help="Load fixture corpus"),
 ):
     """Run memorization/grounding benchmark (offline-first)."""
@@ -356,6 +381,91 @@ def mem_bench_cmd(
     print(report.to_markdown())
     print(f"\nSaved → {out}")
     raise typer.Exit(0 if report.overall_pass else 2)
+
+
+@app.command("domain-pack")
+def domain_pack_cmd(
+    papers_path: Optional[Path] = typer.Option(None, "--papers", "-p"),
+    mode: str = typer.Option("heuristic", "--mode", "-m"),
+    aligner: str = typer.Option("lexical", "--aligner", "-a"),
+    limit: int = typer.Option(50, "--limit", "-n"),
+    cutoff_year: int = typer.Option(2024, "--cutoff-year"),
+    use_fixture: bool = typer.Option(True, "--fixture/--no-fixture"),
+):
+    """Run second-domain pack coverage eval (LNP core vs hybrid ncRNA)."""
+    from src.eval.domain_pack import run_domain_pack_eval, save_domain_pack_report
+    from src.extract import extract_all
+    from src.gap.score import find_gaps, resolve_aligner
+    from src.ingest import ingest_papers
+    from src.topics.suggest import suggest_topics
+
+    if papers_path:
+        papers = _load_papers(papers_path)[:limit]
+    elif use_fixture:
+        papers = ingest_papers(use_fixture=True, save=False, limit=limit)
+    else:
+        papers = _load_papers()[:limit] or ingest_papers(use_fixture=True, save=False, limit=limit)
+
+    if not papers:
+        raise typer.Exit(1)
+
+    claims, evidence = extract_all(papers, mode=mode)
+    resolved = resolve_aligner(aligner)  # type: ignore[arg-type]
+    gaps = find_gaps(claims, evidence, papers, aligner=resolved, use_chroma=False)  # type: ignore[arg-type]
+    topics = suggest_topics(gaps)
+    report = run_domain_pack_eval(
+        papers, claims, evidence, gaps, topics, cutoff_year=cutoff_year
+    )
+    out = save_domain_pack_report(report)
+    print(report.to_markdown())
+    print(f"\nSaved → {out}")
+    raise typer.Exit(0 if report.overall_pass else 2)
+
+
+@app.command("feedback-add")
+def feedback_add_cmd(
+    target_type: str = typer.Option(..., "--type", "-t", help="gap|topic|claim|evidence|run"),
+    target_id: str = typer.Option(..., "--id", help="Artifact id"),
+    rating: Optional[int] = typer.Option(None, "--rating", "-r", min=1, max=5),
+    labels: str = typer.Option("", "--labels", "-l", help="Comma-separated labels"),
+    notes: str = typer.Option("", "--notes", "-n"),
+    reviewer: str = typer.Option("vas", "--reviewer"),
+    run_id: Optional[str] = typer.Option(None, "--run-id"),
+):
+    """Append a human feedback record (JSONL under data/processed/feedback.jsonl)."""
+    from src.eval.feedback import SUGGESTED_LABELS, add_rating
+
+    label_list = [x.strip() for x in labels.split(",") if x.strip()]
+    try:
+        rec = add_rating(
+            target_type=target_type,
+            target_id=target_id,
+            rating=rating,
+            labels=label_list,
+            notes=notes,
+            reviewer=reviewer,
+            run_id=run_id,
+        )
+    except Exception as e:
+        logger.error("%s", e)
+        print(f"Suggested labels: {', '.join(SUGGESTED_LABELS)}")
+        raise typer.Exit(1) from e
+    print(f"Saved {rec.id} type={rec.target_type.value} target={rec.target_id} rating={rec.rating}")
+
+
+@app.command("feedback-summary")
+def feedback_summary_cmd(
+    output: Optional[Path] = typer.Option(None, "--output", "-o"),
+):
+    """Summarize collected human feedback."""
+    from src.eval.feedback import summary_markdown
+
+    md = summary_markdown()
+    out = output or (REPORTS_DIR / "feedback_summary.md")
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(md)
+    print(md)
+    print(f"\nSaved → {out}")
 
 
 def main() -> None:

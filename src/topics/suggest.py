@@ -174,6 +174,34 @@ TEMPLATES: dict[str, dict] = {
         "readout": "≥2× extrahepatic editing at matched liver exposure and ≤baseline off-target rate.",
         "feasibility": "Requires editing readouts and careful scaffold manufacturing.",
     },
+    "ncrna": {
+        "title": "Kinetic gating of bifunctional ncRNA activity until cytosolic arrival",
+        "hypothesis": (
+            "Structure-switching ncRNA modules that remain inert in endosomes and unfold only in "
+            "cytosol can reduce off-target RISC/ADAR engagement and payload interference."
+        ),
+        "experiments": [
+            "Design pH- or redox-gated ncRNA folds and verify switching in vitro",
+            "Measure bystander editing/silencing with gated vs static guides after LNP delivery",
+            "Correlate single-molecule unfold kinetics with functional on-target rates",
+        ],
+        "readout": "≥2× on-target/off-target activity ratio vs static bifunctional guides at matched dose.",
+        "feasibility": "RNA design + standard delivery assays; structural probing adds moderate complexity.",
+    },
+    "async_escape": {
+        "title": "Cargo-selective endosomal escape timing for co-encapsulated nucleic acids",
+        "hypothesis": (
+            "mRNA and ncRNA exit endosomes asynchronously because lipid–cargo affinity differs; "
+            "tuning affinity can enforce intentional staggered cytosolic arrival for combination therapies."
+        ),
+        "experiments": [
+            "Orthogonal fluorogenic aptamer reporters for dual-cargo cytosolic arrival",
+            "Vary ionizable lipid chemistry and measure median arrival-time offsets",
+            "Test whether enforced stagger improves bifunctional efficacy windows",
+        ],
+        "readout": "Controlled arrival offset (≥3 min) with improved dual-payload efficacy vs unsorted co-delivery.",
+        "feasibility": "Advanced imaging required; high mechanistic payoff for hybrid designs.",
+    },
 }
 
 

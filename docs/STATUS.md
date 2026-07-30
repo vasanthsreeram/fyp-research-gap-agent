@@ -16,9 +16,9 @@ Updated by daily progress cron + human/call notes.
 - Write notes + propose approaches; formal start ~August; early progress welcome
 - Audio/transcript: ~/.openclaw/workspace/tmp/fyp-prof-meeting/
 
-## Current stage: **Stage 2** (2026-07-30 07:38 SGT)
+## Current stage: **Stage 2** (2026-07-30 10:06 SGT)
 
-Memorization/grounding bench + HTML report + expanded fixture corpus (30 papers, 7 post-2024 held-out). Embedding aligner remains default when deps present.
+Corpus 52 + dual-domain pack eval (LNP core vs hybrid ncRNA) + human feedback harness. Mem-bench still PASS on expanded held-out set (21 post-2024).
 
 ### Stage checklist
 - [x] S0 Freeze scope 1-pager for prof (problem, domain, eval, risks)
@@ -38,60 +38,71 @@ Memorization/grounding bench + HTML report + expanded fixture corpus (30 papers,
 - [x] **S2 Memorization benchmark (quote grounding + post-cutoff leakage + optional closed-book)**
 - [x] **S2 HTML report export** (`reports/latest_run.html`)
 - [x] S2 Fixture corpus expanded to 30 (7 post-2024 held-out; hybrid ncRNA / gene-editing slices)
-- [ ] S2 Expand corpus to 50+ papers via live S2 API (backoff/retry shipped; still rate-limit sensitive without key)
-- [ ] S2 Full second-domain eval pack (hybrid ncRNA templates started)
-- [ ] S2 Add eval harness with human feedback collection
+- [x] **S2 Expand corpus to 50+ papers** (fixture offline path; 52 papers, 21 post-2024) — live S2 still rate-limit sensitive without key
+- [x] **S2 Full second-domain eval pack** (`src/eval/domain_pack.py`; LNP core / hybrid ncRNA / gene editing gates)
+- [x] **S2 Add eval harness with human feedback collection** (`feedback-add` / `feedback-summary`; JSONL store)
 - [ ] Register BG4801 when eligible
+- [ ] Live S2 API key path for non-fixture 50+ refresh
+- [ ] Closed-book LLM mem probe on held-out titles (optional)
+- [ ] Richer hybrid-specific topic ranking (pack-aware suggester)
 
-### What shipped (2026-07-30 morning — mem-bench + HTML + corpus)
+### What shipped (2026-07-30 10:06 SGT — corpus 52 + domain pack + feedback)
 
 | Metric | Value |
 |--------|-------|
-| Papers | **30** (fixture; 7 year≥2024 held-out) |
-| Claims | **50** |
-| Evidence | **105** |
-| Gaps | **56** |
+| Papers | **52** (fixture; **21** year≥2024 held-out) |
+| Claims | **88** |
+| Evidence | **160** |
+| Gaps | **89** |
 | Topics | **5** |
-| pytest | **34 passed** |
+| pytest | **37 passed** |
 | Aligner | MiniLM cosine + Chroma |
-| Mem-bench | **PASS** — claim/evidence grounding 100%, leakage 0% |
-| Reports | `reports/latest_run.md`, `reports/latest_run.html`, `reports/memorization_bench.md` |
+| Mem-bench | **PASS** — grounding 100%/100%, leakage 0% |
+| Domain pack | **PASS** — lnp_core 33p/75g · hybrid_ncrna 23p/34g · gene_editing 10p/19g |
+| Feedback | schema + CLI; 2 demo seed ratings |
+| Reports | `latest_run.md/html`, `memorization_bench.md`, `domain_pack.md`, `feedback_summary.md` |
 
 **New modules**
 ```
-src/eval/memorization.py   # quote grounding, year held-out, cross-era leakage, optional closed-book LLM
-src/report.py              # markdown + self-contained HTML builders
-CLI: run --format md|html|both --mem-bench --cutoff-year
-CLI: mem-bench             # standalone benchmark command
-S2 client: exponential backoff on 429/5xx + Retry-After
+src/eval/domain_pack.py   # dual/triple domain coverage gates
+src/eval/feedback.py      # Likert + labels JSONL harness
+models.FeedbackRecord     # feedback schema
+CLI: domain-pack | feedback-add | feedback-summary
+CLI run: --domain-pack/--no-domain-pack
+fixtures: 30 → 52 (hybrid ncRNA / editing / async escape focus)
 ```
 
 **Demo commands**
 ```bash
-python -m src.cli run --limit 30 --fixture --mode heuristic --aligner embedding --format both
-python -m src.cli mem-bench --fixture --limit 30 --cutoff-year 2024
+python -m src.cli run --limit 52 --fixture --mode heuristic --aligner embedding --format both
+python -m src.cli domain-pack --limit 52 --fixture --aligner lexical
+python -m src.cli mem-bench --fixture --limit 52 --cutoff-year 2024
+python -m src.cli feedback-add --type gap --id gap_xxx --rating 5 --labels surprising,testable
+python -m src.cli feedback-summary
 python -m pytest tests/ -q
 open reports/latest_run.html
 ```
 
-### Latest run (`run_382657f2bd94`)
-- Top gaps: extrahepatic + endosomal escape co-limitation; bulk extrahepatic targeting; nano-bio interaction fundamentals; brain delivery barrier; untested bifunctional ncRNA co-delivery claim
-- Top topics: ligand avidity vs specificity; innate immune decoupling; endosomal escape mechanism; cascade bottleneck analysis; rational ionizable lipids for extrahepatic delivery
-- Mem-bench: 23 pre / 7 post cutoff; grounding 50/50 claims, 105/105 evidence
+### Latest run (`run_9c4ac94a48a9`)
+- Top gaps: extrahepatic + endosomal escape co-limitation; bulk extrahepatic targeting; minimal extrahepatic after ADAR guides; nano-bio fundamentals; brain delivery barrier
+- Hybrid pack gaps: payload co-delivery untested sync claim; PNA endosomal entrapment; structured RNA manufacturing; RNP competition under-tested
+- Top topics: ligand avidity; innate immune decoupling; endosomal escape mechanism; cascade bottleneck; multi-dose PK
+- Mem-bench: 31 pre / 21 post cutoff; grounding 88/88 claims, 160/160 evidence
 
 ### Known blockers
 - Live Semantic Scholar / arXiv still fragile without API key (429s); fixture path is demo-reliable. Backoff/retry added.
 - OpenAI key resolved from Keychain `openclaw/tgcallskill/openai-api-key` (not committed) for LLM extract / optional closed-book probe.
 - Closed-book LLM memorization probe not run in default cron path (offline-first); enable with `mem-bench --closed-book`.
+- Hybrid pack still shares many LNP-tagged topics — pack-aware topic ranking is next polish.
 
 ## Next supervisor meeting: **30 July 2026, 14:00 SGT**
 - Deliverable: `docs/supervisor-update-draft.md`
-- Demo: Pipeline run + top gaps + topics + HTML report + memorization bench PASS
+- Demo: Pipeline run (52) + dual-domain pack PASS + HTML report + mem-bench PASS + feedback CLI
 - Board: https://fyp.vasanth.my
-- Questions: domain scope (LNP vs hybrid ncRNA weight), eval rubric, memorization rigor, next steps
+- Questions: domain scope (LNP vs hybrid ncRNA weight), eval rubric labels, memorization rigor, next steps
 
 ## Last automated progress
-- 2026-07-30 07:38 SGT — S2 mem-bench + HTML report + fixture 18→30; E2E 30→50→105→56 gaps→5 topics; 34 tests; mem PASS.
+- 2026-07-30 10:06 SGT — Corpus 30→52; domain pack eval PASS (core/hybrid/editing); human feedback harness; E2E 52→88→160→89 gaps→5 topics; mem PASS (21 post-cutoff); 37 tests.
 
 ## Daily loop
 - **10:00 SGT** — autonomous coding progress on next unchecked item; commit/push; update this file

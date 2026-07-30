@@ -261,16 +261,22 @@ class TestFixture:
                 line = line.strip()
                 if line:
                     papers.append(Paper(**json.loads(line)))
-        assert len(papers) >= 25
+        assert len(papers) >= 50
         for p in papers:
             assert p.title
             assert p.source == "fixture"
         # Held-out post-cutoff set for memorization bench
-        assert sum(1 for p in papers if (p.year or 0) >= 2024) >= 5
+        assert sum(1 for p in papers if (p.year or 0) >= 2024) >= 10
+        hybrid = sum(
+            1
+            for p in papers
+            if any(k in (p.keywords or []) for k in ("hybrid_ncrna", "ncrna"))
+        )
+        assert hybrid >= 12
 
     def test_load_fixture_helper(self):
         papers = load_fixture()
-        assert len(papers) >= 25
+        assert len(papers) >= 50
 
     def test_offline_pipeline_one_paper(self):
         """End-to-end offline path on a single fixture paper."""
@@ -303,7 +309,7 @@ class TestMemorization:
             papers, claims, evidence, cutoff_year=2024, run_closed_book=False
         )
         assert report.n_papers_total == len(papers)
-        assert report.n_post_cutoff >= 5
+        assert report.n_post_cutoff >= 10
         assert report.claim_grounding.rate >= 0.85
         assert report.evidence_grounding.rate >= 0.85
         assert report.overall_pass is True
@@ -325,6 +331,60 @@ class TestMemorization:
         )
         hits = find_cross_era_leakage([post_claim], pre, threshold=0.5)
         assert hits
+
+
+class TestDomainPack:
+    def test_hybrid_pack_filters_and_passes(self):
+        from src.eval.domain_pack import filter_papers, run_domain_pack_eval
+
+        papers = load_fixture()
+        hybrid = filter_papers(papers, "hybrid_ncrna")
+        assert len(hybrid) >= 12
+        claims, evidence = extract_all(papers[:40], mode="heuristic")
+        gaps = find_gaps(claims, evidence, papers[:40], aligner="lexical")
+        topics = suggest_topics(gaps)
+        report = run_domain_pack_eval(
+            papers[:40], claims, evidence, gaps, topics, cutoff_year=2024
+        )
+        assert report.packs
+        by_id = {p.pack_id: p for p in report.packs}
+        assert by_id["hybrid_ncrna"].n_papers >= 8
+        assert by_id["lnp_core"].n_papers >= 15
+        assert report.overall_pass is True
+
+    def test_tag_domains_hybrid(self):
+        tags = tag_domains("bifunctional ncRNA mRNA co-delivery and RISC loading")
+        assert "hybrid_ncrna" in tags
+
+
+class TestFeedback:
+    def test_add_and_summarize(self, tmp_path):
+        from src.eval.feedback import add_rating, load_feedback, summarize_feedback
+
+        path = tmp_path / "feedback.jsonl"
+        r1 = add_rating(
+            target_type="gap",
+            target_id="gap_demo",
+            rating=5,
+            labels=["surprising", "testable"],
+            notes="strong",
+            path=path,
+        )
+        r2 = add_rating(
+            target_type="topic",
+            target_id="topic_demo",
+            rating=3,
+            labels=["incremental"],
+            path=path,
+        )
+        assert r1.id.startswith("fb_")
+        loaded = load_feedback(path)
+        assert len(loaded) == 2
+        summary = summarize_feedback(path=path)
+        assert summary["n_total"] == 2
+        assert summary["by_type"]["gap"]["mean_rating"] == 5.0
+        assert summary["by_type"]["topic"]["n"] == 1
+        assert r2.rating == 3
 
 
 class TestReport:

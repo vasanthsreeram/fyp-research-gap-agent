@@ -143,3 +143,27 @@ class RunManifest(BaseModel):
     extractor_mode: str = "heuristic"
     aligner_mode: str = "auto"  # auto | lexical | embedding (resolved value recorded at finish)
     notes: str = ""
+
+
+class FeedbackTargetType(str, Enum):
+    GAP = "gap"
+    TOPIC = "topic"
+    CLAIM = "claim"
+    EVIDENCE = "evidence"
+    RUN = "run"
+
+
+class FeedbackRecord(BaseModel):
+    """Human rating for a gap, topic, or other pipeline artifact."""
+
+    id: str = Field(default_factory=lambda: _id("fb"))
+    target_type: FeedbackTargetType
+    target_id: str
+    # Likert 1–5 (None if only labels/notes)
+    rating: Optional[int] = Field(default=None, ge=1, le=5)
+    # Free-form labels e.g. surprising, testable, low_impact, memorized, unclear
+    labels: list[str] = Field(default_factory=list)
+    notes: str = ""
+    reviewer: str = "vas"
+    run_id: Optional[str] = None
+    created_at: datetime = Field(default_factory=datetime.utcnow)

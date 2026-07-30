@@ -10,49 +10,51 @@
 | 2026-07-29 00:34 | `484194f` | Stage 1 vertical slice (flat modules) |
 | 2026-07-29 01:11 | wave 2 | Modular packages + claim recall + LLM run |
 | 2026-07-29 10:05 | wave 3 | Embedding gap alignment (MiniLM + Chroma) |
-| 2026-07-30 07:38 | **wave 4 (this)** | Memorization bench + HTML report + corpus 30 |
+| 2026-07-30 07:38 | wave 4 | Memorization bench + HTML report + corpus 30 |
+| 2026-07-30 10:06 | **wave 5 (this)** | Corpus 52 + domain pack + human feedback |
 
-### Wave 4 summary (2026-07-30 07:38 SGT)
+### Wave 5 summary (2026-07-30 10:06 SGT)
 
-**Goal:** Ship supervisor-facing memorization guard + HTML report + thicker fixture corpus before 14:00 SGT meeting.
+**Goal:** Close remaining Stage-2 checklist items before 14:00 supervisor meeting — 50+ corpus, second-domain pack, feedback harness.
 
 **New / updated:**
 | Path | Role |
 |------|------|
-| `src/eval/memorization.py` | Quote grounding, year held-out split, cross-era leakage, optional closed-book LLM |
-| `src/eval/__init__.py` | Package export |
-| `src/report.py` | Markdown + self-contained HTML report builders |
-| `src/cli.py` | `--format`, `--mem-bench`, `mem-bench` command |
-| `src/ingest/semantic_scholar.py` | Exponential backoff on 429/5xx + Retry-After |
-| `src/fixtures/papers_fixture.jsonl` | 18 → **30** papers (7× year≥2024 held-out; hybrid ncRNA / editing) |
-| `src/gap/score.py` | Domain tags: hybrid_ncrna, circRNA, SORT, complement |
-| `src/topics/suggest.py` | Templates for hybrid_ncrna + gene_therapy |
-| `tests/test_pipeline.py` | 30 → **34** tests |
-| `reports/latest_run.html` | HTML export |
-| `reports/memorization_bench.md` | Bench artifact |
+| `src/fixtures/papers_fixture.jsonl` | 30 → **52** (21× year≥2024; 19 hybrid/ncRNA-tagged) |
+| `src/eval/domain_pack.py` | LNP core / hybrid ncRNA / gene editing coverage gates |
+| `src/eval/feedback.py` | Likert 1–5 + labels JSONL store + summary |
+| `src/models.py` | `FeedbackRecord`, `FeedbackTargetType` |
+| `src/cli.py` | `domain-pack`, `feedback-add`, `feedback-summary`; run `--domain-pack` |
+| `src/extract/claims.py` | Domain tags: hybrid_ncrna, sirna, gene_therapy, immunogenicity |
+| `src/gap/score.py` | Expanded hybrid_ncrna keyword list |
+| `src/topics/suggest.py` | Templates: ncrna kinetic gating, async_escape |
+| `tests/test_pipeline.py` | 34 → **37** tests |
+| `reports/domain_pack.md` | Pack eval artifact |
+| `reports/feedback_summary.md` | Feedback aggregate |
 
-**Pipeline counts (heuristic extract, limit 30, embedding aligner):**
+**Pipeline counts (heuristic extract, limit 52, embedding aligner):**
 
 | Metric | Value |
 |--------|-------|
-| Papers | 30 |
-| Claims | 50 |
-| Evidence | 105 |
-| Gaps | 56 |
+| Papers | 52 |
+| Claims | 88 |
+| Evidence | 160 |
+| Gaps | 89 |
 | Topics | 5 |
-| Mem-bench | PASS (grounding 100% / 100%, leakage 0%, post-cutoff n=7) |
-| pytest | 34 passed |
+| Mem-bench | PASS (100%/100% ground, 0% leak, post-cutoff n=21) |
+| Domain pack | PASS (core 33/75, hybrid 23/34, editing 10/19) |
+| pytest | 37 passed |
 
-### Wave 3 summary (2026-07-29 10:05 SGT)
+### Wave 4 summary (2026-07-30 07:38 SGT)
 
-Embedding gap alignment (MiniLM + Chroma). See prior STATUS / git history.
+Memorization bench + HTML report + corpus 18→30. See prior STATUS.
 
 ### Live API note
 - S2 + arXiv previously returned **HTTP 429**; backoff/retry now in client. Fixture fallback remains default for demos without key.
 
 ### Next coding session
-- [ ] Live corpus expansion toward 50+ (S2 API key + sustained backoff)
+- [ ] Live corpus expansion with S2 API key
 - [ ] Run closed-book LLM probe on held-out titles and log risk
-- [ ] Human feedback collection UI/schema on gap/topic quality
-- [ ] Deeper hybrid ncRNA second-domain eval pack
+- [ ] Pack-aware topic ranking (prefer hybrid templates on hybrid gaps)
 - [ ] Optional: deploy refreshed `site/public/data` bundle to fyp.vasanth.my
+- [ ] Collect real supervisor ratings via feedback CLI after meeting

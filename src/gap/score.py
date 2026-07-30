@@ -40,7 +40,24 @@ DOMAIN_KEYWORDS: dict[str, list[str]] = {
     "pks": ["pharmacokinetic", "biodistribution", "clearance", "half-life"],
     "immunogenicity": ["immunogenicity", "immune response", "innate immune", "reactogenic", "complement"],
     "corona": ["protein corona", "opsonization", "serum protein"],
-    "hybrid_ncrna": ["ncrna", "non-coding rna", "bifunctional", "hybrid nucleic", "risc loading"],
+    "hybrid_ncrna": [
+        "ncrna",
+        "non-coding rna",
+        "noncoding rna",
+        "bifunctional",
+        "hybrid nucleic",
+        "risc loading",
+        "circrna",
+        "circular rna",
+        "lncrna",
+        "microrna",
+        "mirna",
+        "ribozyme",
+        "rna origami",
+        "adar",
+        "guide rna",
+        "arrna",
+    ],
 }
 
 
