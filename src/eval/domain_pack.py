@@ -232,7 +232,8 @@ def run_domain_pack_eval(
         slice_topics = [
             t
             for t in topics
-            if (set(t.domain_tags or []) & pack_tags)
+            if (getattr(t, "pack_id", None) == pid)
+            or (set(t.domain_tags or []) & pack_tags)
             or any(gid in {g.id for g in slice_gaps} for gid in (t.gap_ids or []))
         ]
 

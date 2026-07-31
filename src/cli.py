@@ -100,6 +100,11 @@ def run(
         "--domain-pack/--no-domain-pack",
         help="Run LNP-core vs hybrid-ncRNA domain pack eval",
     ),
+    pack_balance: bool = typer.Option(
+        True,
+        "--pack-balance/--no-pack-balance",
+        help="Pack-aware topic ranking (reserve hybrid/gene slots so LNP mass does not monopolize top-k)",
+    ),
 ):
     """End-to-end pipeline: ingest → extract → gap-score → suggest → report."""
     # Eager keychain resolve for auto/llm mode
@@ -205,10 +210,10 @@ def run(
                 f.write(g.model_dump_json() + "\n")
         logger.info("Saved %d gaps (aligner=%s)", len(all_gaps), resolved_aligner)
 
-    # 4. Topics
+    # 4. Topics (pack-aware ranking by default)
     from src.topics.suggest import suggest_topics
 
-    all_topics = suggest_topics(all_gaps)
+    all_topics = suggest_topics(all_gaps, pack_balance=pack_balance)
     manifest.n_topics = len(all_topics)
     if save:
         with open(PROC_DIR / "topics.jsonl", "w") as f:
@@ -420,7 +425,7 @@ def domain_pack_cmd(
     claims, evidence = extract_all(papers, mode=mode)
     resolved = resolve_aligner(aligner)  # type: ignore[arg-type]
     gaps = find_gaps(claims, evidence, papers, aligner=resolved, use_chroma=False)  # type: ignore[arg-type]
-    topics = suggest_topics(gaps)
+    topics = suggest_topics(gaps, pack_balance=True)
     report = run_domain_pack_eval(
         papers, claims, evidence, gaps, topics, cutoff_year=cutoff_year
     )

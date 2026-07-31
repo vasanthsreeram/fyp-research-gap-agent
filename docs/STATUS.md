@@ -16,9 +16,9 @@ Updated by daily progress cron + human/call notes.
 - Write notes + propose approaches; formal start ~August; early progress welcome
 - Audio/transcript: ~/.openclaw/workspace/tmp/fyp-prof-meeting/
 
-## Current stage: **Stage 2** (2026-07-30 21:10 SGT)
+## Current stage: **Stage 2** (2026-07-31 10:05 SGT)
 
-Wave 6 — **memorization safeguards v2**: structured claims + expanded mem harness (unsupported / hallucinated cites / overconfidence / controlled suite). Docs: `docs/memorization-eval.md`.
+Wave 7 — **pack-aware topic ranking**: hybrid/gene packs reserved in top-k; primary-pack gap assignment stops LNP mass from absorbing hybrid topics.
 
 ### Stage checklist
 - [x] S0 Freeze scope 1-pager for prof (problem, domain, eval, risks)
@@ -42,49 +42,45 @@ Wave 6 — **memorization safeguards v2**: structured claims + expanded mem harn
 - [x] **S2 Full second-domain eval pack** (`src/eval/domain_pack.py`; LNP core / hybrid ncRNA / gene editing gates)
 - [x] **S2 Add eval harness with human feedback collection** (`feedback-add` / `feedback-summary`; JSONL store)
 - [x] **S2 Memorization safeguards v2** — unsupported claims, hallucinated citations, overconfidence, structured claim slots, controlled suite (`docs/memorization-eval.md`)
+- [x] **S2 Richer hybrid-specific topic ranking (pack-aware suggester)** — primary pack + reserved slots + rank_score
 - [ ] Register BG4801 when eligible
 - [ ] Live S2 API key path for non-fixture 50+ refresh
 - [ ] Closed-book LLM mem probe on held-out titles (optional; run with small/open model)
-- [ ] Richer hybrid-specific topic ranking (pack-aware suggester)
 
-### What shipped (2026-07-30 21:10 SGT — wave 6 mem safeguards)
+### What shipped (2026-07-31 10:05 SGT — wave 7 pack-aware topics)
 
 | Metric | Value |
 |--------|-------|
 | Papers | **52** (fixture; **21** year≥2024 held-out) |
-| Claims (heuristic) | **88** (structured slots filled) |
+| Claims (heuristic) | **88** |
 | Evidence | **160** |
-| pytest | **40 passed** (was 37) |
-| Mem-bench | **PASS** — ground 100%/100%, unsup 0%, cite 0%, over 0%, leak 0%, controlled 7/7 |
-| Structure | hyp=62%, any=100%, full(≥3 slots)=18/88 |
-| Docs | `docs/memorization-eval.md` plan + metrics + how-to-run |
+| Gaps | **103** |
+| Topics (balanced) | **5** — packs: hybrid + gene_editing + lnp_core |
+| Domain pack | **PASS** (hybrid topics now **2** dedicated) |
+| pytest | **42 passed** (was 40) |
+| Mem-bench | **PASS** — ground 100%/100%, unsup/cite/over/leak 0% |
 
-**New / updated (wave 6)**
+**New / updated (wave 7)**
 ```
-src/models.py              # Claim: hypothesis, evidence, mechanism, assumptions, uncertainty
-src/extract/claims.py      # structure_claim_fields + grounded quote_span + LLM schema
-src/eval/memorization.py   # unsupported / citation / overconfidence / structure / controlled suite
-src/cli.py                 # mem-bench --controlled; richer mem metrics in run
-tests/test_pipeline.py     # +3 mem/structure tests
-docs/memorization-eval.md  # plan, test cases, recommended metrics
+src/topics/suggest.py   # pack-aware ranking, primary pack, diversity slots
+src/models.py           # TopicProposal.pack_id + rank_score
+src/cli.py              # --pack-balance/--no-pack-balance
+src/eval/domain_pack.py # match topics by pack_id
+src/report.py           # pack + rank in md/html
+tests/test_pipeline.py  # +2 pack-aware tests
 ```
+
+**Before → after (topic top-k):** LNP-only lists → hybrid ncRNA + gene editing + LNP co-ranked.
 
 **Demo commands**
 ```bash
+python -m src.cli run --limit 52 --fixture --mode heuristic --aligner lexical --format both
+python -m src.cli domain-pack --limit 52 --fixture
 python -m src.cli mem-bench --fixture --limit 52 --cutoff-year 2024
-python -m src.cli run --limit 52 --fixture --mode heuristic --aligner embedding --format both
 python -m pytest tests/ -q
-# optional closed-book (API key; prefer small model):
-# OPENAI_MODEL=gpt-4o-mini python -m src.cli mem-bench --fixture --limit 21 --closed-book
-open reports/memorization_bench.md
+# disable pack balance to compare:
+# python -m src.cli run --limit 52 --fixture --no-pack-balance --mode heuristic
 ```
-
-### Latest mem-bench (wave 6)
-- Cutoff 2024 · pre=31 · post=21
-- Claim grounding 88/88 · Evidence 160/160
-- Unsupported 0 · Hallucinated citations 0 · Overconfidence 0 · Leakage 0
-- Controlled synthetic suite 7/7 PASS
-- Structure coverage: hypothesis 62%, any slot 100%
 
 ### Known blockers / honesty notes
 - **Prototype stage** — heuristic extractor + fixture corpus for reliable offline demos; not a production lit-mining system.
@@ -92,17 +88,17 @@ open reports/memorization_bench.md
 - OpenAI key resolved from Keychain `openclaw/tgcallskill/openai-api-key` (not committed) for LLM extract / optional closed-book probe.
 - Closed-book LLM memorization probe not run in default cron path (offline-first); enable with `mem-bench --closed-book`. Prefer open/small models.
 - Detectors are **proxy safeguards**, not proof of non-memorization — see `docs/memorization-eval.md`.
-- Hybrid pack still shares many LNP-tagged topics — pack-aware topic ranking is next polish.
+- Pack balance is a ranking policy (reserved slots + soft boosts), not wet-lab priority truth.
 - Do not claim wet-lab results; software/methods/prototype only.
 
 ## Next supervisor meeting: **30 July 2026, 14:00 SGT**
 - Deliverable: `docs/EMAIL_TO_SUPERVISOR.md` + `docs/supervisor-update-draft.md`
-- Demo: Pipeline run (52) + dual-domain pack + HTML report + **mem-bench v2** + feedback CLI
+- Demo: Pipeline run (52) + dual-domain pack + HTML report + **mem-bench v2** + **pack-aware topics** + feedback CLI
 - Board: https://fyp.vasanth.my
 - Questions: domain scope (LNP vs hybrid ncRNA weight), eval rubric labels, memorization rigor, next steps
 
 ## Last automated progress
-- 2026-07-30 21:10 SGT — Wave 6 memorization safeguards: structured claims + unsupported/citation/overconfidence detectors + controlled suite; mem PASS; 40 tests; `docs/memorization-eval.md`.
+- 2026-07-31 10:05 SGT — Wave 7 pack-aware topic ranking: hybrid/gene reserved in top-k; primary-pack assignment; TopicProposal.pack_id/rank_score; 42 tests; domain pack PASS with hybrid topics.
 
 ## Daily loop
 - **10:00 SGT** — autonomous coding progress on next unchecked item; commit/push; update this file

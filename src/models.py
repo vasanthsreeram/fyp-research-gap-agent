@@ -137,6 +137,9 @@ class TopicProposal(BaseModel):
     impact_rationale: str = ""
     priority: float = Field(default=0.5, ge=0.0, le=1.0)
     domain_tags: list[str] = Field(default_factory=list)
+    # Pack-aware ranking metadata (lnp_core | hybrid_ncrna | gene_editing)
+    pack_id: Optional[str] = None
+    rank_score: float = Field(default=0.5, ge=0.0, le=1.0)
 
 
 class RunManifest(BaseModel):

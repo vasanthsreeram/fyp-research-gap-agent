@@ -87,7 +87,13 @@ def build_markdown_report(
     for i, t in enumerate(topics, 1):
         lines += [
             f"### {i}. {t.title}",
-            f"- **Priority**: {t.priority:.2f}",
+            f"- **Priority**: {t.priority:.2f}"
+            + (
+                f" · rank={getattr(t, 'rank_score', t.priority):.2f}"
+                if getattr(t, "rank_score", None) is not None
+                else ""
+            ),
+            f"- **Pack**: {getattr(t, 'pack_id', None) or '—'}",
             f"- **Domains**: {', '.join(t.domain_tags) if t.domain_tags else '—'}",
             f"- **Hypothesis**: {t.hypothesis}",
             "- **Experiments**:",
@@ -176,10 +182,14 @@ def build_html_report(
     topic_blocks = []
     for i, t in enumerate(topics, 1):
         exps = "".join(f"<li>{_esc(e)}</li>" for e in t.proposed_experiments)
+        pack_label = getattr(t, "pack_id", None) or "—"
+        rank = getattr(t, "rank_score", None)
+        rank_bit = f" · rank {rank:.2f}" if rank is not None else ""
         topic_blocks.append(
             f"""<article class="card highlight">
   <h3>{i}. {_esc(t.title)}</h3>
-  <div class="tags"><span class="score">priority {t.priority:.2f}</span>
+  <div class="tags"><span class="score">priority {t.priority:.2f}{rank_bit}</span>
+  <span class="tag">pack:{_esc(pack_label)}</span>
   <span class="tag">{_esc(', '.join(t.domain_tags) or '—')}</span></div>
   <p><strong>Hypothesis.</strong> {_esc(t.hypothesis)}</p>
   <p><strong>Experiments</strong></p>

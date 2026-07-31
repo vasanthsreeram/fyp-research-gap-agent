@@ -14,6 +14,23 @@
 | 2026-07-30 10:06 | wave 5 | Corpus 52 + domain pack + human feedback |
 | 2026-07-30 11:01 | pre-meeting | E2E re-verify `run_d4b35242b895` + supervisor email draft |
 | 2026-07-30 21:10 | **wave 6** | Mem safeguards v2: structured claims + detectors + controlled suite |
+| 2026-07-31 10:05 | **wave 7** | Pack-aware topic ranking (hybrid/gene reserved slots) |
+
+### Wave 7 summary (2026-07-31 10:05 SGT)
+
+**Goal:** Stop LNP-core mass from monopolizing top-k topics; surface hybrid/bifunctional ncRNA proposals for supervisor dual-slice demos.
+
+**New / updated:**
+| Path | Role |
+|------|------|
+| `src/topics/suggest.py` | Primary pack assignment, pack score boosts, diversity slots, vaccine template |
+| `src/models.py` | `TopicProposal.pack_id`, `rank_score` |
+| `src/cli.py` | `--pack-balance/--no-pack-balance` |
+| `src/eval/domain_pack.py` | Topic slice match via `pack_id` |
+| `src/report.py` | Pack + rank in markdown/HTML |
+| `tests/test_pipeline.py` | 40 → **42** tests |
+
+**Topic top-k (balanced, n=52 fixture):** hybrid ncRNA payload competition · gene-editing DNA–LNP scaffolds · LNP targeting · endosomal escape · immunogenicity.
 
 ### Wave 6 summary (2026-07-30 21:10 SGT)
 

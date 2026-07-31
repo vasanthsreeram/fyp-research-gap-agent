@@ -7,10 +7,10 @@
 
 ## Status
 
-Stage 2: modular packages, claim-recall, LLM path, embedding gap alignment, **memorization safeguards v2**, **52-paper corpus**, **dual-domain pack eval**, **human feedback harness**.
+Stage 2: modular packages, claim-recall, LLM path, embedding gap alignment, **memorization safeguards v2**, **pack-aware topic ranking**, **52-paper corpus**, **dual-domain pack eval**, **human feedback harness**.
 
-Latest heuristic extract on fixture: **52 papers → 88 structured claims → 160 evidence**.  
-Mem-bench **PASS** (ground 100%, unsup/cite/over/leak 0%, controlled 7/7). Domain pack **PASS**. Tests: **40 passed**.
+Latest heuristic extract on fixture: **52 papers → 88 structured claims → 160 evidence → 103 gaps → 5 pack-balanced topics**.  
+Mem-bench **PASS** (ground 100%, unsup/cite/over/leak 0%, controlled 7/7). Domain pack **PASS**. Tests: **42 passed**.
 
 See [`docs/STATUS.md`](docs/STATUS.md), [`docs/memorization-eval.md`](docs/memorization-eval.md), and [`docs/supervisor-update-draft.md`](docs/supervisor-update-draft.md).
 
@@ -61,11 +61,11 @@ ingest (S2 / arXiv / fixture)
 
 | Package | Role |
 |---------|------|
-| `src/models.py` | Pydantic schemas (+ FeedbackRecord) |
+| `src/models.py` | Pydantic schemas (+ FeedbackRecord; TopicProposal pack_id/rank_score) |
 | `src/ingest/` | Semantic Scholar + arXiv + fixture pipeline |
 | `src/extract/` | Claims, evidence, LLM helpers |
 | `src/gap/` | Lexical + embedding alignment, scoring, Chroma index |
-| `src/topics/` | Research topic proposals |
+| `src/topics/` | Pack-aware research topic proposals (hybrid/LNP/gene balance) |
 | `src/eval/` | Memorization bench, domain packs, feedback |
 | `src/cli.py` | Typer CLI |
 

@@ -1,14 +1,79 @@
-"""Research topic proposals from scored gaps."""
+"""Research topic proposals from scored gaps (pack-aware ranking)."""
 
 from __future__ import annotations
 
 import logging
+from collections import defaultdict
+from dataclasses import dataclass
 
 from src.models import Gap, TopicProposal
 
 logger = logging.getLogger(__name__)
 
 DEFAULT_DOMAIN = "lnp"
+
+# Domain-tag → supervisor dual-slice pack. Order in PACK_PRIORITY is selection order
+# for diversity slots (secondary packs first so hybrid is not starved by LNP mass).
+PACK_TAG_MEMBERSHIP: dict[str, set[str]] = {
+    "hybrid_ncrna": {
+        "hybrid_ncrna",
+        "ncrna",
+        "async_escape",
+    },
+    "gene_editing": {
+        "gene_therapy",
+        "gene_editing",
+    },
+    "lnp_core": {
+        "lnp",
+        "mrna",
+        "sirna",
+        "endosomal_escape",
+        "targeting",
+        "delivery_efficiency",
+        "corona",
+        "pks",
+        "immunogenicity",
+        "vaccine",
+        "nucleic_acid_delivery",
+    },
+}
+
+# Prefer underrepresented packs when filling diversity slots
+PACK_PRIORITY: tuple[str, ...] = ("hybrid_ncrna", "gene_editing", "lnp_core")
+
+# Template keys that are pack-native (used for affinity scoring)
+PACK_NATIVE_TEMPLATES: dict[str, set[str]] = {
+    "hybrid_ncrna": {"hybrid_ncrna", "ncrna", "async_escape"},
+    "gene_editing": {"gene_therapy", "gene_editing"},
+    "lnp_core": {
+        "lnp",
+        "mrna",
+        "sirna",
+        "endosomal_escape",
+        "targeting",
+        "delivery_efficiency",
+        "corona",
+        "pks",
+        "immunogenicity",
+        "vaccine",
+    },
+}
+
+# Preferred seed tag when a pack has gaps but no matching template cluster yet
+PACK_SEED_TAG: dict[str, str] = {
+    "hybrid_ncrna": "hybrid_ncrna",
+    "gene_editing": "gene_therapy",
+    "lnp_core": "lnp",
+}
+
+# Soft priority boost for secondary packs so they can surface in top-k without
+# drowning LNP (which has more fixture mass). Applied only when pack_balance=True.
+PACK_SCORE_BOOST: dict[str, float] = {
+    "hybrid_ncrna": 0.08,
+    "gene_editing": 0.05,
+    "lnp_core": 0.0,
+}
 
 TEMPLATES: dict[str, dict] = {
     "lnp": {
@@ -202,72 +267,293 @@ TEMPLATES: dict[str, dict] = {
         "readout": "Controlled arrival offset (≥3 min) with improved dual-payload efficacy vs unsorted co-delivery.",
         "feasibility": "Advanced imaging required; high mechanistic payoff for hybrid designs.",
     },
+    "vaccine": {
+        "title": "Innate sensing thresholds for multi-antigen nucleic acid vaccines",
+        "hypothesis": (
+            "Co-formulated multi-antigen mRNA/saRNA vaccines hit an innate activation cliff that "
+            "blunts adaptive responses; antigen splitting across particles or staged release can "
+            "raise the effective antigen load without exceeding that cliff."
+        ),
+        "experiments": [
+            "Titrate antigen count per LNP vs split multi-particle regimens and measure IFN/IL-6",
+            "Correlate innate markers with neutralizing titers across regimens",
+            "Test delayed-release co-delivery of adjuvant vs antigen RNA",
+        ],
+        "readout": "≥2× neutralizing titer at matched total RNA dose without higher systemic cytokines.",
+        "feasibility": "Standard vaccine immunology panels; moderate formulation complexity.",
+    },
 }
 
 
-def suggest_topics(gaps: list[Gap], max_topics: int = 5) -> list[TopicProposal]:
-    """Generate research topic proposals from top gaps, clustered by domain tags."""
+def gap_primary_pack(gap: Gap) -> str:
+    """Assign a single primary pack so hybrid gaps are not absorbed into LNP mass.
+
+    Priority: hybrid_ncrna > gene_editing > lnp_core > (fallback lnp_core).
+    """
+    tags = {t.lower() for t in (gap.domain_tags or [])}
+    blob = f"{gap.title} {gap.description}".lower()
+    # Text cues for hybrid even if tagger missed
+    hybrid_cues = (
+        "ncrna",
+        "non-coding",
+        "noncoding",
+        "bifunctional",
+        "circrna",
+        "lncrna",
+        "mirna",
+        "ribozyme",
+        "adar",
+        "risc",
+        "rna origami",
+        "guide rna",
+    )
+    gene_cues = ("crispr", "cas9", "cas13", "base edit", "gene edit", "indel")
+
+    if tags & PACK_TAG_MEMBERSHIP["hybrid_ncrna"] or any(c in blob for c in hybrid_cues):
+        return "hybrid_ncrna"
+    if tags & PACK_TAG_MEMBERSHIP["gene_editing"] or any(c in blob for c in gene_cues):
+        return "gene_editing"
+    if tags & PACK_TAG_MEMBERSHIP["lnp_core"]:
+        return "lnp_core"
+    return "lnp_core"
+
+
+def tag_to_pack(tag: str) -> str:
+    t = (tag or "").lower()
+    for pack, members in PACK_TAG_MEMBERSHIP.items():
+        if t in members or t == pack:
+            return pack
+    return "lnp_core"
+
+
+def _fallback_template(tag: str) -> dict:
+    return {
+        "title": f"Addressing open gaps in {tag} for nucleic acid delivery",
+        "hypothesis": (
+            f"Systematic investigation of {tag}-linked mechanisms will reveal "
+            "testable intervention points for improving nucleic acid delivery."
+        ),
+        "experiments": [
+            f"Map literature claims vs evidence for {tag} in LNP/mRNA delivery",
+            "Design and test candidate approaches in relevant in vitro models",
+            "Validate top candidates in vivo with clear quantitative readouts",
+        ],
+        "readout": "Pre-registered quantitative improvement over a defined baseline formulation.",
+        "feasibility": "Feasible with standard molecular biology and nanoparticle characterization tools.",
+    }
+
+
+@dataclass
+class _Candidate:
+    tag: str
+    pack_id: str
+    gaps: list[Gap]
+    mean_overall: float
+    rank_score: float
+    template: dict
+
+
+def _build_candidates(
+    gaps: list[Gap],
+    *,
+    pack_balance: bool,
+) -> list[_Candidate]:
+    """Build one candidate topic per domain tag that appears on gaps."""
+    # Primary pack assignment reduces hybrid→LNP leakage
+    pack_gaps: dict[str, list[Gap]] = defaultdict(list)
+    for g in gaps:
+        pack_gaps[gap_primary_pack(g)].append(g)
+
+    # Tag clusters: prefer tags that match the gap's primary pack
+    domain_clusters: dict[str, list[Gap]] = defaultdict(list)
+    for g in gaps:
+        pack = gap_primary_pack(g)
+        tags = [t.lower() for t in (g.domain_tags or []) if t]
+        if not tags:
+            tags = [DEFAULT_DOMAIN]
+        # Keep only tags belonging to this gap's primary pack; if none, use pack-native default
+        pack_members = PACK_TAG_MEMBERSHIP.get(pack, set())
+        filtered = [t for t in tags if t in pack_members or tag_to_pack(t) == pack]
+        if not filtered:
+            # synthetic anchor tag so pack still produces a topic
+            filtered = [PACK_SEED_TAG.get(pack, DEFAULT_DOMAIN)]
+        for t in filtered:
+            domain_clusters[t].append(g)
+
+    # Ensure each non-empty pack has at least one native template cluster
+    for pack, gs in pack_gaps.items():
+        if not gs:
+            continue
+        natives = PACK_NATIVE_TEMPLATES.get(pack, set())
+        if not any(t in domain_clusters for t in natives):
+            seed = PACK_SEED_TAG.get(pack) or (sorted(natives)[0] if natives else DEFAULT_DOMAIN)
+            domain_clusters[seed].extend(gs)
+
+    candidates: list[_Candidate] = []
+    for tag, gs in domain_clusters.items():
+        if not gs:
+            continue
+        mean_ov = sum(g.overall for g in gs) / len(gs)
+        # Coverage term: more supporting gaps → slightly higher rank (capped)
+        coverage = min(0.12, 0.02 * len(gs))
+        pack = tag_to_pack(tag)
+        boost = PACK_SCORE_BOOST.get(pack, 0.0) if pack_balance else 0.0
+        # Native-template affinity: hybrid templates get full boost; generic LNP less so
+        native = tag in PACK_NATIVE_TEMPLATES.get(pack, set())
+        affinity = 0.03 if (pack_balance and native and pack != "lnp_core") else 0.0
+        # Novelty/testability blend from gap axes
+        mean_nov = sum(g.novelty for g in gs) / len(gs)
+        mean_test = sum(g.testability for g in gs) / len(gs)
+        axis = 0.15 * mean_nov + 0.10 * mean_test
+        rank = mean_ov + coverage + boost + affinity + 0.05 * (axis - 0.5)
+        rank = max(0.0, min(1.0, rank))
+        tmpl = TEMPLATES.get(tag)
+        if tmpl is None and tag == "gene_editing":
+            tmpl = TEMPLATES.get("gene_therapy")
+        if tmpl is None and tag == "ncrna":
+            tmpl = TEMPLATES.get("hybrid_ncrna")
+        tmpl = tmpl or _fallback_template(tag)
+        candidates.append(
+            _Candidate(
+                tag=tag,
+                pack_id=pack,
+                gaps=sorted(gs, key=lambda x: x.overall, reverse=True),
+                mean_overall=mean_ov,
+                rank_score=rank,
+                template=tmpl,
+            )
+        )
+    return candidates
+
+
+def _select_balanced(
+    candidates: list[_Candidate],
+    max_topics: int,
+    *,
+    pack_balance: bool,
+    min_per_pack: dict[str, int] | None,
+) -> list[_Candidate]:
+    """Greedy pack-diverse selection then fill by rank_score."""
+    if not candidates:
+        return []
+    if not pack_balance:
+        return sorted(candidates, key=lambda c: c.rank_score, reverse=True)[:max_topics]
+
+    mins = {"hybrid_ncrna": 1, "gene_editing": 0, "lnp_core": 1}
+    if min_per_pack:
+        mins.update(min_per_pack)
+
+    by_pack: dict[str, list[_Candidate]] = defaultdict(list)
+    for c in candidates:
+        by_pack[c.pack_id].append(c)
+    for pack in by_pack:
+        by_pack[pack].sort(key=lambda c: c.rank_score, reverse=True)
+
+    selected: list[_Candidate] = []
+    used_titles: set[str] = set()
+    used_tags: set[str] = set()
+
+    def _take(c: _Candidate) -> bool:
+        title = c.template["title"]
+        if title in used_titles or c.tag in used_tags:
+            return False
+        if len(selected) >= max_topics:
+            return False
+        used_titles.add(title)
+        used_tags.add(c.tag)
+        selected.append(c)
+        return True
+
+    # Diversity pass: reserve slots for packs that have evidence
+    for pack in PACK_PRIORITY:
+        need = mins.get(pack, 0)
+        if need <= 0:
+            continue
+        if pack not in by_pack or not by_pack[pack]:
+            continue
+        taken = 0
+        for c in by_pack[pack]:
+            if taken >= need:
+                break
+            if _take(c):
+                taken += 1
+
+    # Global fill by rank
+    remaining = sorted(candidates, key=lambda c: c.rank_score, reverse=True)
+    for c in remaining:
+        if len(selected) >= max_topics:
+            break
+        _take(c)
+
+    return selected
+
+
+def suggest_topics(
+    gaps: list[Gap],
+    max_topics: int = 5,
+    *,
+    pack_balance: bool = True,
+    min_per_pack: dict[str, int] | None = None,
+) -> list[TopicProposal]:
+    """Generate research topic proposals from top gaps with pack-aware ranking.
+
+    When ``pack_balance`` is True (default), hybrid/bifunctional ncRNA and gene-editing
+    packs get reserved representation so LNP-core mass does not monopolize top-k.
+    """
     if not gaps:
         return []
 
-    domain_clusters: dict[str, list[Gap]] = {}
-    for gap in gaps:
-        tags = gap.domain_tags or [DEFAULT_DOMAIN]
-        for tag in tags:
-            domain_clusters.setdefault(tag, []).append(gap)
-
-    cluster_scores = {
-        tag: sum(g.overall for g in gs) / len(gs) for tag, gs in domain_clusters.items()
-    }
-    sorted_clusters = sorted(cluster_scores.items(), key=lambda x: x[1], reverse=True)
+    candidates = _build_candidates(gaps, pack_balance=pack_balance)
+    chosen = _select_balanced(
+        candidates,
+        max_topics=max_topics,
+        pack_balance=pack_balance,
+        min_per_pack=min_per_pack,
+    )
 
     proposals: list[TopicProposal] = []
-    used_titles: set[str] = set()
-
-    for tag, avg_score in sorted_clusters:
-        if len(proposals) >= max_topics:
-            break
-        template = TEMPLATES.get(
-            tag,
-            {
-                "title": f"Addressing open gaps in {tag} for nucleic acid delivery",
-                "hypothesis": (
-                    f"Systematic investigation of {tag}-linked mechanisms will reveal "
-                    "testable intervention points for improving nucleic acid delivery."
-                ),
-                "experiments": [
-                    f"Map literature claims vs evidence for {tag} in LNP/mRNA delivery",
-                    "Design and test candidate approaches in relevant in vitro models",
-                    "Validate top candidates in vivo with clear quantitative readouts",
-                ],
-                "readout": "Pre-registered quantitative improvement over a defined baseline formulation.",
-                "feasibility": "Feasible with standard molecular biology and nanoparticle characterization tools.",
-            },
+    for c in chosen:
+        gap_ids = [g.id for g in c.gaps[:3]]
+        # Display priority stays on scientific score (mean overall), not boost
+        display_priority = round(min(1.0, c.mean_overall), 2)
+        pack_note = f"pack={c.pack_id}"
+        balance_note = (
+            f"rank={c.rank_score:.2f} (pack-balanced)"
+            if pack_balance
+            else f"rank={c.rank_score:.2f}"
         )
-        title = template["title"]
-        if title in used_titles:
-            continue
-        used_titles.add(title)
+        domain_tags = [c.tag]
+        if c.pack_id not in domain_tags:
+            domain_tags.append(c.pack_id)
 
-        gap_ids = [g.id for g in domain_clusters[tag][:3]]
         proposals.append(
             TopicProposal(
-                title=title[:200],
-                hypothesis=template["hypothesis"],
+                title=c.template["title"][:200],
+                hypothesis=c.template["hypothesis"],
                 gap_ids=gap_ids,
-                proposed_experiments=list(template["experiments"]),
-                expected_readout=template["readout"],
-                feasibility_notes=template["feasibility"],
+                proposed_experiments=list(c.template["experiments"]),
+                expected_readout=c.template["readout"],
+                feasibility_notes=c.template["feasibility"],
                 impact_rationale=(
-                    f"Addresses {len(gap_ids)} scored gaps in '{tag}' "
-                    f"(cluster mean overall={avg_score:.2f}). "
-                    "Success would advance therapeutically relevant nucleic acid delivery."
+                    f"Addresses {len(gap_ids)} scored gaps in '{c.tag}' "
+                    f"({pack_note}, cluster mean overall={c.mean_overall:.2f}, {balance_note}). "
+                    "Success would advance therapeutically relevant nucleic acid delivery "
+                    "and/or hybrid ncRNA mechanisms."
                 ),
-                priority=round(avg_score, 2),
-                domain_tags=[tag],
+                priority=display_priority,
+                domain_tags=domain_tags,
+                pack_id=c.pack_id,
+                rank_score=round(c.rank_score, 4),
             )
         )
 
-    proposals.sort(key=lambda t: t.priority, reverse=True)
-    logger.info("Generated %d topic proposals from %d gaps", len(proposals), len(gaps))
+    # Stable sort: rank_score desc, then priority, then title
+    proposals.sort(key=lambda t: (t.rank_score, t.priority, t.title), reverse=True)
+    logger.info(
+        "Generated %d topic proposals from %d gaps (pack_balance=%s; packs=%s)",
+        len(proposals),
+        len(gaps),
+        pack_balance,
+        {p.pack_id: 1 for p in proposals},
+    )
     return proposals

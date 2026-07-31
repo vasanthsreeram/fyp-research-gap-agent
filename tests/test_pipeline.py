@@ -393,7 +393,7 @@ class TestDomainPack:
         assert len(hybrid) >= 12
         claims, evidence = extract_all(papers[:40], mode="heuristic")
         gaps = find_gaps(claims, evidence, papers[:40], aligner="lexical")
-        topics = suggest_topics(gaps)
+        topics = suggest_topics(gaps, pack_balance=True)
         report = run_domain_pack_eval(
             papers[:40], claims, evidence, gaps, topics, cutoff_year=2024
         )
@@ -407,6 +407,46 @@ class TestDomainPack:
         tags = tag_domains("bifunctional ncRNA mRNA co-delivery and RISC loading")
         assert "hybrid_ncrna" in tags
 
+    def test_pack_aware_topic_ranking_surfaces_hybrid(self):
+        """Balanced ranking must reserve hybrid pack slots (not LNP-only top-k)."""
+        from src.topics.suggest import gap_primary_pack
+
+        papers = load_fixture()
+        claims, evidence = extract_all(papers, mode="heuristic")
+        gaps = find_gaps(claims, evidence, papers, aligner="lexical")
+        assert any(gap_primary_pack(g) == "hybrid_ncrna" for g in gaps)
+
+        balanced = suggest_topics(gaps, max_topics=5, pack_balance=True)
+        packs = {t.pack_id for t in balanced}
+        assert "hybrid_ncrna" in packs
+        assert "lnp_core" in packs
+        assert all(t.pack_id for t in balanced)
+        assert all(0.0 <= t.rank_score <= 1.0 for t in balanced)
+        # At least one hybrid-native title (not generic LNP template)
+        hybrid_titles = [t.title for t in balanced if t.pack_id == "hybrid_ncrna"]
+        assert hybrid_titles
+        assert any(
+            "ncRNA" in t or "nucleic acid" in t.lower() or "bifunctional" in t.lower() or "Cargo-selective" in t
+            for t in hybrid_titles
+        )
+
+        unbalanced = suggest_topics(gaps, max_topics=5, pack_balance=False)
+        # Unbalanced may still include hybrid via scoring, but balanced must
+        # not drop hybrid when hybrid gaps exist.
+        assert any(t.pack_id == "hybrid_ncrna" for t in balanced)
+        assert len(unbalanced) <= 5
+        assert len(balanced) <= 5
+
+    def test_gap_primary_pack_prefers_hybrid(self):
+        from src.topics.suggest import gap_primary_pack
+
+        g = Gap(
+            title="Bifunctional ncRNA payload competition",
+            description="RISC loading vs mRNA translation in shared LNP",
+            domain_tags=["lnp", "hybrid_ncrna", "mrna"],
+            overall=0.7,
+        )
+        assert gap_primary_pack(g) == "hybrid_ncrna"
 
 class TestFeedback:
     def test_add_and_summarize(self, tmp_path):

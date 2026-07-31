@@ -1,14 +1,14 @@
 {
-  "run_id": "run_9c4ac94a48a9",
-  "started_at": "2026-07-30T10:05:44.392573",
-  "finished_at": "2026-07-30T10:05:52.800024",
+  "run_id": "run_76911bf217d3",
+  "started_at": "2026-07-31T10:04:21.642797",
+  "finished_at": "2026-07-31T10:04:21.809860",
   "domain": "nucleic_acid_delivery",
   "n_papers": 52,
   "n_claims": 88,
   "n_evidence": 160,
-  "n_gaps": 89,
+  "n_gaps": 103,
   "n_topics": 5,
   "extractor_mode": "heuristic",
-  "aligner_mode": "embedding",
+  "aligner_mode": "lexical",
   "notes": ""
 }
