@@ -105,6 +105,16 @@ def run(
         "--pack-balance/--no-pack-balance",
         help="Pack-aware topic ranking (reserve hybrid/gene slots so LNP mass does not monopolize top-k)",
     ),
+    year_min: Optional[int] = typer.Option(
+        None,
+        "--year-min",
+        help="Prefer papers with year >= this (live S2 filter; fixture soft-filter)",
+    ),
+    cross_paper: bool = typer.Option(
+        True,
+        "--cross-paper/--no-cross-paper",
+        help="Detect multi-paper claim tensions (supportive vs limiting dialectics)",
+    ),
 ):
     """End-to-end pipeline: ingest → extract → gap-score → suggest → report."""
     # Eager keychain resolve for auto/llm mode
@@ -113,6 +123,14 @@ def run(
             from src.extract.llm_util import resolve_openai_api_key
 
             resolve_openai_api_key()
+        except Exception:
+            pass
+    # Resolve S2 key early so live ingest sees it
+    if not use_fixture:
+        try:
+            from src.ingest.keys import resolve_s2_api_key
+
+            resolve_s2_api_key()
         except Exception:
             pass
 
@@ -126,12 +144,14 @@ def run(
     )
     logger.info("=== FYP Research Gap Agent — run %s ===", manifest.run_id)
     logger.info(
-        "Domain=%s mode=%s aligner=%s fixture=%s limit=%d",
+        "Domain=%s mode=%s aligner=%s fixture=%s limit=%d year_min=%s cross_paper=%s",
         domain,
         mode,
         aligner,
         use_fixture,
         limit,
+        year_min,
+        cross_paper,
     )
 
     # 1. Papers
@@ -144,10 +164,24 @@ def run(
     if not loaded_papers or refetch or use_fixture:
         from src.ingest import ingest_papers
 
-        logger.info("Running ingestion (fixture=%s limit=%d)...", use_fixture, limit)
-        loaded_papers = ingest_papers(use_fixture=use_fixture, save=save, limit=limit)
+        logger.info(
+            "Running ingestion (fixture=%s limit=%d year_min=%s)...",
+            use_fixture,
+            limit,
+            year_min,
+        )
+        loaded_papers = ingest_papers(
+            use_fixture=use_fixture,
+            save=save,
+            limit=limit,
+            year_min=year_min,
+        )
     else:
         loaded_papers = loaded_papers[: max(1, limit)]
+        if year_min is not None:
+            filt = [p for p in loaded_papers if (p.year or 0) >= year_min]
+            if filt:
+                loaded_papers = filt
 
     manifest.n_papers = len(loaded_papers)
     logger.info("Papers: %d", len(loaded_papers))
@@ -202,6 +236,7 @@ def run(
         aligner=resolved_aligner,  # type: ignore[arg-type]
         use_chroma=not no_chroma,
         chroma_dir=(PROC_DIR / "chroma_gap_index") if save and not no_chroma else None,
+        cross_paper=cross_paper,
     )
     manifest.n_gaps = len(all_gaps)
     if save:
@@ -289,6 +324,9 @@ def run(
         f"Evidence: {len(all_evidence)}"
     )
     print(f"  Gaps: {len(all_gaps)} | Topics: {len(all_topics)}")
+    n_x = sum(1 for g in all_gaps if getattr(g.kind, "value", "") == "cross_paper_tension")
+    if n_x:
+        print(f"  Cross-paper tension gaps: {n_x}")
     print(f"  Extractor: {manifest.extractor_mode} | Aligner: {manifest.aligner_mode}")
     if mem_report is not None:
         print(
@@ -343,14 +381,42 @@ def status():
 def fetch_papers(
     use_fixture: bool = typer.Option(False, "--fixture", "-f", help="Use bundled fixture papers"),
     limit: int = typer.Option(20, "--limit", "-n", help="Max papers"),
+    year_min: Optional[int] = typer.Option(None, "--year-min", help="Min publication year"),
+    year_max: Optional[int] = typer.Option(None, "--year-max", help="Max publication year"),
 ):
     """Fetch papers from Semantic Scholar / arXiv and cache locally."""
     from src.ingest import ingest_papers
+    from src.ingest.keys import resolve_s2_api_key, s2_key_status
 
-    papers = ingest_papers(use_fixture=use_fixture, save=True, limit=limit)
+    if not use_fixture:
+        resolve_s2_api_key()
+        st = s2_key_status()
+        print(f"S2 key present: {st['present']} (source={st['source']})")
+    papers = ingest_papers(
+        use_fixture=use_fixture,
+        save=True,
+        limit=limit,
+        year_min=year_min,
+        year_max=year_max,
+    )
     print(f"Ingested {len(papers)} papers")
     for p in papers[:8]:
-        print(f"  - [{p.source}] {p.title[:90]}")
+        y = p.year or "?"
+        print(f"  - [{p.source}|{y}] {p.title[:90]}")
+
+
+@app.command("s2-status")
+def s2_status_cmd():
+    """Show whether a Semantic Scholar API key is resolvable (no secret printed)."""
+    from src.ingest.keys import resolve_s2_api_key, s2_key_status
+
+    resolve_s2_api_key()
+    st = s2_key_status()
+    print("Semantic Scholar API key status")
+    print(f"  present: {st['present']}")
+    print(f"  source:  {st['source']}")
+    print(f"  hint:    {st['hint']}")
+    raise typer.Exit(0 if st["present"] else 1)
 
 
 @app.command("mem-bench")

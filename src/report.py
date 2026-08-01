@@ -69,10 +69,17 @@ def build_markdown_report(
         lines.append("")
 
     lines += [f"## Top Gaps ({len(gaps)})", ""]
+    n_cross = sum(
+        1 for g in gaps if getattr(getattr(g, "kind", None), "value", "") == "cross_paper_tension"
+    )
+    if n_cross:
+        lines += [f"_Including **{n_cross}** cross-paper tension gaps (multi-paper dialectics)._", ""]
     for i, g in enumerate(gaps[:12], 1):
+        n_papers = len(getattr(g, "paper_ids", None) or [])
         lines += [
             f"### {i}. {g.title}",
-            f"- **Kind**: `{g.kind.value}`",
+            f"- **Kind**: `{g.kind.value}`"
+            + (f" · **papers**: {n_papers}" if n_papers > 1 else ""),
             (
                 f"- **Score**: overall={g.overall:.2f} magnitude={g.magnitude:.2f} "
                 f"novelty={g.novelty:.2f} testability={g.testability:.2f} impact={g.impact:.2f}"
@@ -169,10 +176,13 @@ def build_html_report(
 
     gap_blocks = []
     for i, g in enumerate(gaps[:12], 1):
+        n_p = len(getattr(g, "paper_ids", None) or [])
+        multi = f'<span class="tag">{n_p} papers</span>' if n_p > 1 else ""
         gap_blocks.append(
             f"""<article class="card">
   <h3>{i}. {_esc(g.title)}</h3>
   <div class="tags"><span class="tag">{_esc(g.kind.value)}</span>
+  {multi}
   <span class="score">overall {g.overall:.2f}</span></div>
   <p>{_esc(g.description[:400])}</p>
   <p class="muted">{_esc(g.rationale)}</p>

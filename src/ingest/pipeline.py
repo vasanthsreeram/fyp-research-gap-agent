@@ -4,12 +4,12 @@ from __future__ import annotations
 
 import json
 import logging
-import os
 from pathlib import Path
 from typing import Optional
 
 from src.models import Paper
 from src.ingest import arxiv_client, semantic_scholar as s2
+from src.ingest.keys import resolve_s2_api_key
 
 logger = logging.getLogger(__name__)
 
@@ -66,27 +66,44 @@ def ingest_papers(
     save: bool = True,
     limit: int = 20,
     include_arxiv: bool = True,
+    year_min: Optional[int] = None,
+    year_max: Optional[int] = None,
+    prefer_recent: bool = True,
 ) -> list[Paper]:
     """
     Ingest pipeline:
       1. If use_fixture → load fixture only
-      2. Else try Semantic Scholar (+ optional arXiv), merge, dedupe
+      2. Else resolve S2 API key (env/Keychain), try Semantic Scholar (+ optional arXiv)
       3. If live APIs yield 0 → fixture fallback
       4. Truncate to `limit`, cache under data/raw + data/processed
+
+    year_min/year_max: prefer post-cutoff / recent literature (S2 year filter + client filter).
     """
     RAW_DIR.mkdir(parents=True, exist_ok=True)
     PROCESSED_DIR.mkdir(parents=True, exist_ok=True)
 
     if use_fixture:
         papers = load_fixture()
+        if year_min is not None:
+            filtered = [p for p in papers if (p.year or 0) >= year_min]
+            # Keep fixture usable even if filter is aggressive
+            if filtered:
+                papers = filtered
+            else:
+                logger.warning(
+                    "Fixture year_min=%s matched 0 papers; keeping full fixture",
+                    year_min,
+                )
     else:
         papers = []
-        api_key = os.environ.get("S2_API_KEY") or os.environ.get("SEMANTIC_SCHOLAR_API_KEY")
+        api_key = resolve_s2_api_key()
 
         raw_s2 = s2.search_all(
             limit_per_query=max(5, min(15, limit)),
-            max_papers=max(limit * 2, 30),
+            max_papers=max(limit * 2, 40),
             api_key=api_key,
+            year_min=year_min,
+            year_max=year_max,
         )
         if raw_s2:
             s2.save_raw(raw_s2, RAW_DIR / "semantic_scholar.json")
@@ -96,23 +113,42 @@ def ingest_papers(
                     papers.append(m)
 
         if include_arxiv:
-            raw_ax = arxiv_client.search(max_results=min(15, limit))
+            raw_ax = arxiv_client.search(max_results=min(20, max(limit, 10)))
             if raw_ax:
                 arxiv_client.save_raw(raw_ax, RAW_DIR / "arxiv.json")
                 for r in raw_ax:
                     m = arxiv_client.to_paper(r)
-                    if m and (m.abstract or "").strip():
-                        papers.append(m)
+                    if not m or not (m.abstract or "").strip():
+                        continue
+                    if year_min is not None and (m.year or 0) < year_min:
+                        continue
+                    if year_max is not None and m.year and m.year > year_max:
+                        continue
+                    papers.append(m)
 
         papers = _dedupe_papers(papers)
-        # Prefer papers with abstracts and more recent years
-        papers.sort(key=lambda p: (bool(p.abstract), p.year or 0, p.citation_count or 0), reverse=True)
+        # Prefer abstracts, recent years, citation mass
+        if prefer_recent:
+            papers.sort(
+                key=lambda p: (bool(p.abstract), p.year or 0, p.citation_count or 0),
+                reverse=True,
+            )
+        else:
+            papers.sort(
+                key=lambda p: (bool(p.abstract), p.citation_count or 0, p.year or 0),
+                reverse=True,
+            )
 
         if not papers:
             logger.warning("Live APIs returned 0 usable papers; falling back to fixtures")
             papers = load_fixture()
         else:
-            logger.info("Live ingest produced %d papers before limit", len(papers))
+            logger.info(
+                "Live ingest produced %d papers before limit (S2 key=%s year_min=%s)",
+                len(papers),
+                "yes" if api_key else "no",
+                year_min,
+            )
 
     papers = papers[: max(1, limit)]
 

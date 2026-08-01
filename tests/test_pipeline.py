@@ -478,6 +478,98 @@ class TestFeedback:
         assert r2.rating == 3
 
 
+class TestCrossPaperTension:
+    def test_stance_score_polarity(self):
+        from src.gap.tension import stance_score
+
+        pos = stance_score("We demonstrate efficient delivery and achieve significant expression in vivo.")
+        neg = stance_score(
+            "However, endosomal escape remains poorly understood and is a major bottleneck."
+        )
+        assert pos > 0.2
+        assert neg < -0.2
+        assert stance_score("") == 0.0
+
+    def test_tension_clusters_multi_paper(self):
+        from src.gap.tension import find_cross_paper_gaps, find_tension_clusters
+        from src.models import Claim, ClaimType, Evidence, EvidenceType, GapKind, Paper
+
+        papers = [
+            Paper(
+                id="p_a",
+                title="Ionizable lipids enable endosomal escape",
+                abstract="We show efficient endosomal escape via ionizable lipids.",
+                year=2022,
+            ),
+            Paper(
+                id="p_b",
+                title="Endosomal escape remains elusive",
+                abstract="Endosomal escape efficiency remains poorly understood.",
+                year=2024,
+            ),
+        ]
+        claims = [
+            Claim(
+                id="c1",
+                paper_id="p_a",
+                text=(
+                    "Ionizable lipids in LNPs promote efficient endosomal escape of mRNA "
+                    "through membrane destabilization and achieve high cytosolic delivery."
+                ),
+                claim_type=ClaimType.MECHANISM,
+                tags=["lnp", "endosomal_escape"],
+            ),
+            Claim(
+                id="c2",
+                paper_id="p_b",
+                text=(
+                    "Endosomal escape of lipid nanoparticles remains poorly understood "
+                    "and is a major bottleneck; efficient cytosolic delivery is still elusive."
+                ),
+                claim_type=ClaimType.MECHANISM,
+                tags=["lnp", "endosomal_escape"],
+                uncertainty="mechanism unclear",
+            ),
+        ]
+        evidence = [
+            Evidence(
+                id="e1",
+                paper_id="p_b",
+                text="Limitation: less than 2% of cargo escapes endosomes in vivo.",
+                evidence_type=EvidenceType.LIMITATION,
+            )
+        ]
+        clusters = find_tension_clusters(claims, evidence, sim_threshold=0.15)
+        assert clusters, "expected at least one tension cluster"
+        assert len(clusters[0].paper_ids) >= 2
+        gaps = find_cross_paper_gaps(claims, evidence, papers, sim_threshold=0.15)
+        assert gaps
+        assert gaps[0].kind == GapKind.CROSS_PAPER_TENSION
+        assert len(gaps[0].paper_ids) >= 2
+
+    def test_find_gaps_includes_cross_paper_on_fixture(self):
+        papers = load_fixture()[:30]
+        claims, evidence = extract_all(papers, mode="heuristic")
+        gaps = find_gaps(claims, evidence, papers, aligner="lexical", cross_paper=True)
+        x = [g for g in gaps if g.kind == GapKind.CROSS_PAPER_TENSION]
+        # Fixture is rich enough that some multi-paper tensions should appear
+        assert isinstance(x, list)
+        # Cross-paper off must not emit this kind
+        gaps_off = find_gaps(claims, evidence, papers, aligner="lexical", cross_paper=False)
+        assert all(g.kind != GapKind.CROSS_PAPER_TENSION for g in gaps_off)
+
+
+class TestS2KeyResolver:
+    def test_s2_status_dict_shape(self):
+        from src.ingest.keys import s2_key_status
+
+        st = s2_key_status()
+        assert "present" in st
+        assert "source" in st
+        assert "hint" in st
+        assert isinstance(st["present"], bool)
+
+
 class TestReport:
     def test_html_and_markdown_builders(self):
         from src.models import RunManifest

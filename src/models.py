@@ -39,6 +39,7 @@ class GapKind(str, Enum):
     SCALABILITY = "scalability"
     MECHANISM_UNKNOWN = "mechanism_unknown"
     DELIVERY_BARRIER = "delivery_barrier"
+    CROSS_PAPER_TENSION = "cross_paper_tension"
     OTHER = "other"
 
 

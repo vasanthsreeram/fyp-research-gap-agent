@@ -7,10 +7,10 @@
 
 ## Status
 
-Stage 2: modular packages, claim-recall, LLM path, embedding gap alignment, **memorization safeguards v2**, **pack-aware topic ranking**, **52-paper corpus**, **dual-domain pack eval**, **human feedback harness**.
+Stage 2: modular packages, claim-recall, LLM path, embedding gap alignment, **memorization safeguards v2**, **pack-aware topic ranking**, **cross-paper claim tension**, **live S2 key path**, **52-paper corpus**, **dual-domain pack eval**, **human feedback harness**.
 
-Latest heuristic extract on fixture: **52 papers → 88 structured claims → 160 evidence → 103 gaps → 5 pack-balanced topics**.  
-Mem-bench **PASS** (ground 100%, unsup/cite/over/leak 0%, controlled 7/7). Domain pack **PASS**. Tests: **42 passed**.
+Latest heuristic extract on fixture: **52 papers → 88 structured claims → 160 evidence → 104 gaps (incl. cross-paper) → 5 pack-balanced topics**.  
+Mem-bench **PASS** (ground 100%, unsup/cite/over/leak 0%, controlled 7/7). Domain pack **PASS**. Tests: **46 passed**.
 
 See [`docs/STATUS.md`](docs/STATUS.md), [`docs/memorization-eval.md`](docs/memorization-eval.md), and [`docs/supervisor-update-draft.md`](docs/supervisor-update-draft.md).
 
@@ -35,8 +35,11 @@ python -m src.cli mem-bench --fixture --limit 52 --cutoff-year 2024
 python -m src.cli feedback-add --type gap --id gap_xxx --rating 5 --labels surprising,testable
 python -m src.cli feedback-summary
 
-# Live ingest attempt (S2 + arXiv; falls back to fixture on failure)
-python -m src.cli run --limit 15 --refetch
+# Live ingest path (needs S2 key for reliable 50+)
+python -m src.cli s2-status
+# export S2_API_KEY=...  OR  security add-generic-password -s 'openclaw/fyp/s2-api-key' -a lintware -w
+python -m src.cli fetch-papers --limit 40 --year-min 2024
+python -m src.cli run --refetch --limit 40 --year-min 2024 --mode heuristic
 
 pytest -q
 ```
@@ -53,7 +56,8 @@ Outputs:
 ingest (S2 / arXiv / fixture)
     → extract claims + evidence (heuristic | llm)
     → gap align (lexical | embedding) + multi-axis score
-    → topic suggest
+    → cross-paper claim tension (multi-paper dialectics)
+    → topic suggest (pack-aware)
     → mem-bench + domain-pack eval
     → markdown/HTML report
     → optional human feedback JSONL
@@ -61,10 +65,10 @@ ingest (S2 / arXiv / fixture)
 
 | Package | Role |
 |---------|------|
-| `src/models.py` | Pydantic schemas (+ FeedbackRecord; TopicProposal pack_id/rank_score) |
-| `src/ingest/` | Semantic Scholar + arXiv + fixture pipeline |
+| `src/models.py` | Pydantic schemas (+ FeedbackRecord; TopicProposal pack_id/rank_score; CROSS_PAPER_TENSION) |
+| `src/ingest/` | Semantic Scholar + arXiv + fixture + S2 key resolve |
 | `src/extract/` | Claims, evidence, LLM helpers |
-| `src/gap/` | Lexical + embedding alignment, scoring, Chroma index |
+| `src/gap/` | Lexical + embedding alignment, scoring, Chroma, **cross-paper tension** |
 | `src/topics/` | Pack-aware research topic proposals (hybrid/LNP/gene balance) |
 | `src/eval/` | Memorization bench, domain packs, feedback |
 | `src/cli.py` | Typer CLI |

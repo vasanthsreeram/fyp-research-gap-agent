@@ -147,12 +147,14 @@ def score_gap(
     else:
         magnitude = round(min(0.95, 1.0 - sim), 2)
 
-    # Novelty: higher for mechanism-unknown + less common domains
+    # Novelty: higher for mechanism-unknown + multi-paper tension + less common domains
     novelty = 0.5
     if kind == GapKind.MECHANISM_UNKNOWN:
         novelty += 0.15
     if kind == GapKind.DELIVERY_BARRIER:
         novelty += 0.1
+    if kind == GapKind.CROSS_PAPER_TENSION:
+        novelty += 0.2
     if "endosomal_escape" in domain_tags or "targeting" in domain_tags:
         novelty += 0.1
     if claim and claim.claim_type.value == "mechanism":
@@ -167,6 +169,7 @@ def score_gap(
         GapKind.PREDICTION_MISS: 0.6,
         GapKind.REPRODUCIBILITY: 0.5,
         GapKind.SCALABILITY: 0.45,
+        GapKind.CROSS_PAPER_TENSION: 0.68,
         GapKind.OTHER: 0.5,
     }.get(kind, 0.5)
 
@@ -315,6 +318,8 @@ def find_gaps(
     embedding_threshold: Optional[float] = None,
     use_chroma: bool = True,
     chroma_dir: Optional[Path] = None,
+    cross_paper: bool = True,
+    cross_paper_max: int = 12,
 ) -> list[Gap]:
     """
     Align claims with evidence and surface:
@@ -322,6 +327,7 @@ def find_gaps(
       - claim vs limitation mismatches
       - mechanism claims lacking support
       - unmatched author-stated limitations
+      - cross-paper claim tensions (multi-paper dialectics)
 
     `aligner`: auto | lexical | embedding
     Embedding cosine sims run higher than lexical blends; default embedding
@@ -462,6 +468,31 @@ def find_gaps(
                 rationale="Unmatched author-stated limitation — candidate open problem.",
             )
         )
+
+    # Multi-paper dialectics (supportive vs limiting claims on related topics)
+    if cross_paper and len(claims) >= 2:
+        try:
+            from src.gap.tension import find_cross_paper_gaps
+
+            xp = find_cross_paper_gaps(
+                claims,
+                evidence,
+                papers,
+                max_gaps=cross_paper_max,
+            )
+            # Avoid near-duplicate titles already present
+            existing_titles = {re.sub(r"\s+", " ", g.title.lower())[:60] for g in gaps}
+            added = 0
+            for g in xp:
+                key = re.sub(r"\s+", " ", g.title.lower())[:60]
+                if key in existing_titles:
+                    continue
+                gaps.append(g)
+                existing_titles.add(key)
+                added += 1
+            logger.info("Added %d cross-paper tension gaps", added)
+        except Exception as e:
+            logger.warning("Cross-paper tension pass failed (non-fatal): %s", e)
 
     gaps.sort(key=lambda g: g.overall, reverse=True)
     logger.info(

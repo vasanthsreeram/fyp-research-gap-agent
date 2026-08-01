@@ -15,6 +15,28 @@
 | 2026-07-30 11:01 | pre-meeting | E2E re-verify `run_d4b35242b895` + supervisor email draft |
 | 2026-07-30 21:10 | **wave 6** | Mem safeguards v2: structured claims + detectors + controlled suite |
 | 2026-07-31 10:05 | **wave 7** | Pack-aware topic ranking (hybrid/gene reserved slots) |
+| 2026-08-01 10:05 | **wave 8** | Cross-paper claim tension + live S2 key path |
+
+### Wave 8 summary (2026-08-01 10:05 SGT)
+
+**Goal:** Multi-paper dialectics (not only single-paper gaps) + reliable live corpus refresh path once an S2 key exists.
+
+**New / updated:**
+| Path | Role |
+|------|------|
+| `src/gap/tension.py` | Stance cues + claim clusters → CROSS_PAPER_TENSION gaps |
+| `src/gap/score.py` | Optional cross-paper pass inside `find_gaps` |
+| `src/models.py` | `GapKind.CROSS_PAPER_TENSION` |
+| `src/ingest/keys.py` | S2 API key from env / Keychain |
+| `src/ingest/semantic_scholar.py` | Hybrid/gene queries, year filter, auth pacing |
+| `src/ingest/pipeline.py` | `year_min`/`year_max` + key resolve |
+| `src/cli.py` | `--year-min`, `--cross-paper`, `s2-status` |
+| `src/report.py` | Multi-paper tags in md/html |
+| `tests/test_pipeline.py` | 42 → **46** tests |
+
+**E2E (heuristic, n=52 fixture):** 88 claims · 160 evidence · **104 gaps** (1 cross-paper) · 5 pack-balanced topics · domain pack PASS · mem-bench PASS.
+
+**Top gap:** cross-paper tension on bilayer disruption / endosomal escape mechanism controversy.
 
 ### Wave 7 summary (2026-07-31 10:05 SGT)
 
@@ -73,8 +95,11 @@ Corpus 52 + domain pack + feedback harness. See prior STATUS.
 - S2 + arXiv previously returned **HTTP 429**; backoff/retry now in client. Fixture fallback remains default for demos without key.
 
 ### Next coding session
-- [ ] Live corpus expansion with S2 API key
+- [ ] Store S2 API key and run live 40–50 paper refresh with `--year-min 2024`
 - [ ] Run closed-book LLM probe on held-out titles with small/open model and log risk
-- [ ] Pack-aware topic ranking (prefer hybrid templates on hybrid gaps)
+- [x] Pack-aware topic ranking (prefer hybrid templates on hybrid gaps)
+- [x] Cross-paper claim tension gaps
+- [x] Live S2 key path (code ready; key pending)
 - [ ] Optional: deploy refreshed `site/public/data` bundle to fyp.vasanth.my
 - [ ] Collect real supervisor ratings via feedback CLI after meeting
+- [ ] Stage 3 sketch: cite-grounded experiment cards / argument mining depth
