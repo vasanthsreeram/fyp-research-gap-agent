@@ -1,4 +1,4 @@
-"""Paper ingestion package: Semantic Scholar + arXiv + fixture fallback."""
+"""Paper ingestion package: Semantic Scholar + OpenAlex + arXiv + fixture fallback."""
 
 from __future__ import annotations
 

@@ -7,10 +7,10 @@
 
 ## Status
 
-Stage 2: modular packages, claim-recall, LLM path, embedding gap alignment, **memorization safeguards v2**, **pack-aware topic ranking**, **cross-paper claim tension**, **live S2 key path**, **52-paper corpus**, **dual-domain pack eval**, **human feedback harness**.
+Stage 2: modular packages, claim-recall, LLM path, embedding gap alignment, **memorization safeguards v2**, **pack-aware topic ranking**, **cross-paper claim tension**, **OpenAlex free live ingest**, **experiment protocol cards**, **live S2 key path**, **52-paper corpus**, **dual-domain pack eval**, **human feedback harness**.
 
-Latest heuristic extract on fixture: **52 papers → 88 structured claims → 160 evidence → 104 gaps (incl. cross-paper) → 5 pack-balanced topics**.  
-Mem-bench **PASS** (ground 100%, unsup/cite/over/leak 0%, controlled 7/7). Domain pack **PASS**. Tests: **46 passed**.
+Latest heuristic extract on fixture: **52 papers → 88 structured claims → 160 evidence → 104 gaps (incl. cross-paper) → 5 pack-balanced topics → 5 protocol cards**.  
+Mem-bench **PASS** (ground 100%, unsup/cite/over/leak 0%, controlled 7/7). Domain pack **PASS**. Tests: **49 passed**.
 
 See [`docs/STATUS.md`](docs/STATUS.md), [`docs/memorization-eval.md`](docs/memorization-eval.md), and [`docs/supervisor-update-draft.md`](docs/supervisor-update-draft.md).
 
@@ -35,7 +35,11 @@ python -m src.cli mem-bench --fixture --limit 52 --cutoff-year 2024
 python -m src.cli feedback-add --type gap --id gap_xxx --rating 5 --labels surprising,testable
 python -m src.cli feedback-summary
 
-# Live ingest path (needs S2 key for reliable 50+)
+# Experiment protocol cards (controls / assays / success+stop)
+python -m src.cli protocols --limit 52 --fixture
+
+# Live ingest (OpenAlex free, no key; S2 optional)
+python -m src.cli openalex-status
 python -m src.cli s2-status
 # export S2_API_KEY=...  OR  security add-generic-password -s 'openclaw/fyp/s2-api-key' -a lintware -w
 python -m src.cli fetch-papers --limit 40 --year-min 2024
@@ -45,19 +49,20 @@ pytest -q
 ```
 
 Outputs:
-- `data/processed/papers.jsonl`, `claims.jsonl`, `evidence.jsonl`, `gaps.jsonl`, `topics.jsonl`
+- `data/processed/papers.jsonl`, `claims.jsonl`, `evidence.jsonl`, `gaps.jsonl`, `topics.jsonl`, `protocols.jsonl`
 - `data/processed/feedback.jsonl` (human ratings)
 - `data/processed/chroma_gap_index/` (embedding runs; gitignored)
-- `reports/latest_run.md`, `latest_run.html`, `domain_pack.md`, `memorization_bench.md`
+- `reports/latest_run.md`, `latest_run.html`, `domain_pack.md`, `memorization_bench.md`, `protocols_latest.md`
 
 ## Architecture
 
 ```
-ingest (S2 / arXiv / fixture)
+ingest (S2 / OpenAlex / arXiv / fixture)
     → extract claims + evidence (heuristic | llm)
     → gap align (lexical | embedding) + multi-axis score
     → cross-paper claim tension (multi-paper dialectics)
     → topic suggest (pack-aware)
+    → experiment protocol cards (controls / assays / stop rules)
     → mem-bench + domain-pack eval
     → markdown/HTML report
     → optional human feedback JSONL
@@ -65,11 +70,11 @@ ingest (S2 / arXiv / fixture)
 
 | Package | Role |
 |---------|------|
-| `src/models.py` | Pydantic schemas (+ FeedbackRecord; TopicProposal pack_id/rank_score; CROSS_PAPER_TENSION) |
-| `src/ingest/` | Semantic Scholar + arXiv + fixture + S2 key resolve |
+| `src/models.py` | Pydantic schemas (+ FeedbackRecord; TopicProposal pack_id/rank_score; CROSS_PAPER_TENSION; ExperimentProtocol) |
+| `src/ingest/` | Semantic Scholar + **OpenAlex** + arXiv + fixture + S2 key resolve |
 | `src/extract/` | Claims, evidence, LLM helpers |
 | `src/gap/` | Lexical + embedding alignment, scoring, Chroma, **cross-paper tension** |
-| `src/topics/` | Pack-aware research topic proposals (hybrid/LNP/gene balance) |
+| `src/topics/` | Pack-aware research topic proposals + **protocol cards** |
 | `src/eval/` | Memorization bench, domain packs, feedback |
 | `src/cli.py` | Typer CLI |
 

@@ -24,9 +24,11 @@ def build_markdown_report(
     gaps: list,
     topics: list,
     *,
+    protocols: Optional[list] = None,
     now: Optional[datetime] = None,
 ) -> str:
     now = now or datetime.now(tz=SGT)
+    protocols = protocols or []
     lines: list[str] = []
     started = manifest.started_at
     if started.tzinfo is None:
@@ -47,6 +49,7 @@ def build_markdown_report(
         f"| **Evidence** | {len(evidence)} |",
         f"| **Gaps** | {len(gaps)} |",
         f"| **Topics** | {len(topics)} |",
+        f"| **Protocols** | {len(protocols)} |",
         f"| **Extractor** | {manifest.extractor_mode} |",
         f"| **Aligner** | {manifest.aligner_mode} |",
         "",
@@ -114,6 +117,38 @@ def build_markdown_report(
             "",
         ]
 
+    if protocols:
+        lines += [f"## Experiment Protocol Cards ({len(protocols)})", ""]
+        lines += [
+            "_Structured mini-protocols (controls, assays, success/stop rules). "
+            "Prototype design aids — not wet-lab SOPs._",
+            "",
+        ]
+        for i, pr in enumerate(protocols, 1):
+            lines += [
+                f"### {i}. {pr.title}",
+                f"- **Pack**: {getattr(pr, 'pack_id', None) or '—'} · **topic**: `{getattr(pr, 'topic_id', '')}`",
+                f"- **Primary aim**: {getattr(pr, 'primary_aim', '')}",
+                f"- **Hypothesis**: {getattr(pr, 'hypothesis', '')}",
+                "- **Controls**:",
+            ]
+            for c in getattr(pr, "controls", None) or []:
+                lines.append(f"  - {c}")
+            lines.append("- **Assay panel**:")
+            for a in getattr(pr, "assay_panel", None) or []:
+                lines.append(f"  - {a}")
+            lines.append("- **Success criteria**:")
+            for s in getattr(pr, "success_criteria", None) or []:
+                lines.append(f"  - {s}")
+            lines.append("- **Stop rules**:")
+            for s in getattr(pr, "stop_rules", None) or []:
+                lines.append(f"  - {s}")
+            lines += [
+                f"- **Readout**: {getattr(pr, 'expected_readout', '') or '—'}",
+                f"- **Feasibility**: {getattr(pr, 'feasibility_notes', '') or '—'}",
+                "",
+            ]
+
     lines += [
         "---",
         f"*Report generated at {now.strftime('%Y-%m-%d %H:%M %Z')}*",
@@ -129,10 +164,12 @@ def build_html_report(
     gaps: list,
     topics: list,
     *,
+    protocols: Optional[list] = None,
     now: Optional[datetime] = None,
 ) -> str:
     """Self-contained HTML report for offline viewing / supervisor demo."""
     now = now or datetime.now(tz=SGT)
+    protocols = protocols or []
     started = manifest.started_at
     if started.tzinfo is None:
         started_s = started.strftime("%Y-%m-%d %H:%M") + " SGT"
@@ -208,12 +245,34 @@ def build_html_report(
 </article>"""
         )
 
+    proto_blocks = []
+    for i, pr in enumerate(protocols, 1):
+        ctrls = "".join(f"<li>{_esc(c)}</li>" for c in (getattr(pr, "controls", None) or [])[:6])
+        assays = "".join(f"<li>{_esc(a)}</li>" for a in (getattr(pr, "assay_panel", None) or [])[:6])
+        success = "".join(
+            f"<li>{_esc(s)}</li>" for s in (getattr(pr, "success_criteria", None) or [])[:4]
+        )
+        pack_label = getattr(pr, "pack_id", None) or "—"
+        proto_blocks.append(
+            f"""<article class="card">
+  <h3>{i}. {_esc(getattr(pr, 'title', ''))}</h3>
+  <div class="tags"><span class="tag">protocol</span>
+  <span class="tag">pack:{_esc(pack_label)}</span></div>
+  <p><strong>Aim.</strong> {_esc(getattr(pr, 'primary_aim', ''))}</p>
+  <p><strong>Controls</strong></p><ul>{ctrls}</ul>
+  <p><strong>Assays</strong></p><ul>{assays}</ul>
+  <p><strong>Success</strong></p><ul>{success}</ul>
+  <p class="muted">{_esc((getattr(pr, 'expected_readout', None) or '')[:240])}</p>
+</article>"""
+        )
+
     funnel = [
         ("Papers", len(papers)),
         ("Claims", len(claims)),
         ("Evidence", len(evidence)),
         ("Gaps", len(gaps)),
         ("Topics", len(topics)),
+        ("Protocols", len(protocols)),
     ]
     fmax = max(n for _, n in funnel) or 1
     funnel_html = "\n".join(bar_row(l, n, fmax) for l, n in funnel)
@@ -279,6 +338,7 @@ def build_html_report(
     <div class="stat"><b>{len(evidence)}</b><span>Evidence</span></div>
     <div class="stat"><b>{len(gaps)}</b><span>Gaps</span></div>
     <div class="stat"><b>{len(topics)}</b><span>Topics</span></div>
+    <div class="stat"><b>{len(protocols)}</b><span>Protocols</span></div>
     <div class="stat"><b>{_esc(manifest.extractor_mode)}</b><span>Extractor</span></div>
     <div class="stat"><b>{_esc(manifest.aligner_mode)}</b><span>Aligner</span></div>
   </div>
@@ -299,6 +359,9 @@ def build_html_report(
 
   <h2>Topic proposals</h2>
   {''.join(topic_blocks) or '<p class="muted">No topics</p>'}
+
+  <h2>Experiment protocols</h2>
+  {''.join(proto_blocks) or '<p class="muted">No protocols</p>'}
 
   <footer>Generated { _esc(now.strftime('%Y-%m-%d %H:%M %Z')) } · FYP Research Gap Agent</footer>
 </main>

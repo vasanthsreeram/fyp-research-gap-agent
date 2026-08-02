@@ -16,6 +16,7 @@ from src.models import (
     ClaimType,
     Evidence,
     EvidenceType,
+    ExperimentProtocol,
     Gap,
     GapKind,
     Paper,
@@ -574,11 +575,13 @@ class TestReport:
     def test_html_and_markdown_builders(self):
         from src.models import RunManifest
         from src.report import build_html_report, build_markdown_report
+        from src.topics.protocols import build_protocols
 
         papers = load_fixture()[:2]
         claims, evidence = extract_all(papers, mode="heuristic")
         gaps = find_gaps(claims, evidence, papers, aligner="lexical")
         topics = suggest_topics(gaps, max_topics=2)
+        protos = build_protocols(topics, gaps=gaps)
         m = RunManifest(
             domain="nucleic_acid_delivery",
             extractor_mode="heuristic",
@@ -588,11 +591,109 @@ class TestReport:
             n_evidence=len(evidence),
             n_gaps=len(gaps),
             n_topics=len(topics),
+            n_protocols=len(protos),
         )
-        md = build_markdown_report(m, papers, claims, evidence, gaps, topics)
-        html = build_html_report(m, papers, claims, evidence, gaps, topics)
+        md = build_markdown_report(
+            m, papers, claims, evidence, gaps, topics, protocols=protos
+        )
+        html = build_html_report(
+            m, papers, claims, evidence, gaps, topics, protocols=protos
+        )
         assert "Research Gap Agent" in md
         assert str(len(papers)) in md
+        assert "Protocol" in md or "protocol" in md.lower()
         assert "<!DOCTYPE html>" in html
         assert m.run_id in html
         assert "Topic" in html or "topic" in html.lower()
+        assert "protocol" in html.lower()
+
+
+class TestExperimentProtocols:
+    def test_build_protocol_has_controls_and_success(self):
+        from src.topics.protocols import build_protocol, build_protocols, protocols_to_markdown
+
+        topic = TopicProposal(
+            title="Payload competition in bifunctional ncRNA–mRNA co-delivery nanoparticles",
+            hypothesis=(
+                "When ncRNA and mRNA share a single LNP, endosomal escape capacity is a zero-sum resource."
+            ),
+            proposed_experiments=["Titrate ratios", "Barcode cytosolic arrival"],
+            expected_readout="≥70% of single-payload translation and ≥50% knockdown",
+            feasibility_notes="Standard formulation assays",
+            pack_id="hybrid_ncrna",
+            domain_tags=["hybrid_ncrna"],
+            priority=0.8,
+            rank_score=0.85,
+        )
+        gap = Gap(
+            id="gap_test1",
+            kind=GapKind.MECHANISM_UNKNOWN,
+            title="Escape competition unknown",
+            description="Dual payload competition not quantified",
+            overall=0.7,
+            testability=0.8,
+            novelty=0.7,
+            domain_tags=["hybrid_ncrna"],
+        )
+        topic.gap_ids = [gap.id]
+        proto = build_protocol(topic, gaps=[gap])
+        assert isinstance(proto, ExperimentProtocol)
+        assert proto.topic_id == topic.id
+        assert proto.pack_id == "hybrid_ncrna"
+        assert len(proto.controls) >= 3
+        assert len(proto.assay_panel) >= 3
+        assert len(proto.success_criteria) >= 2
+        assert len(proto.stop_rules) >= 2
+        assert "Protocol:" in proto.title
+        md = protocols_to_markdown([proto])
+        assert "Success criteria" in md
+        assert "Controls" in md
+
+        multi = build_protocols([topic, topic], gaps=[gap], max_protocols=1)
+        assert len(multi) == 1
+
+
+class TestOpenAlexClient:
+    def test_abstract_from_inverted_index(self):
+        from src.ingest.openalex import _abstract_from_inverted, to_paper
+
+        inv = {
+            "Lipid": [0],
+            "nanoparticles": [1],
+            "enable": [2],
+            "mRNA": [3],
+            "delivery.": [4],
+        }
+        text = _abstract_from_inverted(inv)
+        assert "Lipid" in text and "mRNA" in text
+        assert len(text.split()) == 5
+
+        work = {
+            "id": "https://openalex.org/W123",
+            "title": "Test LNP paper",
+            "display_name": "Test LNP paper",
+            "doi": "https://doi.org/10.1000/test",
+            "publication_year": 2025,
+            "cited_by_count": 3,
+            "authorships": [{"author": {"display_name": "A Researcher"}}],
+            "primary_location": {
+                "source": {"display_name": "Test Journal"},
+                "landing_page_url": "https://example.org/paper",
+            },
+            "abstract_inverted_index": inv,
+        }
+        p = to_paper(work)
+        assert p is not None
+        assert p.source == "openalex"
+        assert p.year == 2025
+        assert p.doi == "10.1000/test"
+        assert "Lipid" in p.abstract
+        assert p.authors == ["A Researcher"]
+
+    def test_openalex_status_shape_no_probe(self):
+        from src.ingest.openalex import openalex_status
+
+        st = openalex_status(probe=False)
+        assert "endpoint" in st
+        assert st["reachable"] is None
+        assert "mailto" in st

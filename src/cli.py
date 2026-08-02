@@ -115,6 +115,11 @@ def run(
         "--cross-paper/--no-cross-paper",
         help="Detect multi-paper claim tensions (supportive vs limiting dialectics)",
     ),
+    protocols: bool = typer.Option(
+        True,
+        "--protocols/--no-protocols",
+        help="Build structured experiment protocol cards from topics",
+    ),
 ):
     """End-to-end pipeline: ingest → extract → gap-score → suggest → report."""
     # Eager keychain resolve for auto/llm mode
@@ -256,6 +261,22 @@ def run(
                 f.write(t.model_dump_json() + "\n")
         logger.info("Saved %d topics", len(all_topics))
 
+    # 4b. Experiment protocol cards
+    all_protocols: list = []
+    if protocols:
+        from src.topics.protocols import build_protocols, protocols_to_markdown
+
+        all_protocols = build_protocols(all_topics, gaps=all_gaps)
+        manifest.n_protocols = len(all_protocols)
+        if save:
+            with open(PROC_DIR / "protocols.jsonl", "w") as f:
+                for pr in all_protocols:
+                    f.write(pr.model_dump_json() + "\n")
+            proto_md = REPORTS_DIR / "protocols_latest.md"
+            REPORTS_DIR.mkdir(parents=True, exist_ok=True)
+            proto_md.write_text(protocols_to_markdown(all_protocols))
+            logger.info("Saved %d protocols → %s + %s", len(all_protocols), PROC_DIR, proto_md)
+
     # 5. Memorization / grounding benchmark
     mem_report = None
     if mem_bench:
@@ -293,7 +314,13 @@ def run(
         md_path = report_path if report_path.suffix.lower() in {".md", ".markdown"} else report_path.with_suffix(".md")
         md_path.write_text(
             build_markdown_report(
-                manifest, loaded_papers, all_claims, all_evidence, all_gaps, all_topics
+                manifest,
+                loaded_papers,
+                all_claims,
+                all_evidence,
+                all_gaps,
+                all_topics,
+                protocols=all_protocols,
             )
         )
         written.append(md_path)
@@ -306,7 +333,13 @@ def run(
             html_path = REPORTS_DIR / "latest_run.html"
         html_path.write_text(
             build_html_report(
-                manifest, loaded_papers, all_claims, all_evidence, all_gaps, all_topics
+                manifest,
+                loaded_papers,
+                all_claims,
+                all_evidence,
+                all_gaps,
+                all_topics,
+                protocols=all_protocols,
             )
         )
         written.append(html_path)
@@ -323,7 +356,7 @@ def run(
         f"  Papers: {len(loaded_papers)} | Claims: {len(all_claims)} | "
         f"Evidence: {len(all_evidence)}"
     )
-    print(f"  Gaps: {len(all_gaps)} | Topics: {len(all_topics)}")
+    print(f"  Gaps: {len(all_gaps)} | Topics: {len(all_topics)} | Protocols: {len(all_protocols)}")
     n_x = sum(1 for g in all_gaps if getattr(g.kind, "value", "") == "cross_paper_tension")
     if n_x:
         print(f"  Cross-paper tension gaps: {n_x}")
@@ -365,6 +398,10 @@ def run(
     print("\n── Topic Proposals ──")
     for i, t in enumerate(all_topics, 1):
         print(f"  {i}. [{t.priority:.2f}] {t.title[:100]}")
+    if all_protocols:
+        print("\n── Experiment Protocols ──")
+        for i, pr in enumerate(all_protocols, 1):
+            print(f"  {i}. [{pr.pack_id or '—'}] {pr.title[:100]}")
 
 
 @app.command()
@@ -383,8 +420,9 @@ def fetch_papers(
     limit: int = typer.Option(20, "--limit", "-n", help="Max papers"),
     year_min: Optional[int] = typer.Option(None, "--year-min", help="Min publication year"),
     year_max: Optional[int] = typer.Option(None, "--year-max", help="Max publication year"),
+    no_openalex: bool = typer.Option(False, "--no-openalex", help="Skip OpenAlex live source"),
 ):
-    """Fetch papers from Semantic Scholar / arXiv and cache locally."""
+    """Fetch papers from Semantic Scholar / OpenAlex / arXiv and cache locally."""
     from src.ingest import ingest_papers
     from src.ingest.keys import resolve_s2_api_key, s2_key_status
 
@@ -392,14 +430,20 @@ def fetch_papers(
         resolve_s2_api_key()
         st = s2_key_status()
         print(f"S2 key present: {st['present']} (source={st['source']})")
+        print("OpenAlex: enabled (no key; free polite pool)" if not no_openalex else "OpenAlex: skipped")
     papers = ingest_papers(
         use_fixture=use_fixture,
         save=True,
         limit=limit,
         year_min=year_min,
         year_max=year_max,
+        include_openalex=not no_openalex,
     )
     print(f"Ingested {len(papers)} papers")
+    from collections import Counter
+
+    src_counts = Counter(p.source for p in papers)
+    print(f"  sources: {dict(src_counts)}")
     for p in papers[:8]:
         y = p.year or "?"
         print(f"  - [{p.source}|{y}] {p.title[:90]}")
@@ -417,6 +461,68 @@ def s2_status_cmd():
     print(f"  source:  {st['source']}")
     print(f"  hint:    {st['hint']}")
     raise typer.Exit(0 if st["present"] else 1)
+
+
+@app.command("openalex-status")
+def openalex_status_cmd(
+    probe: bool = typer.Option(True, "--probe/--no-probe", help="Hit OpenAlex with a tiny search"),
+):
+    """Show OpenAlex live-ingest path status (no API key required)."""
+    from src.ingest.openalex import openalex_status
+
+    st = openalex_status(probe=probe)
+    print("OpenAlex status")
+    print(f"  endpoint: {st['endpoint']}")
+    print(f"  mailto:   {st['mailto']}")
+    print(f"  reachable:{st['reachable']}")
+    print(f"  sample:   {st['sample_count']}")
+    print(f"  hint:     {st['hint']}")
+    ok = st["reachable"] is True or st["reachable"] is None
+    raise typer.Exit(0 if ok else 1)
+
+
+@app.command("protocols")
+def protocols_cmd(
+    papers_path: Optional[Path] = typer.Option(None, "--papers", "-p"),
+    mode: str = typer.Option("heuristic", "--mode", "-m"),
+    aligner: str = typer.Option("lexical", "--aligner", "-a"),
+    limit: int = typer.Option(52, "--limit", "-n"),
+    use_fixture: bool = typer.Option(True, "--fixture/--no-fixture"),
+    max_protocols: int = typer.Option(5, "--max", help="Max protocol cards"),
+):
+    """Build experiment protocol cards from fixture/live pipeline (offline-first)."""
+    from src.extract import extract_all
+    from src.gap.score import find_gaps, resolve_aligner
+    from src.ingest import ingest_papers
+    from src.topics.protocols import build_protocols, protocols_to_markdown
+    from src.topics.suggest import suggest_topics
+
+    if papers_path:
+        papers = _load_papers(papers_path)[:limit]
+    elif use_fixture:
+        papers = ingest_papers(use_fixture=True, save=False, limit=limit)
+    else:
+        papers = _load_papers()[:limit] or ingest_papers(use_fixture=True, save=False, limit=limit)
+
+    if not papers:
+        raise typer.Exit(1)
+
+    claims, evidence = extract_all(papers, mode=mode)
+    resolved = resolve_aligner(aligner)  # type: ignore[arg-type]
+    gaps = find_gaps(claims, evidence, papers, aligner=resolved, use_chroma=False)  # type: ignore[arg-type]
+    topics = suggest_topics(gaps, pack_balance=True)
+    protos = build_protocols(topics, gaps=gaps, max_protocols=max_protocols)
+    PROC_DIR.mkdir(parents=True, exist_ok=True)
+    with open(PROC_DIR / "protocols.jsonl", "w") as f:
+        for pr in protos:
+            f.write(pr.model_dump_json() + "\n")
+    out = REPORTS_DIR / "protocols_latest.md"
+    REPORTS_DIR.mkdir(parents=True, exist_ok=True)
+    md = protocols_to_markdown(protos)
+    out.write_text(md)
+    print(md)
+    print(f"\nSaved {len(protos)} protocols → {out}")
+    raise typer.Exit(0)
 
 
 @app.command("mem-bench")

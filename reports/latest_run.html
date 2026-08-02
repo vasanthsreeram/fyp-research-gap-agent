@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Research Gap Agent — run_c4f35185e362</title>
+<title>Research Gap Agent — run_58137be90363</title>
 <style>
   :root {
     --bg: #0b1220; --card: #121a2b; --text: #e7eefc; --muted: #9db0d0;
@@ -51,7 +51,7 @@
 <body>
 <main>
   <h1>Research Gap Agent — Run Report</h1>
-  <p class="sub">Run <code>run_c4f35185e362</code> · 2026-08-01 10:05 SGT · domain nucleic_acid_delivery</p>
+  <p class="sub">Run <code>run_58137be90363</code> · 2026-08-02 10:06 SGT · domain nucleic_acid_delivery</p>
 
   <div class="grid">
     <div class="stat"><b>52</b><span>Papers</span></div>
@@ -59,6 +59,7 @@
     <div class="stat"><b>160</b><span>Evidence</span></div>
     <div class="stat"><b>104</b><span>Gaps</span></div>
     <div class="stat"><b>5</b><span>Topics</span></div>
+    <div class="stat"><b>5</b><span>Protocols</span></div>
     <div class="stat"><b>heuristic</b><span>Extractor</span></div>
     <div class="stat"><b>lexical</b><span>Aligner</span></div>
   </div>
@@ -68,7 +69,8 @@
 <div class="bar-row"><span class="bar-label">Claims</span><div class="bar-track"><div class="bar-fill" style="width:55%"></div></div><span class="bar-n">88</span></div>
 <div class="bar-row"><span class="bar-label">Evidence</span><div class="bar-track"><div class="bar-fill" style="width:100%"></div></div><span class="bar-n">160</span></div>
 <div class="bar-row"><span class="bar-label">Gaps</span><div class="bar-track"><div class="bar-fill" style="width:65%"></div></div><span class="bar-n">104</span></div>
-<div class="bar-row"><span class="bar-label">Topics</span><div class="bar-track"><div class="bar-fill" style="width:3%"></div></div><span class="bar-n">5</span></div></div>
+<div class="bar-row"><span class="bar-label">Topics</span><div class="bar-track"><div class="bar-fill" style="width:3%"></div></div><span class="bar-n">5</span></div>
+<div class="bar-row"><span class="bar-label">Protocols</span><div class="bar-track"><div class="bar-fill" style="width:3%"></div></div><span class="bar-n">5</span></div></div>
 
   <h2>Gap kinds</h2>
   <div class="card"><div class="bar-row"><span class="bar-label">theory_vs_experiment</span><div class="bar-track"><div class="bar-fill" style="width:100%"></div></div><span class="bar-n">36</span></div>
@@ -89,7 +91,7 @@
   <div class="tags"><span class="tag">cross_paper_tension</span>
   <span class="tag">10 papers</span>
   <span class="score">overall 0.82</span></div>
-  <p>Related claims across 10 papers (2020–2025) pull in different directions (stance spread=1.00, mean sim=0.20). Supportive: —. Limiting/hedged: However, the molecular mechanism linking SORT lipid charge to corona composition remains poorly unde; However, the exact molecular mechanism of bilayer disruption remains controversial, and direct cryo-. Papers: Bifunctional guide–scaffold RNAs couple Cas9 e</p>
+  <p>Related claims across 10 papers (2020–2025) pull in different directions (stance spread=1.00, mean sim=0.20). Supportive: —. Limiting/hedged: However, the molecular mechanism linking SORT lipid charge to corona composition remains poorly unde; However, the exact molecular mechanism of bilayer disruption remains controversial, and direct cryo-. Papers: Aptamer-ncRNA chimeras for receptor-mediated c</p>
   <p class="muted">Cross-paper dialectic: 0 supportive vs 9 limiting claims over 10 papers; stance_spread=1.0, mean_sim=0.203.</p>
 </article><article class="card">
   <h3>2. Untested: We hypothesized that bifunctional designs displaying both endosomal-disrupting p</h3>
@@ -218,7 +220,55 @@
   <p><strong>Readout.</strong> ≥2× potency/inflammation ratio vs SM-102 or MC3 reference LNPs.</p>
 </article>
 
-  <footer>Generated 2026-08-01 10:05 +08 · FYP Research Gap Agent</footer>
+  <h2>Experiment protocols</h2>
+  <article class="card">
+  <h3>1. Protocol: Payload competition in bifunctional ncRNA–mRNA co-delivery nanoparticles</h3>
+  <div class="tags"><span class="tag">protocol</span>
+  <span class="tag">pack:hybrid_ncrna</span></div>
+  <p><strong>Aim.</strong> Test whether when ncRNA and mRNA share a single LNP, endosomal escape capacity is a zero-sum resource</p>
+  <p><strong>Controls</strong></p><ul><li>Single-payload mRNA-only LNP (matched total RNA mass)</li><li>Single-payload ncRNA-only LNP</li><li>Scrambled ncRNA + mRNA co-LNP</li><li>Vehicle / empty LNP and untreated cells</li></ul>
+  <p><strong>Assays</strong></p><ul><li>Dual-payload encapsulation efficiency (RiboGreen / fluorophore orthogonal labels)</li><li>Translation (luciferase or NanoLuc) and target knockdown (RT-qPCR / western) in same wells</li><li>Cytosolic arrival reporters (split-fluorophore or aptamer) for each cargo</li><li>RISC loading / Ago2 IP for ncRNA arm; ribosome profiling optional for mRNA arm</li><li>Cell viability + IFN/ISG panel (CXCL10, IFIT1) for innate cost</li></ul>
+  <p><strong>Success</strong></p><ul><li>Primary: Identify a ratio/chemistry window with ≥70% of single-payload translation and ≥50% target knockdown.</li><li>Pre-register binary pass if primary numeric threshold is met with the study&#x27;s planned analysis (hints in readout: ≥70%, ≥50%).</li><li>Secondary: no worse than reference on pre-specified safety panel (viability drop ≤20% in vitro; no unexpected grade of systemic cytokines in vivo).</li><li>Replicates: ≥3 independent formulations for in vitro; in vivo n powered for primary effect size.</li></ul>
+  <p class="muted">Identify a ratio/chemistry window with ≥70% of single-payload translation and ≥50% target knockdown.</p>
+</article><article class="card">
+  <h3>2. Protocol: Non-hepatic gene editing via serum-stable hybrid DNA–LNP scaffolds</h3>
+  <div class="tags"><span class="tag">protocol</span>
+  <span class="tag">pack:gene_editing</span></div>
+  <p><strong>Aim.</strong> Test whether dNA-organized ionizable lipid domains improve serum stability and spleen/immune-cell editing without proportional increases in off-target genomic injury</p>
+  <p><strong>Controls</strong></p><ul><li>Cas/base-editor mRNA only (no guide)</li><li>Guide only (no editor)</li><li>Standard clinical-like ionizable LNP reference (e.g. SM-102 or MC3 class)</li><li>Isotype / non-targeting guide control</li></ul>
+  <p><strong>Assays</strong></p><ul><li>On-target indel / base-conversion rate (NGS amplicon)</li><li>Off-target panel (guided SITE-seq subset or in silico top-N NGS)</li><li>Serum stability (incubation + gel / encapsulation retention)</li><li>Organ editing biodistribution (qPCR of edit + cargo) at 48–72 h</li><li>Innate activation (IL-6, IFN-α) vs matched empty LNP</li></ul>
+  <p><strong>Success</strong></p><ul><li>Primary: ≥2× extrahepatic editing at matched liver exposure and ≤baseline off-target rate.</li><li>Pre-register binary pass if primary numeric threshold is met with the study&#x27;s planned analysis (hints in readout: ≥2×).</li><li>Secondary: no worse than reference on pre-specified safety panel (viability drop ≤20% in vitro; no unexpected grade of systemic cytokines in vivo).</li><li>Replicates: ≥3 independent formulations for in vitro; in vivo n powered for primary effect size.</li></ul>
+  <p class="muted">≥2× extrahepatic editing at matched liver exposure and ≤baseline off-target rate.</p>
+</article><article class="card">
+  <h3>3. Protocol: Ligand-displaying LNPs for extrahepatic targeting: avidity vs specificity</h3>
+  <div class="tags"><span class="tag">protocol</span>
+  <span class="tag">pack:lnp_core</span></div>
+  <p><strong>Aim.</strong> Test whether multivalent display of low-affinity targeting ligands (e</p>
+  <p><strong>Controls</strong></p><ul><li>Clinical-like reference LNP (SM-102 or MC3 class) at matched dose</li><li>Non-ionizable lipid control particle</li><li>Free nucleic acid (no particle)</li><li>Vehicle-only</li></ul>
+  <p><strong>Assays</strong></p><ul><li>Size / PDI / zeta (DLS) and encapsulation efficiency</li><li>In vitro transfection across ≥3 cell types (hepato, endo, immune)</li><li>Endosomal escape proxy (galectin puncta or calcein release)</li><li>In vivo reporter biodistribution (liver vs extrahepatic organs)</li><li>Repeat-dose PK / anti-PEG IgM if multi-dose claim</li></ul>
+  <p><strong>Success</strong></p><ul><li>Primary: Target-to-liver uptake ratio; ≥5× improvement over non-targeted LNPs.</li><li>Pre-register binary pass if primary numeric threshold is met with the study&#x27;s planned analysis (hints in readout: ≥5×).</li><li>Secondary: no worse than reference on pre-specified safety panel (viability drop ≤20% in vitro; no unexpected grade of systemic cytokines in vivo).</li><li>Replicates: ≥3 independent formulations for in vitro; in vivo n powered for primary effect size.</li></ul>
+  <p class="muted">Target-to-liver uptake ratio; ≥5× improvement over non-targeted LNPs.</p>
+</article><article class="card">
+  <h3>4. Protocol: Mechanistic understanding of LNP endosomal escape: fusion vs destabilization</h3>
+  <div class="tags"><span class="tag">protocol</span>
+  <span class="tag">pack:lnp_core</span></div>
+  <p><strong>Aim.</strong> Test whether endosomal escape of LNPs proceeds primarily through membrane destabilization (ionizable lipid-facilitated flip-flop and bilayer disruption) rather than fusogenic mechanisms, and can be enhanced by helper lipids that lower the lamellar-to-hexagonal phase transition temperature</p>
+  <p><strong>Controls</strong></p><ul><li>Clinical-like reference LNP (SM-102 or MC3 class) at matched dose</li><li>Non-ionizable lipid control particle</li><li>Free nucleic acid (no particle)</li><li>Vehicle-only</li></ul>
+  <p><strong>Assays</strong></p><ul><li>Size / PDI / zeta (DLS) and encapsulation efficiency</li><li>In vitro transfection across ≥3 cell types (hepato, endo, immune)</li><li>Endosomal escape proxy (galectin puncta or calcein release)</li><li>In vivo reporter biodistribution (liver vs extrahepatic organs)</li><li>Repeat-dose PK / anti-PEG IgM if multi-dose claim</li></ul>
+  <p><strong>Success</strong></p><ul><li>Primary: Quantitative fraction of delivered cargo reaching cytosol vs lysosomal degradation.</li><li>Pre-register a binary pass/fail on the primary readout vs reference LNP before unblinding in vivo arms.</li><li>Secondary: no worse than reference on pre-specified safety panel (viability drop ≤20% in vitro; no unexpected grade of systemic cytokines in vivo).</li><li>Replicates: ≥3 independent formulations for in vitro; in vivo n powered for primary effect size.</li></ul>
+  <p class="muted">Quantitative fraction of delivered cargo reaching cytosol vs lysosomal degradation.</p>
+</article><article class="card">
+  <h3>5. Protocol: Decoupling innate immune activation from LNP delivery potency</h3>
+  <div class="tags"><span class="tag">protocol</span>
+  <span class="tag">pack:lnp_core</span></div>
+  <p><strong>Aim.</strong> Test whether ionizable lipid structure independently drives TLR/inflammasome activation versus endosomal escape</p>
+  <p><strong>Controls</strong></p><ul><li>Clinical-like reference LNP (SM-102 or MC3 class) at matched dose</li><li>Non-ionizable lipid control particle</li><li>Free nucleic acid (no particle)</li><li>Vehicle-only</li></ul>
+  <p><strong>Assays</strong></p><ul><li>Size / PDI / zeta (DLS) and encapsulation efficiency</li><li>In vitro transfection across ≥3 cell types (hepato, endo, immune)</li><li>Endosomal escape proxy (galectin puncta or calcein release)</li><li>In vivo reporter biodistribution (liver vs extrahepatic organs)</li><li>Repeat-dose PK / anti-PEG IgM if multi-dose claim</li></ul>
+  <p><strong>Success</strong></p><ul><li>Primary: ≥2× potency/inflammation ratio vs SM-102 or MC3 reference LNPs.</li><li>Pre-register binary pass if primary numeric threshold is met with the study&#x27;s planned analysis (hints in readout: ≥2×, 102 , 3 ).</li><li>Secondary: no worse than reference on pre-specified safety panel (viability drop ≤20% in vitro; no unexpected grade of systemic cytokines in vivo).</li><li>Replicates: ≥3 independent formulations for in vitro; in vivo n powered for primary effect size.</li></ul>
+  <p class="muted">≥2× potency/inflammation ratio vs SM-102 or MC3 reference LNPs.</p>
+</article>
+
+  <footer>Generated 2026-08-02 10:06 +08 · FYP Research Gap Agent</footer>
 </main>
 </body>
 </html>

@@ -143,6 +143,33 @@ class TopicProposal(BaseModel):
     rank_score: float = Field(default=0.5, ge=0.0, le=1.0)
 
 
+class ExperimentProtocol(BaseModel):
+    """Structured mini-protocol card derived from a TopicProposal.
+
+    Prototype design aid (controls, assays, success/stop rules) — not a wet-lab SOP.
+    """
+
+    id: str = Field(default_factory=lambda: _id("proto"))
+    topic_id: str
+    title: str
+    pack_id: Optional[str] = None
+    primary_aim: str = ""
+    hypothesis: str = ""
+    steps: list[str] = Field(default_factory=list)
+    controls: list[str] = Field(default_factory=list)
+    assay_panel: list[str] = Field(default_factory=list)
+    materials: list[str] = Field(default_factory=list)
+    success_criteria: list[str] = Field(default_factory=list)
+    stop_rules: list[str] = Field(default_factory=list)
+    timeline_weeks: list[str] = Field(default_factory=list)
+    risks: list[str] = Field(default_factory=list)
+    gap_ids: list[str] = Field(default_factory=list)
+    domain_tags: list[str] = Field(default_factory=list)
+    feasibility_notes: str = ""
+    expected_readout: str = ""
+    rationale: str = ""
+
+
 class RunManifest(BaseModel):
     """Metadata for one end-to-end pipeline run."""
 
@@ -155,6 +182,7 @@ class RunManifest(BaseModel):
     n_evidence: int = 0
     n_gaps: int = 0
     n_topics: int = 0
+    n_protocols: int = 0
     extractor_mode: str = "heuristic"
     aligner_mode: str = "auto"  # auto | lexical | embedding (resolved value recorded at finish)
     notes: str = ""

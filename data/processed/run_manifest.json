@@ -1,13 +1,14 @@
 {
-  "run_id": "run_c4f35185e362",
-  "started_at": "2026-08-01T10:05:04.243080",
-  "finished_at": "2026-08-01T10:05:04.441196",
+  "run_id": "run_58137be90363",
+  "started_at": "2026-08-02T10:06:27.302615",
+  "finished_at": "2026-08-02T10:06:27.433348",
   "domain": "nucleic_acid_delivery",
   "n_papers": 52,
   "n_claims": 88,
   "n_evidence": 160,
   "n_gaps": 104,
   "n_topics": 5,
+  "n_protocols": 5,
   "extractor_mode": "heuristic",
   "aligner_mode": "lexical",
   "notes": ""

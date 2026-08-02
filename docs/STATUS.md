@@ -16,9 +16,9 @@ Updated by daily progress cron + human/call notes.
 - Write notes + propose approaches; formal start ~August; early progress welcome
 - Audio/transcript: ~/.openclaw/workspace/tmp/fyp-prof-meeting/
 
-## Current stage: **Stage 2** (2026-08-01 10:05 SGT)
+## Current stage: **Stage 2** (2026-08-02 10:10 SGT)
 
-Wave 8 — **cross-paper claim tension** + **live S2 key path** (env/Keychain, year filter, hybrid/gene queries).
+Wave 9 — **OpenAlex free live ingest** + **experiment protocol cards** (controls / assays / success+stop rules).
 
 ### Stage checklist
 - [x] S0 Freeze scope 1-pager for prof (problem, domain, eval, risks)
@@ -45,69 +45,71 @@ Wave 8 — **cross-paper claim tension** + **live S2 key path** (env/Keychain, y
 - [x] **S2 Richer hybrid-specific topic ranking (pack-aware suggester)** — primary pack + reserved slots + rank_score
 - [x] **S2 Cross-paper claim tension gaps** — multi-paper dialectics (`src/gap/tension.py`; GapKind.CROSS_PAPER_TENSION)
 - [x] **S2 Live S2 API key path** — env + Keychain resolve, year filter, hybrid/gene query pack, `s2-status` CLI *(key itself still missing on this machine)*
+- [x] **S2 OpenAlex free live ingest** — no-key Works API, year filter, abstract rebuild, `openalex-status` *(verified 20× ≥2024)*
+- [x] **S2 Experiment protocol cards** — controls, assay panel, success/stop rules, timeline (`ExperimentProtocol`; `protocols` CLI)
 - [ ] Register BG4801 when eligible
-- [ ] Store S2 API key (`S2_API_KEY` or Keychain `openclaw/fyp/s2-api-key`) and refresh live 50+ corpus
+- [ ] Optional: store S2 API key for dual-source live refresh (OpenAlex already unblocks live path)
 - [ ] Closed-book LLM mem probe on held-out titles (optional; run with small/open model)
 
-### What shipped (2026-08-01 10:05 SGT — wave 8 cross-paper + live S2 path)
+### What shipped (2026-08-02 10:10 SGT — wave 9 OpenAlex + protocols)
 
 | Metric | Value |
 |--------|-------|
 | Papers | **52** (fixture; **21** year≥2024 held-out) |
 | Claims (heuristic) | **88** |
 | Evidence | **160** |
-| Gaps | **104** (incl. **1** cross-paper tension; was 103) |
+| Gaps | **104** (incl. **1** cross-paper tension) |
 | Topics (balanced) | **5** — packs: hybrid + gene_editing + lnp_core |
+| Protocols | **5** (pack-specific controls/assays/success/stop) |
 | Domain pack | **PASS** |
-| pytest | **46 passed** (was 42) |
+| pytest | **49 passed** (was 46) |
 | Mem-bench | **PASS** — ground 100%/100%, unsup/cite/over/leak 0% |
-| S2 key on host | **absent** (path ready; use `python -m src.cli s2-status`) |
+| OpenAlex live | **reachable**; sample **20** works year≥2024 with abstracts |
+| S2 key on host | **absent** (path ready; OpenAlex covers free live refresh) |
 
-**New / updated (wave 8)**
+**New / updated (wave 9)**
 ```
-src/gap/tension.py          # cross-paper stance clusters → tension gaps
-src/gap/score.py            # wires tension pass; CROSS_PAPER scoring
-src/models.py               # GapKind.CROSS_PAPER_TENSION
-src/ingest/keys.py          # S2 env + Keychain resolver
-src/ingest/semantic_scholar.py  # hybrid/gene queries, year filter, auth pacing
-src/ingest/pipeline.py      # year_min/max + key resolve
-src/cli.py                  # --year-min, --cross-paper, s2-status, fetch year flags
-src/report.py               # multi-paper gap tags
-tests/test_pipeline.py      # +4 tests (tension + s2 status)
+src/ingest/openalex.py      # free Works API client (no key)
+src/ingest/pipeline.py      # OpenAlex when S2 thin / no key
+src/topics/protocols.py     # ExperimentProtocol cards from topics
+src/models.py               # ExperimentProtocol + RunManifest.n_protocols
+src/cli.py                  # --protocols, openalex-status, protocols cmd
+src/report.py               # protocol section in md/html
+tests/test_pipeline.py      # +3 tests (protocols + openalex)
+data/raw/openalex_papers_2024plus.jsonl  # live sample cache
+reports/protocols_latest.md
 ```
-
-**Top gap demo signal:** #1 is now a multi-paper dialectic on bilayer-disruption / endosomal-escape mechanism controversy (not single-paper template).
 
 **Demo commands**
 ```bash
 python -m src.cli run --limit 52 --fixture --mode heuristic --aligner lexical --format both
+python -m src.cli protocols --limit 52 --fixture
+python -m src.cli openalex-status
+python -m src.cli fetch-papers --limit 20 --year-min 2024   # uses OpenAlex if S2 weak
 python -m src.cli domain-pack --limit 52 --fixture
 python -m src.cli mem-bench --fixture --limit 52 --cutoff-year 2024
-python -m src.cli s2-status
-# after key is stored:
-# python -m src.cli fetch-papers --limit 40 --year-min 2024
-# python -m src.cli run --refetch --limit 40 --year-min 2024 --mode heuristic
 python -m pytest tests/ -q
 ```
 
 ### Known blockers / honesty notes
 - **Prototype stage** — heuristic extractor + fixture corpus for reliable offline demos; not a production lit-mining system.
-- Live Semantic Scholar still needs an API key for reliable 50+ refresh; path is wired (`s2-status` → absent on this host). Unauthenticated mode keeps backoff/retry + fixture fallback.
+- Live Semantic Scholar still prefers an API key for reliable bulk refresh; **OpenAlex now provides a free no-key live path** (verified). Unauthenticated S2 remains rate-limit sensitive.
 - OpenAI key resolved from Keychain `openclaw/tgcallskill/openai-api-key` (not committed) for LLM extract / optional closed-book probe.
 - Closed-book LLM memorization probe not run in default cron path (offline-first); enable with `mem-bench --closed-book`. Prefer open/small models.
 - Cross-paper tension uses abstract-level stance cues (support vs limit lexicon) — proxy dialectic, not full argument mining.
+- Protocol cards are **design sketches** (controls/assays/stop rules), not wet-lab SOPs or safety approvals.
 - Detectors are **proxy safeguards**, not proof of non-memorization — see `docs/memorization-eval.md`.
 - Pack balance is a ranking policy (reserved slots + soft boosts), not wet-lab priority truth.
 - Do not claim wet-lab results; software/methods/prototype only.
 
 ## Next supervisor meeting: **30 July 2026, 14:00 SGT**
 - Deliverable: `docs/EMAIL_TO_SUPERVISOR.md` + `docs/supervisor-update-draft.md`
-- Demo: Pipeline run (52) + dual-domain pack + HTML report + **mem-bench v2** + **pack-aware topics** + **cross-paper tension** + feedback CLI
+- Demo: Pipeline run (52) + dual-domain pack + HTML report + **mem-bench v2** + **pack-aware topics** + **cross-paper tension** + **protocol cards** + **OpenAlex live** + feedback CLI
 - Board: https://fyp.vasanth.my
 - Questions: domain scope (LNP vs hybrid ncRNA weight), eval rubric labels, memorization rigor, next steps
 
 ## Last automated progress
-- 2026-08-01 10:05 SGT — Wave 8: cross-paper claim tension gaps (GapKind.CROSS_PAPER_TENSION) + live S2 key path (Keychain/env, year filter, hybrid/gene queries, `s2-status`). E2E 52→88c/160e/104g/5 topics; domain pack PASS; mem-bench PASS; 46 tests. S2 key still missing on host.
+- 2026-08-02 10:10 SGT — Wave 9: OpenAlex free live ingest (no S2 key; 20× ≥2024 verified) + experiment protocol cards (5 pack-aware protocols with controls/assays/success+stop). E2E 52→88c/160e/104g/5 topics/5 protocols; domain pack PASS; mem-bench PASS; 49 tests.
 
 ## Daily loop
 - **10:00 SGT** — autonomous coding progress on next unchecked item; commit/push; update this file

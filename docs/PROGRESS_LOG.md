@@ -16,6 +16,26 @@
 | 2026-07-30 21:10 | **wave 6** | Mem safeguards v2: structured claims + detectors + controlled suite |
 | 2026-07-31 10:05 | **wave 7** | Pack-aware topic ranking (hybrid/gene reserved slots) |
 | 2026-08-01 10:05 | **wave 8** | Cross-paper claim tension + live S2 key path |
+| 2026-08-02 10:10 | **wave 9** | OpenAlex free live ingest + experiment protocol cards |
+
+### Wave 9 summary (2026-08-02 10:10 SGT)
+
+**Goal:** Unblock live corpus refresh without S2 key; make topics experimentally discussable (controls, assays, success/stop).
+
+**New / updated:**
+| Path | Role |
+|------|------|
+| `src/ingest/openalex.py` | Free OpenAlex Works client (no key; polite mailto) |
+| `src/ingest/pipeline.py` | OpenAlex when S2 thin / no key |
+| `src/topics/protocols.py` | Pack-aware ExperimentProtocol cards |
+| `src/models.py` | `ExperimentProtocol`, `RunManifest.n_protocols` |
+| `src/cli.py` | `--protocols`, `openalex-status`, `protocols` |
+| `src/report.py` | Protocol section in md/html |
+| `tests/test_pipeline.py` | 46 → **49** tests |
+
+**E2E (heuristic, n=52 fixture):** 88 claims · 160 evidence · 104 gaps · 5 topics · **5 protocols** · domain pack PASS · mem-bench PASS.
+
+**OpenAlex live probe:** 20 works year≥2024 with abstracts (cached `data/raw/openalex_papers_2024plus.jsonl`).
 
 ### Wave 8 summary (2026-08-01 10:05 SGT)
 
@@ -93,13 +113,16 @@ Corpus 52 + domain pack + feedback harness. See prior STATUS.
 
 ### Live API note
 - S2 + arXiv previously returned **HTTP 429**; backoff/retry now in client. Fixture fallback remains default for demos without key.
+- **OpenAlex** (wave 9) provides free no-key live refresh; verified 20× year≥2024 with abstracts.
 
 ### Next coding session
-- [ ] Store S2 API key and run live 40–50 paper refresh with `--year-min 2024`
+- [x] OpenAlex free live ingest (no S2 key)
+- [x] Experiment protocol cards from topics
+- [ ] Optional: store S2 API key for dual-source bulk refresh
 - [ ] Run closed-book LLM probe on held-out titles with small/open model and log risk
 - [x] Pack-aware topic ranking (prefer hybrid templates on hybrid gaps)
 - [x] Cross-paper claim tension gaps
 - [x] Live S2 key path (code ready; key pending)
 - [ ] Optional: deploy refreshed `site/public/data` bundle to fyp.vasanth.my
 - [ ] Collect real supervisor ratings via feedback CLI after meeting
-- [ ] Stage 3 sketch: cite-grounded experiment cards / argument mining depth
+- [ ] Stage 3 sketch: cite-grounded argument mining / full-text PDF depth / novelty-vs-corpus scoring
