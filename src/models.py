@@ -123,6 +123,11 @@ class Gap(BaseModel):
     overall: float = Field(default=0.5, ge=0.0, le=1.0)
     domain_tags: list[str] = Field(default_factory=list)
     rationale: str = ""
+    # Corpus-relative novelty (Stage 3 / wave 10) — optional until novelty pass runs
+    corpus_novelty: Optional[float] = Field(default=None, ge=0.0, le=1.0)
+    nearest_sim: Optional[float] = Field(default=None, ge=0.0, le=1.0)
+    nearest_paper_ids: list[str] = Field(default_factory=list)
+    gap_redundancy: Optional[float] = Field(default=None, ge=0.0, le=1.0)
 
 
 class TopicProposal(BaseModel):

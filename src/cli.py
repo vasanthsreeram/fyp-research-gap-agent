@@ -120,6 +120,16 @@ def run(
         "--protocols/--no-protocols",
         help="Build structured experiment protocol cards from topics",
     ),
+    corpus_novelty: bool = typer.Option(
+        True,
+        "--corpus-novelty/--no-corpus-novelty",
+        help="Rescore gap novelty vs rest of paper corpus (Stage 3 novelty-vs-corpus)",
+    ),
+    novelty_backend: str = typer.Option(
+        "lexical",
+        "--novelty-backend",
+        help="Corpus novelty backend: lexical | embedding | auto (default lexical for offline demos)",
+    ),
 ):
     """End-to-end pipeline: ingest → extract → gap-score → suggest → report."""
     # Eager keychain resolve for auto/llm mode
@@ -149,7 +159,7 @@ def run(
     )
     logger.info("=== FYP Research Gap Agent — run %s ===", manifest.run_id)
     logger.info(
-        "Domain=%s mode=%s aligner=%s fixture=%s limit=%d year_min=%s cross_paper=%s",
+        "Domain=%s mode=%s aligner=%s fixture=%s limit=%d year_min=%s cross_paper=%s novelty=%s",
         domain,
         mode,
         aligner,
@@ -157,6 +167,7 @@ def run(
         limit,
         year_min,
         cross_paper,
+        corpus_novelty,
     )
 
     # 1. Papers
@@ -243,6 +254,30 @@ def run(
         chroma_dir=(PROC_DIR / "chroma_gap_index") if save and not no_chroma else None,
         cross_paper=cross_paper,
     )
+    novelty_report = None
+    if corpus_novelty and all_gaps:
+        from src.gap.novelty import apply_corpus_novelty, save_novelty_report
+
+        try:
+            all_gaps, novelty_report = apply_corpus_novelty(
+                all_gaps,
+                loaded_papers,
+                backend=novelty_backend,  # type: ignore[arg-type]
+                mutate=True,
+            )
+            if save:
+                npath = save_novelty_report(
+                    novelty_report, REPORTS_DIR / "novelty_corpus.md"
+                )
+                logger.info(
+                    "Corpus novelty: mean=%.2f high=%d redundant=%d → %s",
+                    novelty_report.mean_corpus_novelty,
+                    novelty_report.n_high_novelty,
+                    novelty_report.n_redundant,
+                    npath,
+                )
+        except Exception as e:
+            logger.warning("Corpus novelty pass failed (non-fatal): %s", e)
     manifest.n_gaps = len(all_gaps)
     if save:
         with open(PROC_DIR / "gaps.jsonl", "w") as f:
@@ -360,6 +395,13 @@ def run(
     n_x = sum(1 for g in all_gaps if getattr(g.kind, "value", "") == "cross_paper_tension")
     if n_x:
         print(f"  Cross-paper tension gaps: {n_x}")
+    if novelty_report is not None:
+        print(
+            f"  Corpus novelty: mean={novelty_report.mean_corpus_novelty:.2f} "
+            f"high≥0.55={novelty_report.n_high_novelty} "
+            f"redundant≥0.55={novelty_report.n_redundant} "
+            f"({novelty_report.backend})"
+        )
     print(f"  Extractor: {manifest.extractor_mode} | Aligner: {manifest.aligner_mode}")
     if mem_report is not None:
         print(
@@ -522,6 +564,57 @@ def protocols_cmd(
     out.write_text(md)
     print(md)
     print(f"\nSaved {len(protos)} protocols → {out}")
+    raise typer.Exit(0)
+
+
+@app.command("novelty")
+def novelty_cmd(
+    papers_path: Optional[Path] = typer.Option(None, "--papers", "-p"),
+    mode: str = typer.Option("heuristic", "--mode", "-m"),
+    aligner: str = typer.Option("lexical", "--aligner", "-a"),
+    limit: int = typer.Option(52, "--limit", "-n"),
+    use_fixture: bool = typer.Option(True, "--fixture/--no-fixture"),
+    backend: str = typer.Option(
+        "lexical",
+        "--backend",
+        "-b",
+        help="lexical | embedding | auto",
+    ),
+    top: int = typer.Option(12, "--top", help="Top surprising gaps in report"),
+):
+    """Score gaps for novelty vs rest of paper corpus (offline-first)."""
+    from src.extract import extract_all
+    from src.gap.novelty import apply_corpus_novelty, novelty_report_markdown, save_novelty_report
+    from src.gap.score import find_gaps, resolve_aligner
+    from src.ingest import ingest_papers
+
+    if papers_path:
+        papers = _load_papers(papers_path)[:limit]
+    elif use_fixture:
+        papers = ingest_papers(use_fixture=True, save=False, limit=limit)
+    else:
+        papers = _load_papers()[:limit] or ingest_papers(use_fixture=True, save=False, limit=limit)
+
+    if not papers:
+        raise typer.Exit(1)
+
+    claims, evidence = extract_all(papers, mode=mode)
+    resolved = resolve_aligner(aligner)  # type: ignore[arg-type]
+    gaps = find_gaps(claims, evidence, papers, aligner=resolved, use_chroma=False)  # type: ignore[arg-type]
+    gaps, report = apply_corpus_novelty(gaps, papers, backend=backend, mutate=True)  # type: ignore[arg-type]
+
+    PROC_DIR.mkdir(parents=True, exist_ok=True)
+    with open(PROC_DIR / "gaps.jsonl", "w") as f:
+        for g in gaps:
+            f.write(g.model_dump_json() + "\n")
+    out = REPORTS_DIR / "novelty_corpus.md"
+    save_novelty_report(report, out, top_n=top)
+    print(novelty_report_markdown(report, top_n=top))
+    print(
+        f"\nCorpus novelty mean={report.mean_corpus_novelty:.2f} "
+        f"high={report.n_high_novelty} redundant={report.n_redundant} backend={report.backend}"
+    )
+    print(f"Saved → {out} (+ gaps.jsonl rescored)")
     raise typer.Exit(0)
 
 

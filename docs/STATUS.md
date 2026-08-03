@@ -16,9 +16,9 @@ Updated by daily progress cron + human/call notes.
 - Write notes + propose approaches; formal start ~August; early progress welcome
 - Audio/transcript: ~/.openclaw/workspace/tmp/fyp-prof-meeting/
 
-## Current stage: **Stage 2** (2026-08-02 10:10 SGT)
+## Current stage: **Stage 2 → Stage 3 start** (2026-08-03 10:03 SGT)
 
-Wave 9 — **OpenAlex free live ingest** + **experiment protocol cards** (controls / assays / success+stop rules).
+Wave 10 — **Novelty-vs-corpus scoring** (corpus_novelty + gap redundancy + nearest papers; blends into gap.novelty/overall).
 
 ### Stage checklist
 - [x] S0 Freeze scope 1-pager for prof (problem, domain, eval, risks)
@@ -47,11 +47,14 @@ Wave 9 — **OpenAlex free live ingest** + **experiment protocol cards** (contro
 - [x] **S2 Live S2 API key path** — env + Keychain resolve, year filter, hybrid/gene query pack, `s2-status` CLI *(key itself still missing on this machine)*
 - [x] **S2 OpenAlex free live ingest** — no-key Works API, year filter, abstract rebuild, `openalex-status` *(verified 20× ≥2024)*
 - [x] **S2 Experiment protocol cards** — controls, assay panel, success/stop rules, timeline (`ExperimentProtocol`; `protocols` CLI)
+- [x] **S3 Novelty-vs-corpus scoring** — `src/gap/novelty.py`; nearest papers; redundancy penalty; `novelty` CLI; report `novelty_corpus.md`
 - [ ] Register BG4801 when eligible
 - [ ] Optional: store S2 API key for dual-source live refresh (OpenAlex already unblocks live path)
 - [ ] Closed-book LLM mem probe on held-out titles (optional; run with small/open model)
+- [ ] S3 Cite-grounded argument mining (beyond stance lexicon)
+- [ ] S3 Full-text PDF depth (abstract-only today)
 
-### What shipped (2026-08-02 10:10 SGT — wave 9 OpenAlex + protocols)
+### What shipped (2026-08-03 10:03 SGT — wave 10 novelty-vs-corpus)
 
 | Metric | Value |
 |--------|-------|
@@ -60,32 +63,31 @@ Wave 9 — **OpenAlex free live ingest** + **experiment protocol cards** (contro
 | Evidence | **160** |
 | Gaps | **104** (incl. **1** cross-paper tension) |
 | Topics (balanced) | **5** — packs: hybrid + gene_editing + lnp_core |
-| Protocols | **5** (pack-specific controls/assays/success/stop) |
+| Protocols | **5** |
+| Corpus novelty mean | **0.79** (lexical; own papers excluded) |
+| High novelty (≥0.55) | **104** |
+| Redundant gaps (≥0.55) | **7** |
 | Domain pack | **PASS** |
-| pytest | **49 passed** (was 46) |
+| pytest | **52 passed** (was 49) |
 | Mem-bench | **PASS** — ground 100%/100%, unsup/cite/over/leak 0% |
-| OpenAlex live | **reachable**; sample **20** works year≥2024 with abstracts |
-| S2 key on host | **absent** (path ready; OpenAlex covers free live refresh) |
 
-**New / updated (wave 9)**
+**New / updated (wave 10)**
 ```
-src/ingest/openalex.py      # free Works API client (no key)
-src/ingest/pipeline.py      # OpenAlex when S2 thin / no key
-src/topics/protocols.py     # ExperimentProtocol cards from topics
-src/models.py               # ExperimentProtocol + RunManifest.n_protocols
-src/cli.py                  # --protocols, openalex-status, protocols cmd
-src/report.py               # protocol section in md/html
-tests/test_pipeline.py      # +3 tests (protocols + openalex)
-data/raw/openalex_papers_2024plus.jsonl  # live sample cache
-reports/protocols_latest.md
+src/gap/novelty.py          # corpus novelty + redundancy + nearest papers
+src/models.py               # Gap.corpus_novelty / nearest_* / gap_redundancy
+src/gap/__init__.py         # export apply_corpus_novelty
+src/cli.py                  # --corpus-novelty, --novelty-backend, novelty cmd
+src/report.py               # corpus novelty tags in md/html
+tests/test_pipeline.py      # +3 tests (TestCorpusNovelty)
+reports/novelty_corpus.md   # top surprising gaps with nearest papers
 ```
 
 **Demo commands**
 ```bash
 python -m src.cli run --limit 52 --fixture --mode heuristic --aligner lexical --format both
+python -m src.cli novelty --limit 52 --fixture --backend lexical
 python -m src.cli protocols --limit 52 --fixture
 python -m src.cli openalex-status
-python -m src.cli fetch-papers --limit 20 --year-min 2024   # uses OpenAlex if S2 weak
 python -m src.cli domain-pack --limit 52 --fixture
 python -m src.cli mem-bench --fixture --limit 52 --cutoff-year 2024
 python -m pytest tests/ -q
@@ -98,18 +100,19 @@ python -m pytest tests/ -q
 - Closed-book LLM memorization probe not run in default cron path (offline-first); enable with `mem-bench --closed-book`. Prefer open/small models.
 - Cross-paper tension uses abstract-level stance cues (support vs limit lexicon) — proxy dialectic, not full argument mining.
 - Protocol cards are **design sketches** (controls/assays/stop rules), not wet-lab SOPs or safety approvals.
+- Corpus novelty is **text-distance to other abstracts** (own sources excluded) — proxy for “surprising vs this corpus”, not global literature novelty or expert judgment.
 - Detectors are **proxy safeguards**, not proof of non-memorization — see `docs/memorization-eval.md`.
 - Pack balance is a ranking policy (reserved slots + soft boosts), not wet-lab priority truth.
 - Do not claim wet-lab results; software/methods/prototype only.
 
 ## Next supervisor meeting: **30 July 2026, 14:00 SGT**
 - Deliverable: `docs/EMAIL_TO_SUPERVISOR.md` + `docs/supervisor-update-draft.md`
-- Demo: Pipeline run (52) + dual-domain pack + HTML report + **mem-bench v2** + **pack-aware topics** + **cross-paper tension** + **protocol cards** + **OpenAlex live** + feedback CLI
+- Demo: Pipeline run (52) + dual-domain pack + HTML report + **mem-bench v2** + **pack-aware topics** + **cross-paper tension** + **protocol cards** + **OpenAlex live** + **novelty-vs-corpus** + feedback CLI
 - Board: https://fyp.vasanth.my
 - Questions: domain scope (LNP vs hybrid ncRNA weight), eval rubric labels, memorization rigor, next steps
 
 ## Last automated progress
-- 2026-08-02 10:10 SGT — Wave 9: OpenAlex free live ingest (no S2 key; 20× ≥2024 verified) + experiment protocol cards (5 pack-aware protocols with controls/assays/success+stop). E2E 52→88c/160e/104g/5 topics/5 protocols; domain pack PASS; mem-bench PASS; 49 tests.
+- 2026-08-03 10:03 SGT — Wave 10: Novelty-vs-corpus scoring (`src/gap/novelty.py`). Gaps rescored with corpus_novelty (1−nearest other abstract) + redundancy penalty + nearest-paper grounding. E2E 52→88c/160e/104g mean_cn=0.79 / 7 redundant; domain pack PASS; mem-bench PASS; **52 tests**.
 
 ## Daily loop
 - **10:00 SGT** — autonomous coding progress on next unchecked item; commit/push; update this file

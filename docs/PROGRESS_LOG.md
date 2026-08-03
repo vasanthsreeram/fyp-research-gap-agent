@@ -17,6 +17,23 @@
 | 2026-07-31 10:05 | **wave 7** | Pack-aware topic ranking (hybrid/gene reserved slots) |
 | 2026-08-01 10:05 | **wave 8** | Cross-paper claim tension + live S2 key path |
 | 2026-08-02 10:10 | **wave 9** | OpenAlex free live ingest + experiment protocol cards |
+| 2026-08-03 10:03 | **wave 10** | Novelty-vs-corpus scoring (nearest papers + redundancy) |
+
+
+### Wave 10 summary (2026-08-03 10:03 SGT)
+
+**Goal:** Make “scientifically surprising” quantitative vs the ingested corpus (Stage 3 start).
+
+**New / updated:**
+| Path | Role |
+|------|------|
+| `src/gap/novelty.py` | Corpus novelty + gap redundancy + nearest papers + report |
+| `src/models.py` | `Gap.corpus_novelty`, `nearest_sim`, `nearest_paper_ids`, `gap_redundancy` |
+| `src/cli.py` | `--corpus-novelty`, `--novelty-backend`, `novelty` command |
+| `src/report.py` | Corpus novelty tags in md/html gap cards |
+| `tests/test_pipeline.py` | 49 → **52** tests |
+
+**E2E (heuristic, n=52 fixture):** 88 claims · 160 evidence · 104 gaps · mean corpus novelty **0.79** · **7** redundant · 5 topics · 5 protocols · domain pack PASS · mem-bench PASS.
 
 ### Wave 9 summary (2026-08-02 10:10 SGT)
 
@@ -118,6 +135,7 @@ Corpus 52 + domain pack + feedback harness. See prior STATUS.
 ### Next coding session
 - [x] OpenAlex free live ingest (no S2 key)
 - [x] Experiment protocol cards from topics
+- [x] Novelty-vs-corpus scoring (Stage 3 start)
 - [ ] Optional: store S2 API key for dual-source bulk refresh
 - [ ] Run closed-book LLM probe on held-out titles with small/open model and log risk
 - [x] Pack-aware topic ranking (prefer hybrid templates on hybrid gaps)
@@ -125,4 +143,4 @@ Corpus 52 + domain pack + feedback harness. See prior STATUS.
 - [x] Live S2 key path (code ready; key pending)
 - [ ] Optional: deploy refreshed `site/public/data` bundle to fyp.vasanth.my
 - [ ] Collect real supervisor ratings via feedback CLI after meeting
-- [ ] Stage 3 sketch: cite-grounded argument mining / full-text PDF depth / novelty-vs-corpus scoring
+- [ ] Stage 3: cite-grounded argument mining / full-text PDF depth

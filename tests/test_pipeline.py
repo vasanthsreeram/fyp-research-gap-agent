@@ -697,3 +697,109 @@ class TestOpenAlexClient:
         assert "endpoint" in st
         assert st["reachable"] is None
         assert "mailto" in st
+
+
+class TestCorpusNovelty:
+    def test_similarity_and_empty(self):
+        from src.gap.novelty import apply_corpus_novelty, similarity_lexical
+
+        assert similarity_lexical("lipid nanoparticle mrna", "lipid nanoparticle mrna") > 0.9
+        assert similarity_lexical("aaa", "zzz completely unrelated words here") < 0.2
+        gaps, report = apply_corpus_novelty([], [], mutate=True)
+        assert gaps == []
+        assert report.n_gaps == 0
+
+    def test_distant_gap_higher_novelty_than_near_duplicate(self, sample_papers):
+        from src.gap.novelty import apply_corpus_novelty, novelty_report_markdown
+
+        # Gap that paraphrases paper_1 abstract → low corpus novelty after excluding own paper
+        # Use paper_2 only so nearest is paper_1
+        near = Gap(
+            id="gap_near",
+            kind=GapKind.UNTESTED_CLAIM,
+            title="Ionizable lipids promote endosomal escape via flip-flop",
+            description=(
+                "Ionizable lipids in LNPs promote endosomal escape through a flip-flop "
+                "mechanism involving pH-dependent protonation; escape is the major bottleneck."
+            ),
+            paper_ids=["paper_2"],  # not paper_1 — so paper_1 is an "other" neighbor
+            novelty=0.5,
+            magnitude=0.7,
+            testability=0.6,
+            impact=0.6,
+            overall=0.6,
+            domain_tags=["lnp", "endosomal_escape"],
+        )
+        far = Gap(
+            id="gap_far",
+            kind=GapKind.MECHANISM_UNKNOWN,
+            title="Quantum-dot barcode tracking of bifunctional circRNA export kinetics",
+            description=(
+                "Whether nuclear export kinetics of engineered circular RNA barcodes "
+                "limit cytosolic dual-payload competition remains untested in primary neurons."
+            ),
+            paper_ids=["paper_2"],
+            novelty=0.5,
+            magnitude=0.7,
+            testability=0.6,
+            impact=0.6,
+            overall=0.6,
+            domain_tags=["hybrid_ncrna"],
+        )
+        # Duplicate of near → high redundancy
+        dup = Gap(
+            id="gap_dup",
+            kind=GapKind.UNTESTED_CLAIM,
+            title="Ionizable lipids promote endosomal escape via flip-flop",
+            description=(
+                "Ionizable lipids in LNPs promote endosomal escape through a flip-flop "
+                "mechanism involving pH-dependent protonation; escape is the major bottleneck."
+            ),
+            paper_ids=["paper_1"],
+            novelty=0.5,
+            magnitude=0.7,
+            testability=0.6,
+            impact=0.6,
+            overall=0.6,
+            domain_tags=["lnp"],
+        )
+
+        gaps, report = apply_corpus_novelty(
+            [near, far, dup],
+            sample_papers,
+            backend="lexical",
+            mutate=True,
+        )
+        by_id = {g.id: g for g in gaps}
+        assert by_id["gap_far"].corpus_novelty is not None
+        assert by_id["gap_near"].corpus_novelty is not None
+        # Far gap should be more corpus-novel than near paraphrase of paper_1
+        assert by_id["gap_far"].corpus_novelty > by_id["gap_near"].corpus_novelty
+        # Near and dup are near-duplicates of each other
+        assert by_id["gap_near"].gap_redundancy is not None
+        assert by_id["gap_near"].gap_redundancy > 0.5
+        assert by_id["gap_far"].nearest_paper_ids
+        assert report.n_gaps == 3
+        assert report.backend == "lexical"
+        md = novelty_report_markdown(report, top_n=5)
+        assert "Novelty-vs-corpus" in md
+        assert "blended_novelty" in md or "blended" in md.lower()
+
+    def test_own_paper_excluded_from_nearest(self, sample_papers):
+        from src.gap.novelty import apply_corpus_novelty
+
+        g = Gap(
+            id="gap_self",
+            kind=GapKind.UNTESTED_CLAIM,
+            title="Test paper: LNP endosomal escape mechanism",
+            description=sample_papers[0].abstract,
+            paper_ids=[sample_papers[0].id],
+            novelty=0.5,
+            magnitude=0.5,
+            testability=0.5,
+            impact=0.5,
+            overall=0.5,
+        )
+        gaps, _ = apply_corpus_novelty([g], sample_papers, backend="lexical", mutate=True)
+        # Own paper excluded — nearest should be paper_2 if anything
+        assert sample_papers[0].id not in (gaps[0].nearest_paper_ids or [])

@@ -79,6 +79,14 @@ def build_markdown_report(
         lines += [f"_Including **{n_cross}** cross-paper tension gaps (multi-paper dialectics)._", ""]
     for i, g in enumerate(gaps[:12], 1):
         n_papers = len(getattr(g, "paper_ids", None) or [])
+        cn = getattr(g, "corpus_novelty", None)
+        red = getattr(g, "gap_redundancy", None)
+        corp_bits = []
+        if cn is not None:
+            corp_bits.append(f"corpus_novelty={cn:.2f}")
+        if red is not None:
+            corp_bits.append(f"redundancy={red:.2f}")
+        corp_line = f"- **Corpus**: {', '.join(corp_bits)}" if corp_bits else ""
         lines += [
             f"### {i}. {g.title}",
             f"- **Kind**: `{g.kind.value}`"
@@ -87,6 +95,10 @@ def build_markdown_report(
                 f"- **Score**: overall={g.overall:.2f} magnitude={g.magnitude:.2f} "
                 f"novelty={g.novelty:.2f} testability={g.testability:.2f} impact={g.impact:.2f}"
             ),
+        ]
+        if corp_line:
+            lines.append(corp_line)
+        lines += [
             f"- **Domains**: {', '.join(g.domain_tags) if g.domain_tags else '—'}",
             f"- **Description**: {g.description[:350]}",
             f"- **Rationale**: {g.rationale}",
@@ -215,11 +227,19 @@ def build_html_report(
     for i, g in enumerate(gaps[:12], 1):
         n_p = len(getattr(g, "paper_ids", None) or [])
         multi = f'<span class="tag">{n_p} papers</span>' if n_p > 1 else ""
+        cn = getattr(g, "corpus_novelty", None)
+        red = getattr(g, "gap_redundancy", None)
+        corp_tags = ""
+        if cn is not None:
+            corp_tags += f'<span class="tag">corpus_nov {cn:.2f}</span>'
+        if red is not None:
+            corp_tags += f'<span class="tag">redund {red:.2f}</span>'
         gap_blocks.append(
             f"""<article class="card">
   <h3>{i}. {_esc(g.title)}</h3>
   <div class="tags"><span class="tag">{_esc(g.kind.value)}</span>
   {multi}
+  {corp_tags}
   <span class="score">overall {g.overall:.2f}</span></div>
   <p>{_esc(g.description[:400])}</p>
   <p class="muted">{_esc(g.rationale)}</p>

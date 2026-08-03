@@ -2,9 +2,9 @@
 
 | Field | Value |
 |-------|-------|
-| **Run ID** | `run_58137be90363` |
+| **Run ID** | `run_b2319eacf048` |
 | **Domain** | nucleic_acid_delivery |
-| **Date** | 2026-08-02 10:06 SGT |
+| **Date** | 2026-08-03 10:03 SGT |
 | **Papers** | 52 |
 | **Claims** | 88 |
 | **Evidence** | 160 |
@@ -332,94 +332,106 @@
 
 _Including **1** cross-paper tension gaps (multi-paper dialectics)._
 
-### 1. Cross-paper tension: However, the exact molecular mechanism of bilayer disruption remains controversi
+### 1. Untested: We hypothesized that bifunctional designs displaying both endosomal-disrupting p
+- **Kind**: `untested_claim`
+- **Score**: overall=0.80 magnitude=0.95 novelty=0.66 testability=0.72 impact=0.87
+- **Corpus**: corpus_novelty=0.76, redundancy=0.32
+- **Domains**: endosomal_escape, lnp, targeting, hybrid_ncrna
+- **Description**: Claim without matching experimental evidence: "We hypothesized that bifunctional designs displaying both endosomal-disrupting peptides and tissue-targeting aptamers would outperform LNPs in extrahe" [Hybrid nucleic acid nanostructures for programmable intracellular delivery]
+- **Rationale**: Claim confidence 0.55, best evidence sim 0.04 (lexical). Claim type=theory, kind=untested_claim. Corpus novelty=0.76 (1−nearest_other_paper; backend=lexical); redundancy=0.32; nearest: "Bifunctional ncRNA-mRNA co-delivery reveals interference bet" (2025) sim=0.24; "The endosomal escape of lipid nanoparticles: mechanisms and " (2021) sim=0.22.
+
+### 2. Cross-paper tension: However, the exact molecular mechanism of bilayer disruption remains controversi
 - **Kind**: `cross_paper_tension` · **papers**: 10
-- **Score**: overall=0.82 magnitude=0.90 novelty=0.88 testability=0.68 impact=0.81
+- **Score**: overall=0.78 magnitude=0.90 novelty=0.74 testability=0.68 impact=0.81
+- **Corpus**: corpus_novelty=0.74, redundancy=0.47
 - **Domains**: endosomal_escape, targeting, gene_therapy, hybrid_ncrna
 - **Description**: Related claims across 10 papers (2020–2025) pull in different directions (stance spread=1.00, mean sim=0.20). Supportive: —. Limiting/hedged: However, the molecular mechanism linking SORT lipid charge to corona composition remains poorly unde; However, the exact molecular mechanism of bilayer disruption remains controversial, and direct cryo-. Pape
-- **Rationale**: Cross-paper dialectic: 0 supportive vs 9 limiting claims over 10 papers; stance_spread=1.0, mean_sim=0.203.
-
-### 2. Untested: We hypothesized that bifunctional designs displaying both endosomal-disrupting p
-- **Kind**: `untested_claim`
-- **Score**: overall=0.78 magnitude=0.95 novelty=0.60 testability=0.72 impact=0.87
-- **Domains**: lnp, hybrid_ncrna, targeting, endosomal_escape
-- **Description**: Claim without matching experimental evidence: "We hypothesized that bifunctional designs displaying both endosomal-disrupting peptides and tissue-targeting aptamers would outperform LNPs in extrahe" [Hybrid nucleic acid nanostructures for programmable intracellular delivery]
-- **Rationale**: Claim confidence 0.55, best evidence sim 0.04 (lexical). Claim type=theory, kind=untested_claim.
+- **Rationale**: Cross-paper dialectic: 0 supportive vs 9 limiting claims over 10 papers; stance_spread=1.0, mean_sim=0.203. Corpus novelty=0.74 (1−nearest_other_paper; backend=lexical); redundancy=0.47; nearest: "Lipid nanoparticles for mRNA delivery" (2021) sim=0.26; "CRISPR-Cas9 lipid nanoparticle systems for in vivo gene edit" (2018) sim=0.25.
 
 ### 3. Limitation: Nevertheless, extrahepatic delivery was not achieved, and endosomal escape remai
 - **Kind**: `delivery_barrier`
-- **Score**: overall=0.78 magnitude=0.95 novelty=0.70 testability=0.70 impact=0.79
+- **Score**: overall=0.78 magnitude=0.95 novelty=0.67 testability=0.70 impact=0.79
+- **Corpus**: corpus_novelty=0.72, redundancy=0.45
 - **Domains**: endosomal_escape, targeting
 - **Description**: Acknowledged limitation: "Nevertheless, extrahepatic delivery was not achieved, and endosomal escape remained below 4% of internalized dose." [Machine-guided design of degradable ionizable lipids for redosable mRNA LNPs]
-- **Rationale**: Unmatched author-stated limitation — candidate open problem.
+- **Rationale**: Unmatched author-stated limitation — candidate open problem. Corpus novelty=0.72 (1−nearest_other_paper; backend=lexical); redundancy=0.45; nearest: "Hybrid nucleic acid nanostructures for programmable intracel" (2023) sim=0.28; "Lipid nanoparticles for mRNA delivery" (2021) sim=0.27.
 
 ### 4. Limitation: Extrahepatic targeting of lipid nanoparticles in vivo  Clinical use of lipid nan
 - **Kind**: `delivery_barrier`
-- **Score**: overall=0.77 magnitude=0.95 novelty=0.70 testability=0.70 impact=0.75
+- **Score**: overall=0.77 magnitude=0.95 novelty=0.68 testability=0.70 impact=0.75
+- **Corpus**: corpus_novelty=0.73, redundancy=0.39
 - **Domains**: lnp, targeting
 - **Description**: Acknowledged limitation: "Extrahepatic targeting of lipid nanoparticles in vivo  Clinical use of lipid nanoparticles (LNPs) is limited by their predominant accumulation in the liver after systemic administration." [Extrahepatic targeting of lipid nanoparticles in vivo]
-- **Rationale**: Unmatched author-stated limitation — candidate open problem.
+- **Rationale**: Unmatched author-stated limitation — candidate open problem. Corpus novelty=0.73 (1−nearest_other_paper; backend=lexical); redundancy=0.39; nearest: "Lipid nanoparticles for mRNA delivery" (2021) sim=0.27; "CRISPR-Cas9 lipid nanoparticle systems for in vivo gene edit" (2018) sim=0.23.
 
 ### 5. Limitation: However, delivery to extrahepatic tissues was minimal.
 - **Kind**: `delivery_barrier`
-- **Score**: overall=0.76 magnitude=0.95 novelty=0.70 testability=0.70 impact=0.69
+- **Score**: overall=0.77 magnitude=0.95 novelty=0.73 testability=0.70 impact=0.69
+- **Corpus**: corpus_novelty=0.83, redundancy=0.38
 - **Domains**: targeting
 - **Description**: Acknowledged limitation: "However, delivery to extrahepatic tissues was minimal." [Dual-function ADAR recruiting RNAs for therapeutic A-to-I editing with reduced b]
-- **Rationale**: Unmatched author-stated limitation — candidate open problem.
+- **Rationale**: Unmatched author-stated limitation — candidate open problem. Corpus novelty=0.83 (1−nearest_other_paper; backend=lexical); redundancy=0.38; nearest: "CRISPR-Cas9 lipid nanoparticle systems for in vivo gene edit" (2018) sim=0.17; "Extrahepatic targeting of lipid nanoparticles in vivo" (2021) sim=0.15.
 
 ### 6. Gap: Here, we review the design principles of LNPs, their st vs We identify several key gaps: the exact mechanism of en
 - **Kind**: `theory_vs_experiment`
 - **Score**: overall=0.75 magnitude=0.89 novelty=0.60 testability=0.65 impact=0.87
-- **Domains**: lnp, targeting, endosomal_escape
+- **Corpus**: corpus_novelty=0.71, redundancy=0.72
+- **Domains**: endosomal_escape, lnp, targeting
 - **Description**: Claim vs limitation: "Here, we review the design principles of LNPs, their structure-activity relationships, and emerging " vs "We identify several key gaps: the exact mechanism of endosomal escape remains controversial, extrahe" [Lipid nanoparticles for mRNA delivery]
-- **Rationale**: Claim confidence 0.55, best evidence sim 0.15 (lexical). Claim type=theory, kind=theory_vs_experiment.
+- **Rationale**: Claim confidence 0.55, best evidence sim 0.15 (lexical). Claim type=theory, kind=theory_vs_experiment. Corpus novelty=0.71 (1−nearest_other_paper; backend=lexical); redundancy=0.72; nearest: "The endosomal escape of lipid nanoparticles: mechanisms and " (2021) sim=0.29; "Endosomal escape of lipid nanoparticles: a mechanistic inves" (2020) sim=0.27.
 
-### 7. Mechanism gap: Current evidence suggests that ionizable lipids disrupt the endosomal membrane t
-- **Kind**: `mechanism_unknown`
-- **Score**: overall=0.74 magnitude=0.85 novelty=0.80 testability=0.55 impact=0.75
-- **Domains**: lnp, endosomal_escape
-- **Description**: Mechanism claim lacks strong experimental support: "Current evidence suggests that ionizable lipids disrupt the endosomal membrane through a flip-flop mechanism involving p" [Ionizable lipid nanoparticles for RNA delivery: design, mechanism, and applicati]
-- **Rationale**: Claim confidence 0.47, best evidence sim 0.15 (lexical). Claim type=mechanism, kind=mechanism_unknown.
-
-### 8. Untested: Important gaps remain: the role of lipid shape in membrane curvature induction d
-- **Kind**: `untested_claim`
-- **Score**: overall=0.73 magnitude=0.90 novelty=0.65 testability=0.72 impact=0.67
-- **Domains**: delivery_efficiency, endosomal_escape
-- **Description**: Claim without matching experimental evidence: "Important gaps remain: the role of lipid shape in membrane curvature induction during endosomal escape is poorly characterized, and most SAR studies h" [Structure-activity relationships of ionizable lipids for lipid nanoparticle deli]
-- **Rationale**: Claim confidence 0.47, best evidence sim 0.10 (lexical). Claim type=mechanism, kind=untested_claim.
-
-### 9. Limitation: These findings underscore the need for fundamental advances in understanding nan
+### 7. Limitation: Results indicate cytosolic RNP competition is a post-escape bottleneck distinct 
 - **Kind**: `delivery_barrier`
-- **Score**: overall=0.73 magnitude=0.95 novelty=0.70 testability=0.70 impact=0.57
-- **Domains**: targeting
-- **Description**: Acknowledged limitation: "These findings underscore the need for fundamental advances in understanding nano-bio interactions to achieve extrahepatic targeting." [Extrahepatic targeting of lipid nanoparticles in vivo]
-- **Rationale**: Unmatched author-stated limitation — candidate open problem.
-
-### 10. Limitation: Designing lipid nanoparticles for targeted delivery of nucleic acids to the brai
-- **Kind**: `delivery_barrier`
-- **Score**: overall=0.73 magnitude=0.95 novelty=0.70 testability=0.70 impact=0.57
-- **Domains**: lnp, targeting
-- **Description**: Acknowledged limitation: "Designing lipid nanoparticles for targeted delivery of nucleic acids to the brain  The blood-brain barrier (BBB) prevents most LNP-formulated nucleic acids from reaching the brain parenchyma." [Designing lipid nanoparticles for targeted delivery of nucleic acids to the brai]
-- **Rationale**: Unmatched author-stated limitation — candidate open problem.
-
-### 11. Limitation: We observed that less than 2% of LNP-encapsulated cargo reaches the cytosol, sug
-- **Kind**: `delivery_barrier`
-- **Score**: overall=0.72 magnitude=0.95 novelty=0.70 testability=0.70 impact=0.55
-- **Domains**: lnp, endosomal_escape
-- **Description**: Acknowledged limitation: "We observed that less than 2% of LNP-encapsulated cargo reaches the cytosol, suggesting endosomal entrapment is the dominant barrier." [The endosomal escape of lipid nanoparticles: mechanisms and strategies for impro]
-- **Rationale**: Unmatched author-stated limitation — candidate open problem.
-
-### 12. Limitation: Results indicate cytosolic RNP competition is a post-escape bottleneck distinct 
-- **Kind**: `delivery_barrier`
-- **Score**: overall=0.72 magnitude=0.95 novelty=0.70 testability=0.70 impact=0.55
+- **Score**: overall=0.74 magnitude=0.95 novelty=0.75 testability=0.70 impact=0.55
+- **Corpus**: corpus_novelty=0.83, redundancy=0.25
 - **Domains**: endosomal_escape
 - **Description**: Acknowledged limitation: "Results indicate cytosolic RNP competition is a post-escape bottleneck distinct from endosomal escape." [Quantitative RNP profiling reveals ribosomal protein competition with LNP-delive]
-- **Rationale**: Unmatched author-stated limitation — candidate open problem.
+- **Rationale**: Unmatched author-stated limitation — candidate open problem. Corpus novelty=0.83 (1−nearest_other_paper; backend=lexical); redundancy=0.25; nearest: "The endosomal escape of lipid nanoparticles: mechanisms and " (2021) sim=0.17; "Aptamer-ncRNA chimeras for receptor-mediated cytosolic deliv" (2024) sim=0.15.
+
+### 8. Limitation: These findings underscore the need for fundamental advances in understanding nan
+- **Kind**: `delivery_barrier`
+- **Score**: overall=0.73 magnitude=0.95 novelty=0.71 testability=0.70 impact=0.57
+- **Corpus**: corpus_novelty=0.80, redundancy=0.39
+- **Domains**: targeting
+- **Description**: Acknowledged limitation: "These findings underscore the need for fundamental advances in understanding nano-bio interactions to achieve extrahepatic targeting." [Extrahepatic targeting of lipid nanoparticles in vivo]
+- **Rationale**: Unmatched author-stated limitation — candidate open problem. Corpus novelty=0.80 (1−nearest_other_paper; backend=lexical); redundancy=0.39; nearest: "CRISPR-Cas9 lipid nanoparticle systems for in vivo gene edit" (2018) sim=0.20; "Lipid nanoparticles for mRNA delivery" (2021) sim=0.18.
+
+### 9. Limitation: A major barrier is manufacturing long structured RNA at clinical purity.
+- **Kind**: `delivery_barrier`
+- **Score**: overall=0.73 magnitude=0.95 novelty=0.73 testability=0.70 impact=0.55
+- **Corpus**: corpus_novelty=0.87, redundancy=0.25
+- **Domains**: —
+- **Description**: Acknowledged limitation: "A major barrier is manufacturing long structured RNA at clinical purity." [Long noncoding RNA scaffolds organize chromatin editors delivered as mRNA-LNP]
+- **Rationale**: Unmatched author-stated limitation — candidate open problem. Corpus novelty=0.87 (1−nearest_other_paper; backend=lexical); redundancy=0.25; nearest: "Serum-stable DNA-ionizable lipid hybrid nanoparticles for ge" (2024) sim=0.13; "Hybrid nucleic acid nanostructures for programmable intracel" (2023) sim=0.12.
+
+### 10. Untested: We propose ribosome dwell time modulates endosomal TLR exposure via altered unpa
+- **Kind**: `untested_claim`
+- **Score**: overall=0.73 magnitude=0.92 novelty=0.74 testability=0.72 impact=0.55
+- **Corpus**: corpus_novelty=0.85, redundancy=0.27
+- **Domains**: endosomal_escape, lnp
+- **Description**: Claim without matching experimental evidence: "We propose ribosome dwell time modulates endosomal TLR exposure via altered unpackaging kinetics." [N1-methylpseudouridine positional isomers differentially affect TLR sensing and ]
+- **Rationale**: Claim confidence 0.55, best evidence sim 0.07 (lexical). Claim type=mechanism, kind=untested_claim. Corpus novelty=0.85 (1−nearest_other_paper; backend=lexical); redundancy=0.27; nearest: "The endosomal escape of lipid nanoparticles: mechanisms and " (2021) sim=0.15; "Quantitative single-cell map of LNP uptake, endosomal progre" (2023) sim=0.14.
+
+### 11. Untested: Important gaps remain: the role of lipid shape in membrane curvature induction d
+- **Kind**: `untested_claim`
+- **Score**: overall=0.73 magnitude=0.90 novelty=0.64 testability=0.72 impact=0.67
+- **Corpus**: corpus_novelty=0.70, redundancy=0.41
+- **Domains**: delivery_efficiency, endosomal_escape
+- **Description**: Claim without matching experimental evidence: "Important gaps remain: the role of lipid shape in membrane curvature induction during endosomal escape is poorly characterized, and most SAR studies h" [Structure-activity relationships of ionizable lipids for lipid nanoparticle deli]
+- **Rationale**: Claim confidence 0.47, best evidence sim 0.10 (lexical). Claim type=mechanism, kind=untested_claim. Corpus novelty=0.70 (1−nearest_other_paper; backend=lexical); redundancy=0.41; nearest: "Lipid nanoparticles for mRNA delivery" (2021) sim=0.30; "Lipid nanoparticle chemistry: from RNA delivery to the next " (2019) sim=0.30.
+
+### 12. Limitation: Decoupling immunogenicity from delivery remains a major challenge.
+- **Kind**: `delivery_barrier`
+- **Score**: overall=0.73 magnitude=0.95 novelty=0.70 testability=0.70 impact=0.57
+- **Corpus**: corpus_novelty=0.83, redundancy=0.34
+- **Domains**: immunogenicity
+- **Description**: Acknowledged limitation: "Decoupling immunogenicity from delivery remains a major challenge." [Immunogenicity of lipid nanoparticle-formulated mRNA: mechanisms and mitigation ]
+- **Rationale**: Unmatched author-stated limitation — candidate open problem. Corpus novelty=0.83 (1−nearest_other_paper; backend=lexical); redundancy=0.34; nearest: "Advances in lipid nanoparticle delivery of nucleic acids and" (2021) sim=0.17; "Combinatorial design of ionizable lipids for lipid nanoparti" (2022) sim=0.17.
 
 ## Research Topic Proposals (5)
 
 ### 1. Payload competition in bifunctional ncRNA–mRNA co-delivery nanoparticles
-- **Priority**: 0.66 · rank=0.87
+- **Priority**: 0.68 · rank=0.89
 - **Pack**: hybrid_ncrna
 - **Domains**: hybrid_ncrna
 - **Hypothesis**: When ncRNA and mRNA share a single LNP, endosomal escape capacity is a zero-sum resource; optimizing mass ratio and staggered release chemistry can restore translation without sacrificing silencing.
@@ -429,10 +441,10 @@ _Including **1** cross-paper tension gaps (multi-paper dialectics)._
   3. Test delayed-release linker designs that temporally separate escape events
 - **Expected Readout**: Identify a ratio/chemistry window with ≥70% of single-payload translation and ≥50% target knockdown.
 - **Feasibility**: Standard formulation + reporter assays; moderate complexity.
-- **Impact Rationale**: Addresses 3 scored gaps in 'hybrid_ncrna' (pack=hybrid_ncrna, cluster mean overall=0.66, rank=0.87 (pack-balanced)). Success would advance therapeutically relevant nucleic acid delivery and/or hybrid ncRNA mechanisms.
+- **Impact Rationale**: Addresses 3 scored gaps in 'hybrid_ncrna' (pack=hybrid_ncrna, cluster mean overall=0.68, rank=0.89 (pack-balanced)). Success would advance therapeutically relevant nucleic acid delivery and/or hybrid ncRNA mechanisms.
 
 ### 2. Non-hepatic gene editing via serum-stable hybrid DNA–LNP scaffolds
-- **Priority**: 0.64 · rank=0.82
+- **Priority**: 0.67 · rank=0.85
 - **Pack**: gene_editing
 - **Domains**: gene_therapy, gene_editing
 - **Hypothesis**: DNA-organized ionizable lipid domains improve serum stability and spleen/immune-cell editing without proportional increases in off-target genomic injury.
@@ -442,10 +454,10 @@ _Including **1** cross-paper tension gaps (multi-paper dialectics)._
   3. Image endosomal membrane contacts with and without scaffold
 - **Expected Readout**: ≥2× extrahepatic editing at matched liver exposure and ≤baseline off-target rate.
 - **Feasibility**: Requires editing readouts and careful scaffold manufacturing.
-- **Impact Rationale**: Addresses 3 scored gaps in 'gene_therapy' (pack=gene_editing, cluster mean overall=0.64, rank=0.82 (pack-balanced)). Success would advance therapeutically relevant nucleic acid delivery and/or hybrid ncRNA mechanisms.
+- **Impact Rationale**: Addresses 3 scored gaps in 'gene_therapy' (pack=gene_editing, cluster mean overall=0.67, rank=0.85 (pack-balanced)). Success would advance therapeutically relevant nucleic acid delivery and/or hybrid ncRNA mechanisms.
 
 ### 3. Ligand-displaying LNPs for extrahepatic targeting: avidity vs specificity
-- **Priority**: 0.69 · rank=0.79
+- **Priority**: 0.69 · rank=0.80
 - **Pack**: lnp_core
 - **Domains**: targeting, lnp_core
 - **Hypothesis**: Multivalent display of low-affinity targeting ligands (e.g., mannose, transferrin, or anti-CD3 scFv) on LNP surfaces achieves higher tissue selectivity than high-affinity monovalent targeting, due to reduced off-target uptake by liver macrophages.
@@ -455,23 +467,10 @@ _Including **1** cross-paper tension gaps (multi-paper dialectics)._
   3. Test in vivo biodistribution with reporter mRNAs in xenograft or disease models
 - **Expected Readout**: Target-to-liver uptake ratio; ≥5× improvement over non-targeted LNPs.
 - **Feasibility**: Lipid-PEG-ligand chemistry is standard; main risk is synthesis scale-up.
-- **Impact Rationale**: Addresses 3 scored gaps in 'targeting' (pack=lnp_core, cluster mean overall=0.69, rank=0.79 (pack-balanced)). Success would advance therapeutically relevant nucleic acid delivery and/or hybrid ncRNA mechanisms.
+- **Impact Rationale**: Addresses 3 scored gaps in 'targeting' (pack=lnp_core, cluster mean overall=0.69, rank=0.80 (pack-balanced)). Success would advance therapeutically relevant nucleic acid delivery and/or hybrid ncRNA mechanisms.
 
-### 4. Mechanistic understanding of LNP endosomal escape: fusion vs destabilization
-- **Priority**: 0.67 · rank=0.78
-- **Pack**: lnp_core
-- **Domains**: endosomal_escape, lnp_core
-- **Hypothesis**: Endosomal escape of LNPs proceeds primarily through membrane destabilization (ionizable lipid-facilitated flip-flop and bilayer disruption) rather than fusogenic mechanisms, and can be enhanced by helper lipids that lower the lamellar-to-hexagonal phase transition temperature.
-- **Experiments**:
-  1. Labelled lipid mixing vs content release assays to distinguish fusion from destabilization
-  2. Cryo-ET of LNPs in endosomal compartments at timed intervals after uptake
-  3. Vary helper lipid ratios and correlate with endosomal escape efficiency via FRET
-- **Expected Readout**: Quantitative fraction of delivered cargo reaching cytosol vs lysosomal degradation.
-- **Feasibility**: Requires advanced microscopy (cryo-ET) — moderate; FRET assays are accessible.
-- **Impact Rationale**: Addresses 3 scored gaps in 'endosomal_escape' (pack=lnp_core, cluster mean overall=0.67, rank=0.78 (pack-balanced)). Success would advance therapeutically relevant nucleic acid delivery and/or hybrid ncRNA mechanisms.
-
-### 5. Decoupling innate immune activation from LNP delivery potency
-- **Priority**: 0.66 · rank=0.77
+### 4. Decoupling innate immune activation from LNP delivery potency
+- **Priority**: 0.69 · rank=0.79
 - **Pack**: lnp_core
 - **Domains**: immunogenicity, lnp_core
 - **Hypothesis**: Ionizable lipid structure independently drives TLR/inflammasome activation versus endosomal escape; lipids can be optimized for high delivery with low reactogenicity.
@@ -481,14 +480,27 @@ _Including **1** cross-paper tension gaps (multi-paper dialectics)._
   3. Validate low-inflammation high-potency candidates in mice
 - **Expected Readout**: ≥2× potency/inflammation ratio vs SM-102 or MC3 reference LNPs.
 - **Feasibility**: Cell reporter assays are accessible; in vivo cytokine panels standard.
-- **Impact Rationale**: Addresses 3 scored gaps in 'immunogenicity' (pack=lnp_core, cluster mean overall=0.66, rank=0.77 (pack-balanced)). Success would advance therapeutically relevant nucleic acid delivery and/or hybrid ncRNA mechanisms.
+- **Impact Rationale**: Addresses 3 scored gaps in 'immunogenicity' (pack=lnp_core, cluster mean overall=0.69, rank=0.79 (pack-balanced)). Success would advance therapeutically relevant nucleic acid delivery and/or hybrid ncRNA mechanisms.
+
+### 5. Mechanistic understanding of LNP endosomal escape: fusion vs destabilization
+- **Priority**: 0.68 · rank=0.78
+- **Pack**: lnp_core
+- **Domains**: endosomal_escape, lnp_core
+- **Hypothesis**: Endosomal escape of LNPs proceeds primarily through membrane destabilization (ionizable lipid-facilitated flip-flop and bilayer disruption) rather than fusogenic mechanisms, and can be enhanced by helper lipids that lower the lamellar-to-hexagonal phase transition temperature.
+- **Experiments**:
+  1. Labelled lipid mixing vs content release assays to distinguish fusion from destabilization
+  2. Cryo-ET of LNPs in endosomal compartments at timed intervals after uptake
+  3. Vary helper lipid ratios and correlate with endosomal escape efficiency via FRET
+- **Expected Readout**: Quantitative fraction of delivered cargo reaching cytosol vs lysosomal degradation.
+- **Feasibility**: Requires advanced microscopy (cryo-ET) — moderate; FRET assays are accessible.
+- **Impact Rationale**: Addresses 3 scored gaps in 'endosomal_escape' (pack=lnp_core, cluster mean overall=0.68, rank=0.78 (pack-balanced)). Success would advance therapeutically relevant nucleic acid delivery and/or hybrid ncRNA mechanisms.
 
 ## Experiment Protocol Cards (5)
 
 _Structured mini-protocols (controls, assays, success/stop rules). Prototype design aids — not wet-lab SOPs._
 
 ### 1. Protocol: Payload competition in bifunctional ncRNA–mRNA co-delivery nanoparticles
-- **Pack**: hybrid_ncrna · **topic**: `topic_d7748b46bcdb`
+- **Pack**: hybrid_ncrna · **topic**: `topic_257c4db8c4b0`
 - **Primary aim**: Test whether when ncRNA and mRNA share a single LNP, endosomal escape capacity is a zero-sum resource
 - **Hypothesis**: When ncRNA and mRNA share a single LNP, endosomal escape capacity is a zero-sum resource; optimizing mass ratio and staggered release chemistry can restore translation without sacrificing silencing.
 - **Controls**:
@@ -516,7 +528,7 @@ _Structured mini-protocols (controls, assays, success/stop rules). Prototype des
 - **Feasibility**: Standard formulation + reporter assays; moderate complexity.
 
 ### 2. Protocol: Non-hepatic gene editing via serum-stable hybrid DNA–LNP scaffolds
-- **Pack**: gene_editing · **topic**: `topic_c25bf7c65d09`
+- **Pack**: gene_editing · **topic**: `topic_21ab53c5a85a`
 - **Primary aim**: Test whether dNA-organized ionizable lipid domains improve serum stability and spleen/immune-cell editing without proportional increases in off-target genomic injury
 - **Hypothesis**: DNA-organized ionizable lipid domains improve serum stability and spleen/immune-cell editing without proportional increases in off-target genomic injury.
 - **Controls**:
@@ -544,7 +556,7 @@ _Structured mini-protocols (controls, assays, success/stop rules). Prototype des
 - **Feasibility**: Requires editing readouts and careful scaffold manufacturing.
 
 ### 3. Protocol: Ligand-displaying LNPs for extrahepatic targeting: avidity vs specificity
-- **Pack**: lnp_core · **topic**: `topic_9e2b9961d2e3`
+- **Pack**: lnp_core · **topic**: `topic_7dd1910ba7b6`
 - **Primary aim**: Test whether multivalent display of low-affinity targeting ligands (e
 - **Hypothesis**: Multivalent display of low-affinity targeting ligands (e.g., mannose, transferrin, or anti-CD3 scFv) on LNP surfaces achieves higher tissue selectivity than high-affinity monovalent targeting, due to reduced off-target uptake by liver macrophages.
 - **Controls**:
@@ -571,36 +583,8 @@ _Structured mini-protocols (controls, assays, success/stop rules). Prototype des
 - **Readout**: Target-to-liver uptake ratio; ≥5× improvement over non-targeted LNPs.
 - **Feasibility**: Lipid-PEG-ligand chemistry is standard; main risk is synthesis scale-up.
 
-### 4. Protocol: Mechanistic understanding of LNP endosomal escape: fusion vs destabilization
-- **Pack**: lnp_core · **topic**: `topic_dbda697d6307`
-- **Primary aim**: Test whether endosomal escape of LNPs proceeds primarily through membrane destabilization (ionizable lipid-facilitated flip-flop and bilayer disruption) rather than fusogenic mechanisms, and can be enhanced by helper lipids that lower the lamellar-to-hexagonal phase transition temperature
-- **Hypothesis**: Endosomal escape of LNPs proceeds primarily through membrane destabilization (ionizable lipid-facilitated flip-flop and bilayer disruption) rather than fusogenic mechanisms, and can be enhanced by helper lipids that lower the lamellar-to-hexagonal phase transition temperature.
-- **Controls**:
-  - Clinical-like reference LNP (SM-102 or MC3 class) at matched dose
-  - Non-ionizable lipid control particle
-  - Free nucleic acid (no particle)
-  - Vehicle-only
-- **Assay panel**:
-  - Size / PDI / zeta (DLS) and encapsulation efficiency
-  - In vitro transfection across ≥3 cell types (hepato, endo, immune)
-  - Endosomal escape proxy (galectin puncta or calcein release)
-  - In vivo reporter biodistribution (liver vs extrahepatic organs)
-  - Repeat-dose PK / anti-PEG IgM if multi-dose claim
-- **Success criteria**:
-  - Primary: Quantitative fraction of delivered cargo reaching cytosol vs lysosomal degradation.
-  - Pre-register a binary pass/fail on the primary readout vs reference LNP before unblinding in vivo arms.
-  - Secondary: no worse than reference on pre-specified safety panel (viability drop ≤20% in vitro; no unexpected grade of systemic cytokines in vivo).
-  - Replicates: ≥3 independent formulations for in vitro; in vivo n powered for primary effect size.
-- **Stop rules**:
-  - Stop expansion if lead fails primary readout in two independent formulation lots.
-  - Stop in vivo if acute reactogenicity exceeds reference by pre-set cytokine fold-change.
-  - Redesign (do not force dose escalation) if QC (PDI>0.3 or EE%<70%) is unstable across lots.
-  - Kill criterion tied to feasibility note: Requires advanced microscopy (cryo-ET) — moderate; FRET assays are accessible.
-- **Readout**: Quantitative fraction of delivered cargo reaching cytosol vs lysosomal degradation.
-- **Feasibility**: Requires advanced microscopy (cryo-ET) — moderate; FRET assays are accessible.
-
-### 5. Protocol: Decoupling innate immune activation from LNP delivery potency
-- **Pack**: lnp_core · **topic**: `topic_2ab6ae02ac87`
+### 4. Protocol: Decoupling innate immune activation from LNP delivery potency
+- **Pack**: lnp_core · **topic**: `topic_88c66f9ffe29`
 - **Primary aim**: Test whether ionizable lipid structure independently drives TLR/inflammasome activation versus endosomal escape
 - **Hypothesis**: Ionizable lipid structure independently drives TLR/inflammasome activation versus endosomal escape; lipids can be optimized for high delivery with low reactogenicity.
 - **Controls**:
@@ -627,5 +611,33 @@ _Structured mini-protocols (controls, assays, success/stop rules). Prototype des
 - **Readout**: ≥2× potency/inflammation ratio vs SM-102 or MC3 reference LNPs.
 - **Feasibility**: Cell reporter assays are accessible; in vivo cytokine panels standard.
 
+### 5. Protocol: Mechanistic understanding of LNP endosomal escape: fusion vs destabilization
+- **Pack**: lnp_core · **topic**: `topic_6006d4cafd47`
+- **Primary aim**: Test whether endosomal escape of LNPs proceeds primarily through membrane destabilization (ionizable lipid-facilitated flip-flop and bilayer disruption) rather than fusogenic mechanisms, and can be enhanced by helper lipids that lower the lamellar-to-hexagonal phase transition temperature
+- **Hypothesis**: Endosomal escape of LNPs proceeds primarily through membrane destabilization (ionizable lipid-facilitated flip-flop and bilayer disruption) rather than fusogenic mechanisms, and can be enhanced by helper lipids that lower the lamellar-to-hexagonal phase transition temperature.
+- **Controls**:
+  - Clinical-like reference LNP (SM-102 or MC3 class) at matched dose
+  - Non-ionizable lipid control particle
+  - Free nucleic acid (no particle)
+  - Vehicle-only
+- **Assay panel**:
+  - Size / PDI / zeta (DLS) and encapsulation efficiency
+  - In vitro transfection across ≥3 cell types (hepato, endo, immune)
+  - Endosomal escape proxy (galectin puncta or calcein release)
+  - In vivo reporter biodistribution (liver vs extrahepatic organs)
+  - Repeat-dose PK / anti-PEG IgM if multi-dose claim
+- **Success criteria**:
+  - Primary: Quantitative fraction of delivered cargo reaching cytosol vs lysosomal degradation.
+  - Pre-register a binary pass/fail on the primary readout vs reference LNP before unblinding in vivo arms.
+  - Secondary: no worse than reference on pre-specified safety panel (viability drop ≤20% in vitro; no unexpected grade of systemic cytokines in vivo).
+  - Replicates: ≥3 independent formulations for in vitro; in vivo n powered for primary effect size.
+- **Stop rules**:
+  - Stop expansion if lead fails primary readout in two independent formulation lots.
+  - Stop in vivo if acute reactogenicity exceeds reference by pre-set cytokine fold-change.
+  - Redesign (do not force dose escalation) if QC (PDI>0.3 or EE%<70%) is unstable across lots.
+  - Kill criterion tied to feasibility note: Requires advanced microscopy (cryo-ET) — moderate; FRET assays are accessible.
+- **Readout**: Quantitative fraction of delivered cargo reaching cytosol vs lysosomal degradation.
+- **Feasibility**: Requires advanced microscopy (cryo-ET) — moderate; FRET assays are accessible.
+
 ---
-*Report generated at 2026-08-02 10:06 +08*
+*Report generated at 2026-08-03 10:03 +08*
