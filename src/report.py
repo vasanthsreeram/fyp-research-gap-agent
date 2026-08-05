@@ -75,8 +75,16 @@ def build_markdown_report(
     n_cross = sum(
         1 for g in gaps if getattr(getattr(g, "kind", None), "value", "") == "cross_paper_tension"
     )
-    if n_cross:
-        lines += [f"_Including **{n_cross}** cross-paper tension gaps (multi-paper dialectics)._", ""]
+    n_arg = sum(
+        1 for g in gaps if getattr(getattr(g, "kind", None), "value", "") == "argue_mined_conflict"
+    )
+    if n_cross or n_arg:
+        bits = []
+        if n_cross:
+            bits.append(f"**{n_cross}** cross-paper tension gaps (multi-paper dialectics)")
+        if n_arg:
+            bits.append(f"**{n_arg}** argue-mined conflict gaps (quote-grounded support/attack)")
+        lines += [f"_Including {', '.join(bits)}._", ""]
     for i, g in enumerate(gaps[:12], 1):
         n_papers = len(getattr(g, "paper_ids", None) or [])
         cn = getattr(g, "corpus_novelty", None)
@@ -87,6 +95,11 @@ def build_markdown_report(
         if red is not None:
             corp_bits.append(f"redundancy={red:.2f}")
         corp_line = f"- **Corpus**: {', '.join(corp_bits)}" if corp_bits else ""
+        quote_bits = []
+        quotes = getattr(g, "grounded_quotes", None) or []
+        if quotes:
+            for q in quotes[:2]:
+                quote_bits.append(f"> {q}")
         lines += [
             f"### {i}. {g.title}",
             f"- **Kind**: `{g.kind.value}`"
@@ -102,8 +115,10 @@ def build_markdown_report(
             f"- **Domains**: {', '.join(g.domain_tags) if g.domain_tags else '—'}",
             f"- **Description**: {g.description[:350]}",
             f"- **Rationale**: {g.rationale}",
-            "",
         ]
+        if quote_bits:
+            lines += [""] + quote_bits
+        lines += ["", ""]
 
     lines += [f"## Research Topic Proposals ({len(topics)})", ""]
     for i, t in enumerate(topics, 1):

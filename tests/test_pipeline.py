@@ -803,3 +803,84 @@ class TestCorpusNovelty:
         gaps, _ = apply_corpus_novelty([g], sample_papers, backend="lexical", mutate=True)
         # Own paper excluded — nearest should be paper_2 if anything
         assert sample_papers[0].id not in (gaps[0].nearest_paper_ids or [])
+
+
+class TestArgumentMining:
+    def test_role_detection(self):
+        from src.gap.argue import role_from_text
+        from src.models import ArgumentRole
+
+        assert role_from_text("The exact mechanism remains poorly understood.") == ArgumentRole.LIMITATION
+        assert role_from_text("We demonstrated efficient delivery to hepatocytes.") == ArgumentRole.SUPPORT
+        assert role_from_text("Uptake is mediated by clathrin-dependent endocytosis.") == ArgumentRole.MECHANISM
+        assert role_from_text("Assuming linear scaling holds, the model predicts 10x.") == ArgumentRole.WARRANT
+        assert role_from_text("We report a new formulation.") == ArgumentRole.ASSERTION
+
+    def test_cite_markers(self):
+        from src.gap.argue import find_cite_markers
+        from src.models import CiteMarkerKind
+
+        sent = "As shown by Zhang et al. (2023) and prior work, LNPs deliver mRNA (DOI: 10.1038/s41586-020-2649-2; arXiv:2301.12345)."
+        markers = find_cite_markers(sent)
+        kinds = {m.kind for m in markers}
+        assert CiteMarkerKind.AUTHOR_YEAR in kinds
+        assert CiteMarkerKind.DOI in kinds
+        assert CiteMarkerKind.ARXIV in kinds
+        assert CiteMarkerKind.ET_AL in kinds
+        assert CiteMarkerKind.PRIOR_WORK in kinds
+        assert CiteMarkerKind.BRACKET_NUM not in kinds
+
+    def test_units_are_quote_grounded(self, sample_papers):
+        from src.gap.argue import mine_argument_units
+
+        units = mine_argument_units(sample_papers)
+        assert len(units) >= 4
+        for u in units:
+            assert u.quote_span  # every unit carries a literal quote
+            # quote must appear in the source paper blob (memorization-safe)
+            src = next(p for p in sample_papers if p.id == u.paper_id)
+            assert u.quote_span in src.text_blob()
+
+    def test_attack_relation_detected(self):
+        from src.gap.argue import build_argument_graph, find_argument_relations, mine_argument_units
+        from src.ingest.pipeline import load_fixture
+        from src.models import ArgumentRelationKind
+
+        papers = load_fixture()
+        units = mine_argument_units(papers)
+        rels = find_argument_relations(units, sim_threshold=0.22)
+        attacks = [r for r in rels if r.kind == ArgumentRelationKind.ATTACK]
+        # Fixture abstracts share LNP/ncRNA vocabulary → cross-paper attack edges
+        assert attacks
+        for r in attacks:
+            assert r.paper_ids and len(r.paper_ids) >= 1
+            assert r.rationale
+
+    def test_graph_to_gaps_carries_quotes(self):
+        from src.gap.argue import build_argument_graph, graph_to_gaps
+        from src.ingest.pipeline import load_fixture
+        from src.models import GapKind
+
+        papers = load_fixture()
+        g = build_argument_graph(papers, sim_threshold=0.22)
+        gaps = graph_to_gaps(g, papers, max_gaps=5)
+        assert gaps
+        for gap in gaps:
+            assert gap.kind == GapKind.ARGUE_MINED_CONFLICT
+            assert gap.grounded_quotes
+            assert gap.argument_unit_ids
+            assert gap.argument_relation_ids
+            assert gap.title.startswith("Cite-grounded conflict")
+
+    def test_offline_fixture_argument_report(self, tmp_path):
+        from src.gap.argue import argument_markdown, save_argument_report
+        from src.ingest.pipeline import load_fixture
+
+        papers = load_fixture()[:10]
+        from src.gap.argue import build_argument_graph
+
+        g = build_argument_graph(papers, sim_threshold=0.22)
+        md = argument_markdown(g, papers, top_relations=5)
+        assert "Cite-grounded argument mining" in md
+        save_argument_report(g, papers, tmp_path / "argument_graph.md")
+        assert (tmp_path / "argument_graph.md").exists()

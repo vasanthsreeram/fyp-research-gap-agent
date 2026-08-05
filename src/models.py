@@ -40,7 +40,29 @@ class GapKind(str, Enum):
     MECHANISM_UNKNOWN = "mechanism_unknown"
     DELIVERY_BARRIER = "delivery_barrier"
     CROSS_PAPER_TENSION = "cross_paper_tension"
+    # Stage 3: quote-grounded multi-paper argument attack (beyond stance lexicon)
+    ARGUE_MINED_CONFLICT = "argue_mined_conflict"
     OTHER = "other"
+
+
+class ArgumentRole(str, Enum):
+    """Rhetorical role of a mined argument unit (cite-grounded mining)."""
+
+    ASSERTION = "assertion"  # positive claim / result claim
+    SUPPORT = "support"  # evidence backing a claim
+    REBUTTAL = "rebuttal"  # counters prior / alternative view
+    LIMITATION = "limitation"  # hedge, bottleneck, unknown
+    MECHANISM = "mechanism"  # how/why explanation
+    WARRANT = "warrant"  # bridging assumption / general principle
+
+
+class CiteMarkerKind(str, Enum):
+    DOI = "doi"
+    ARXIV = "arxiv"
+    AUTHOR_YEAR = "author_year"
+    ET_AL = "et_al"
+    PRIOR_WORK = "prior_work"
+    BRACKET_NUM = "bracket_num"
 
 
 class Paper(BaseModel):
@@ -105,6 +127,53 @@ class Evidence(BaseModel):
     extractor: str = "heuristic"
 
 
+class CiteMarker(BaseModel):
+    """Lightweight citation / prior-work cue attached to an argument unit."""
+
+    kind: CiteMarkerKind
+    text: str
+    # Optional normalized target (doi string, arxiv id, "Author YYYY")
+    target: Optional[str] = None
+
+
+class ArgumentUnit(BaseModel):
+    """Quote-grounded argumentative span mined from a paper abstract/body.
+
+    Stage 3 cite-grounded mining: every unit carries a quote_span that must
+    appear in the source paper text (memorization-safe).
+    """
+
+    id: str = Field(default_factory=lambda: _id("arg"))
+    paper_id: str
+    role: ArgumentRole = ArgumentRole.ASSERTION
+    text: str
+    quote_span: str = ""
+    confidence: float = Field(default=0.5, ge=0.0, le=1.0)
+    tags: list[str] = Field(default_factory=list)
+    cite_markers: list[CiteMarker] = Field(default_factory=list)
+    # Optional link back to claim/evidence ids when derived from them
+    claim_id: Optional[str] = None
+    evidence_id: Optional[str] = None
+    extractor: str = "heuristic"
+
+
+class ArgumentRelationKind(str, Enum):
+    SUPPORT = "support"
+    ATTACK = "attack"
+
+
+class ArgumentRelation(BaseModel):
+    """Directed relation between two argument units (usually cross-paper)."""
+
+    id: str = Field(default_factory=lambda: _id("arel"))
+    source_id: str  # attacker or supporter
+    target_id: str
+    kind: ArgumentRelationKind
+    similarity: float = Field(default=0.0, ge=0.0, le=1.0)
+    rationale: str = ""
+    paper_ids: list[str] = Field(default_factory=list)
+
+
 class Gap(BaseModel):
     """Scored theory↔experiment (or related) gap."""
 
@@ -128,6 +197,10 @@ class Gap(BaseModel):
     nearest_sim: Optional[float] = Field(default=None, ge=0.0, le=1.0)
     nearest_paper_ids: list[str] = Field(default_factory=list)
     gap_redundancy: Optional[float] = Field(default=None, ge=0.0, le=1.0)
+    # Stage 3 argue-mining provenance (optional)
+    argument_unit_ids: list[str] = Field(default_factory=list)
+    argument_relation_ids: list[str] = Field(default_factory=list)
+    grounded_quotes: list[str] = Field(default_factory=list)
 
 
 class TopicProposal(BaseModel):

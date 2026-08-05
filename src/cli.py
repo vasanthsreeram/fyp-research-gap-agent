@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import json
 import logging
+import re
 from datetime import datetime
 from pathlib import Path
 from typing import Optional
@@ -124,6 +125,11 @@ def run(
         True,
         "--corpus-novelty/--no-corpus-novelty",
         help="Rescore gap novelty vs rest of paper corpus (Stage 3 novelty-vs-corpus)",
+    ),
+    argue_mining: bool = typer.Option(
+        True,
+        "--argue-mining/--no-argue-mining",
+        help="Quote-grounded argument mining: units + cross-paper support/attack relations (Stage 3)",
     ),
     novelty_backend: str = typer.Option(
         "lexical",
@@ -338,6 +344,48 @@ def run(
             "PASS" if mem_report.overall_pass else "FAIL",
         )
 
+    # 5b. Cite-grounded argument mining (Stage 3)
+    argue_graph = None
+    if argue_mining:
+        from src.gap.argue import build_argument_graph, graph_to_gaps, save_argument_report
+
+        try:
+            argue_graph = build_argument_graph(
+                loaded_papers,
+                all_claims,
+                all_evidence,
+            )
+            arg_gaps = graph_to_gaps(argue_graph, loaded_papers, max_gaps=10)
+            if arg_gaps:
+                existing_titles = {re.sub(r"\s+", " ", g.title.lower())[:60] for g in all_gaps}
+                added = 0
+                for g in arg_gaps:
+                    key = re.sub(r"\s+", " ", g.title.lower())[:60]
+                    if key in existing_titles:
+                        continue
+                    all_gaps.append(g)
+                    existing_titles.add(key)
+                    added += 1
+                all_gaps.sort(key=lambda g: g.overall, reverse=True)
+                logger.info("Added %d argue-mined conflict gaps", added)
+            if save:
+                with open(PROC_DIR / "argument_units.jsonl", "w") as f:
+                    for u in argue_graph.units:
+                        f.write(u.model_dump_json() + "\n")
+                with open(PROC_DIR / "argument_relations.jsonl", "w") as f:
+                    for r in argue_graph.relations:
+                        f.write(r.model_dump_json() + "\n")
+                save_argument_report(argue_graph, loaded_papers, REPORTS_DIR / "argument_graph.md")
+            logger.info(
+                "Argue mining: units=%d relations=%d attacks=%d supports=%d",
+                argue_graph.n_units,
+                argue_graph.n_relations,
+                argue_graph.n_attack,
+                argue_graph.n_support,
+            )
+        except Exception as e:
+            logger.warning("Argue-mining pass failed (non-fatal): %s", e)
+
     # 6. Report
     REPORTS_DIR.mkdir(parents=True, exist_ok=True)
     manifest.finished_at = _now_sgt().replace(tzinfo=None)
@@ -395,6 +443,15 @@ def run(
     n_x = sum(1 for g in all_gaps if getattr(g.kind, "value", "") == "cross_paper_tension")
     if n_x:
         print(f"  Cross-paper tension gaps: {n_x}")
+    n_arg = sum(1 for g in all_gaps if getattr(g.kind, "value", "") == "argue_mined_conflict")
+    if n_arg:
+        print(f"  Argue-mined conflict gaps: {n_arg}")
+    if argue_graph is not None:
+        print(
+            f"  Argument graph: units={argue_graph.n_units} "
+            f"relations={argue_graph.n_relations} "
+            f"attacks={argue_graph.n_attack} supports={argue_graph.n_support}"
+        )
     if novelty_report is not None:
         print(
             f"  Corpus novelty: mean={novelty_report.mean_corpus_novelty:.2f} "
@@ -615,6 +672,59 @@ def novelty_cmd(
         f"high={report.n_high_novelty} redundant={report.n_redundant} backend={report.backend}"
     )
     print(f"Saved → {out} (+ gaps.jsonl rescored)")
+    raise typer.Exit(0)
+
+
+@app.command("argue")
+def argue_cmd(
+    papers_path: Optional[Path] = typer.Option(None, "--papers", "-p"),
+    mode: str = typer.Option("heuristic", "--mode", "-m"),
+    limit: int = typer.Option(52, "--limit", "-n"),
+    use_fixture: bool = typer.Option(True, "--fixture/--no-fixture"),
+    sim_threshold: float = typer.Option(0.22, "--sim-threshold", help="Min token similarity for relations"),
+    top: int = typer.Option(12, "--top", help="Top relations in report"),
+):
+    """Quote-grounded argument mining: units + cross-paper support/attack relations."""
+    from src.extract import extract_all
+    from src.gap.argue import (
+        argument_markdown,
+        build_argument_graph,
+        graph_to_gaps,
+        save_argument_report,
+    )
+    from src.ingest import ingest_papers
+
+    if papers_path:
+        papers = _load_papers(papers_path)[:limit]
+    elif use_fixture:
+        papers = ingest_papers(use_fixture=True, save=False, limit=limit)
+    else:
+        papers = _load_papers()[:limit] or ingest_papers(use_fixture=True, save=False, limit=limit)
+
+    if not papers:
+        raise typer.Exit(1)
+
+    claims, evidence = extract_all(papers, mode=mode)
+    graph = build_argument_graph(papers, claims, evidence, sim_threshold=sim_threshold)
+    gaps = graph_to_gaps(graph, papers, max_gaps=10)
+
+    PROC_DIR.mkdir(parents=True, exist_ok=True)
+    with open(PROC_DIR / "argument_units.jsonl", "w") as f:
+        for u in graph.units:
+            f.write(u.model_dump_json() + "\n")
+    with open(PROC_DIR / "argument_relations.jsonl", "w") as f:
+        for r in graph.relations:
+            f.write(r.model_dump_json() + "\n")
+    out = REPORTS_DIR / "argument_graph.md"
+    save_argument_report(graph, papers, out)
+
+    print(
+        f"Argument graph: units={graph.n_units} relations={graph.n_relations} "
+        f"attacks={graph.n_attack} supports={graph.n_support}"
+    )
+    print(f"Argue-mined conflict gaps: {len(gaps)}")
+    print(argument_markdown(graph, papers, top_relations=top))
+    print(f"\nSaved → {out} (+ argument_units/relations.jsonl)")
     raise typer.Exit(0)
 
 

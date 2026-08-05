@@ -9,7 +9,7 @@
       "n_papers": 33,
       "n_claims": 55,
       "n_evidence": 114,
-      "n_gaps": 90,
+      "n_gaps": 98,
       "n_topics": 5,
       "post_cutoff_papers": 7,
       "top_gap_titles": [
@@ -17,7 +17,7 @@
         "Cross-paper tension: However, the exact molecular mechanism of bilayer disruption remains controversi",
         "Limitation: Nevertheless, extrahepatic delivery was not achieved, and endosomal escape remai",
         "Limitation: Extrahepatic targeting of lipid nanoparticles in vivo  Clinical use of lipid nan",
-        "Gap: Here, we review the design principles of LNPs, their st vs We identify several key gaps: the exact mechanism of en"
+        "Cite-grounded conflict: However, the exact molecular mechanism of bilayer disruption remains c"
       ],
       "top_topic_titles": [
         "Ligand-displaying LNPs for extrahepatic targeting: avidity vs specificity",
@@ -27,11 +27,11 @@
         "Non-hepatic gene editing via serum-stable hybrid DNA\u2013LNP scaffolds"
       ],
       "domain_tag_hist": {
-        "lnp": 38,
-        "endosomal_escape": 23,
-        "targeting": 13,
-        "hybrid_ncrna": 13,
-        "mrna": 11,
+        "lnp": 39,
+        "endosomal_escape": 29,
+        "hybrid_ncrna": 17,
+        "targeting": 16,
+        "mrna": 14,
         "immunogenicity": 6,
         "delivery_efficiency": 4,
         "pks": 4,
@@ -51,15 +51,15 @@
       "n_papers": 23,
       "n_claims": 39,
       "n_evidence": 56,
-      "n_gaps": 42,
+      "n_gaps": 49,
       "n_topics": 3,
       "post_cutoff_papers": 16,
       "top_gap_titles": [
         "Untested: We hypothesized that bifunctional designs displaying both endosomal-disrupting p",
         "Cross-paper tension: However, the exact molecular mechanism of bilayer disruption remains controversi",
         "Limitation: However, delivery to extrahepatic tissues was minimal.",
-        "Limitation: Results indicate cytosolic RNP competition is a post-escape bottleneck distinct ",
-        "Limitation: A major barrier is manufacturing long structured RNA at clinical purity."
+        "Cite-grounded conflict: However, the exact molecular mechanism of bilayer disruption remains c",
+        "Cite-grounded conflict: We found that less than 5% of internalized mRNA reached the cytosol, i"
       ],
       "top_topic_titles": [
         "Payload competition in bifunctional ncRNA\u2013mRNA co-delivery nanoparticles",
@@ -67,11 +67,11 @@
         "Non-hepatic gene editing via serum-stable hybrid DNA\u2013LNP scaffolds"
       ],
       "domain_tag_hist": {
-        "hybrid_ncrna": 15,
-        "endosomal_escape": 11,
+        "hybrid_ncrna": 19,
+        "endosomal_escape": 16,
+        "mrna": 7,
         "lnp": 6,
-        "targeting": 4,
-        "mrna": 4,
+        "targeting": 6,
         "gene_therapy": 2,
         "delivery_efficiency": 1,
         "vaccine": 1,
@@ -88,26 +88,26 @@
       "n_papers": 10,
       "n_claims": 16,
       "n_evidence": 35,
-      "n_gaps": 24,
+      "n_gaps": 26,
       "n_topics": 2,
       "post_cutoff_papers": 5,
       "top_gap_titles": [
         "Cross-paper tension: However, the exact molecular mechanism of bilayer disruption remains controversi",
         "Limitation: However, delivery to extrahepatic tissues was minimal.",
-        "Limitation: A major barrier is manufacturing long structured RNA at clinical purity.",
-        "Limitation: Scale-up of scaffold synthesis remains a practical barrier to clinical manufactu",
-        "Untested: We hypothesized peptide branching improves endosomal buffering versus linear pep"
+        "Cite-grounded conflict: However, the molecular mechanism linking SORT lipid charge to corona c",
+        "Cite-grounded conflict: Nevertheless, endosomal escape in resting HSCs was inefficient, with l",
+        "Limitation: A major barrier is manufacturing long structured RNA at clinical purity."
       ],
       "top_topic_titles": [
         "Payload competition in bifunctional ncRNA\u2013mRNA co-delivery nanoparticles",
         "Non-hepatic gene editing via serum-stable hybrid DNA\u2013LNP scaffolds"
       ],
       "domain_tag_hist": {
+        "endosomal_escape": 6,
+        "hybrid_ncrna": 6,
         "lnp": 6,
-        "endosomal_escape": 5,
-        "hybrid_ncrna": 5,
+        "targeting": 4,
         "gene_therapy": 4,
-        "targeting": 3,
         "mrna": 2,
         "sirna": 1,
         "corona": 1

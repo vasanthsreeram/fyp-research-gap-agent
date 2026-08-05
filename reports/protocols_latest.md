@@ -3,7 +3,7 @@
 _Prototype structured protocols derived from topic proposals. Not wet-lab SOPs — for design discussion and preregistration sketches._
 
 ## 1. Protocol: Payload competition in bifunctional ncRNA–mRNA co-delivery nanoparticles
-- **ID**: `proto_f2af37d898f3` · **topic**: `topic_257c4db8c4b0` · **pack**: `hybrid_ncrna`
+- **ID**: `proto_221ee579db1c` · **topic**: `topic_c06199f2decf` · **pack**: `hybrid_ncrna`
 - **Primary aim**: Test whether when ncRNA and mRNA share a single LNP, endosomal escape capacity is a zero-sum resource
 - **Hypothesis**: When ncRNA and mRNA share a single LNP, endosomal escape capacity is a zero-sum resource; optimizing mass ratio and staggered release chemistry can restore translation without sacrificing silencing.
 - **Expected readout**: Identify a ratio/chemistry window with ≥70% of single-payload translation and ≥50% target knockdown.
@@ -62,7 +62,7 @@ _Prototype structured protocols derived from topic proposals. Not wet-lab SOPs �
 **Rationale:** Derived from topic 'Payload competition in bifunctional ncRNA–mRNA co-delivery nanoparticles' (pack=hybrid_ncrna, priority=0.68). Anchored on gap [untested_claim] 'Untested: We hypothesized that bifunctional designs displaying both endosomal-disrupting p' (overall=0.80, testability=0.72). Addresses 3 scored gaps in 'hybrid_ncrna' (pack=hybrid_ncrna, cluster mean overall=0.68, rank=0.89 (pack-balanced)). Success would advance therapeutically relevant nucleic acid delivery and/or hybrid ncRNA mechanisms.
 
 ## 2. Protocol: Non-hepatic gene editing via serum-stable hybrid DNA–LNP scaffolds
-- **ID**: `proto_e9e8b1c43414` · **topic**: `topic_21ab53c5a85a` · **pack**: `gene_editing`
+- **ID**: `proto_f00179ec111f` · **topic**: `topic_4897d5350cad` · **pack**: `gene_editing`
 - **Primary aim**: Test whether dNA-organized ionizable lipid domains improve serum stability and spleen/immune-cell editing without proportional increases in off-target genomic injury
 - **Hypothesis**: DNA-organized ionizable lipid domains improve serum stability and spleen/immune-cell editing without proportional increases in off-target genomic injury.
 - **Expected readout**: ≥2× extrahepatic editing at matched liver exposure and ≤baseline off-target rate.
@@ -121,7 +121,7 @@ _Prototype structured protocols derived from topic proposals. Not wet-lab SOPs �
 **Rationale:** Derived from topic 'Non-hepatic gene editing via serum-stable hybrid DNA–LNP scaffolds' (pack=gene_editing, priority=0.67). Anchored on gap [delivery_barrier] 'Limitation: Scale-up of scaffold synthesis remains a practical barrier to clinical manufactu' (overall=0.73, testability=0.70). Addresses 3 scored gaps in 'gene_therapy' (pack=gene_editing, cluster mean overall=0.67, rank=0.85 (pack-balanced)). Success would advance therapeutically relevant nucleic acid delivery and/or hybrid ncRNA mechanisms.
 
 ## 3. Protocol: Ligand-displaying LNPs for extrahepatic targeting: avidity vs specificity
-- **ID**: `proto_89c16a88c262` · **topic**: `topic_7dd1910ba7b6` · **pack**: `lnp_core`
+- **ID**: `proto_18264c17f03f` · **topic**: `topic_f9cd6c0e906e` · **pack**: `lnp_core`
 - **Primary aim**: Test whether multivalent display of low-affinity targeting ligands (e
 - **Hypothesis**: Multivalent display of low-affinity targeting ligands (e.g., mannose, transferrin, or anti-CD3 scFv) on LNP surfaces achieves higher tissue selectivity than high-affinity monovalent targeting, due to reduced off-target uptake by liver macrophages.
 - **Expected readout**: Target-to-liver uptake ratio; ≥5× improvement over non-targeted LNPs.
@@ -180,7 +180,7 @@ _Prototype structured protocols derived from topic proposals. Not wet-lab SOPs �
 **Rationale:** Derived from topic 'Ligand-displaying LNPs for extrahepatic targeting: avidity vs specificity' (pack=lnp_core, priority=0.69). Anchored on gap [delivery_barrier] 'Limitation: Nevertheless, extrahepatic delivery was not achieved, and endosomal escape remai' (overall=0.78, testability=0.70). Addresses 3 scored gaps in 'targeting' (pack=lnp_core, cluster mean overall=0.69, rank=0.80 (pack-balanced)). Success would advance therapeutically relevant nucleic acid delivery and/or hybrid ncRNA mechanisms.
 
 ## 4. Protocol: Decoupling innate immune activation from LNP delivery potency
-- **ID**: `proto_3347e48b84d5` · **topic**: `topic_88c66f9ffe29` · **pack**: `lnp_core`
+- **ID**: `proto_e4b8518e6878` · **topic**: `topic_0bfa80e48dee` · **pack**: `lnp_core`
 - **Primary aim**: Test whether ionizable lipid structure independently drives TLR/inflammasome activation versus endosomal escape
 - **Hypothesis**: Ionizable lipid structure independently drives TLR/inflammasome activation versus endosomal escape; lipids can be optimized for high delivery with low reactogenicity.
 - **Expected readout**: ≥2× potency/inflammation ratio vs SM-102 or MC3 reference LNPs.
@@ -238,7 +238,7 @@ _Prototype structured protocols derived from topic proposals. Not wet-lab SOPs �
 **Rationale:** Derived from topic 'Decoupling innate immune activation from LNP delivery potency' (pack=lnp_core, priority=0.69). Anchored on gap [delivery_barrier] 'Limitation: Decoupling immunogenicity from delivery remains a major challenge.' (overall=0.73, testability=0.70). Addresses 3 scored gaps in 'immunogenicity' (pack=lnp_core, cluster mean overall=0.69, rank=0.79 (pack-balanced)). Success would advance therapeutically relevant nucleic acid delivery and/or hybrid ncRNA mechanisms.
 
 ## 5. Protocol: Mechanistic understanding of LNP endosomal escape: fusion vs destabilization
-- **ID**: `proto_8efb85dff023` · **topic**: `topic_6006d4cafd47` · **pack**: `lnp_core`
+- **ID**: `proto_2f8db00f1de4` · **topic**: `topic_8035249b0577` · **pack**: `lnp_core`
 - **Primary aim**: Test whether endosomal escape of LNPs proceeds primarily through membrane destabilization (ionizable lipid-facilitated flip-flop and bilayer disruption) rather than fusogenic mechanisms, and can be enhanced by helper lipids that lower the lamellar-to-hexagonal phase transition temperature
 - **Hypothesis**: Endosomal escape of LNPs proceeds primarily through membrane destabilization (ionizable lipid-facilitated flip-flop and bilayer disruption) rather than fusogenic mechanisms, and can be enhanced by helper lipids that lower the lamellar-to-hexagonal phase transition temperature.
 - **Expected readout**: Quantitative fraction of delivered cargo reaching cytosol vs lysosomal degradation.

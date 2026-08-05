@@ -47,4 +47,4 @@
 - [ok] `ctrl_structure_fn` structure_claim_fields fills hypothesis/mechanism: {'hypothesis': 'We propose that ionizable lipids promote', 'evidence': None, 'mechanism': 'We propose that ionizable lipids promote', 'assumptions': [], 'uncertainty': None}
 - [ok] `ctrl_supported_passes` grounded claim not flagged unsupported: hits=0
 
-*Generated 2026-08-03T02:03:42.871227Z*
+*Generated 2026-08-05T02:26:08.605184Z*
