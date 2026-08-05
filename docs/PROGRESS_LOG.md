@@ -18,6 +18,7 @@
 | 2026-08-01 10:05 | **wave 8** | Cross-paper claim tension + live S2 key path |
 | 2026-08-02 10:10 | **wave 9** | OpenAlex free live ingest + experiment protocol cards |
 | 2026-08-03 10:03 | **wave 10** | Novelty-vs-corpus scoring (nearest papers + redundancy) |
+| 2026-08-05 10:00 | **wave 11** | Cite-grounded argument mining (units + support/attack graph) |
 
 
 ### Wave 10 summary (2026-08-03 10:03 SGT)
