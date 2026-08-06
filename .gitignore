@@ -35,6 +35,7 @@ data/raw/*.pdf
 data/raw/*.zip
 data/raw/*.tar.gz
 data/raw/openalex.json
+data/raw/pdfs/
 
 # Secrets
 .env

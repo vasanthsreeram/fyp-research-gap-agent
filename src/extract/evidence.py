@@ -52,8 +52,14 @@ def _split_sentences(text: str) -> list[str]:
     return [s.strip() for s in raw if len(s.strip()) > 20]
 
 
-def extract_evidence_heuristic(paper: Paper, max_per_paper: int = 12) -> list[Evidence]:
-    """Extract experimental results, metrics, and limitations via heuristics."""
+def extract_evidence_heuristic(paper: Paper, max_per_paper: int | None = None) -> list[Evidence]:
+    """Extract experimental results, metrics, and limitations via heuristics.
+
+    Full-text papers raise the per-paper cap so Methods/Results/Limitations
+    sections can contribute beyond abstract-only density.
+    """
+    if max_per_paper is None:
+        max_per_paper = 24 if paper.has_full_text() else 12
     evidences: list[Evidence] = []
     text = paper.text_blob()
     if not text:
@@ -127,7 +133,8 @@ def extract_evidence_llm(paper: Paper) -> list[Evidence]:
         'Return JSON: {"evidence":[{"text":str,"evidence_type":"experiment|result|metric|limitation|observation|other",'
         '"metric_name":str|null,"metric_value":str|null,"confidence":0-1,"tags":[str]}]}. Prefer 3-10 items.'
     )
-    user_text = f"Title: {paper.title}\n\nAbstract:\n{(paper.abstract or '')[:4000]}"
+    body = (paper.full_text or paper.abstract or "")[:12000]
+    user_text = f"Title: {paper.title}\n\nText:\n{body}"
 
     try:
         import os

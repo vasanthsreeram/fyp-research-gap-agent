@@ -45,6 +45,7 @@ def build_markdown_report(
         f"| **Domain** | {manifest.domain} |",
         f"| **Date** | {started_s} |",
         f"| **Papers** | {len(papers)} |",
+        f"| **Full-text** | {getattr(manifest, 'n_fulltext', sum(1 for p in papers if getattr(p, 'has_full_text', lambda: False)()))} |",
         f"| **Claims** | {len(claims)} |",
         f"| **Evidence** | {len(evidence)} |",
         f"| **Gaps** | {len(gaps)} |",
@@ -65,6 +66,11 @@ def build_markdown_report(
             lines.append(f"   - Year: {p.year}")
         if p.source:
             lines.append(f"   - Source: `{p.source}`")
+        if getattr(p, "has_full_text", lambda: False)():
+            nsec = len(getattr(p, "sections", None) or [])
+            lines.append(
+                f"   - Full text: `{p.full_text_source or 'yes'}` · {len(p.full_text or '')} chars · {nsec} sections"
+            )
         if p.doi:
             lines.append(f"   - DOI: [{p.doi}](https://doi.org/{p.doi})")
         if p.arxiv_id:
@@ -369,6 +375,7 @@ def build_html_report(
 
   <div class="grid">
     <div class="stat"><b>{len(papers)}</b><span>Papers</span></div>
+    <div class="stat"><b>{getattr(manifest, 'n_fulltext', sum(1 for p in papers if getattr(p, 'has_full_text', lambda: False)()))}</b><span>Full-text</span></div>
     <div class="stat"><b>{len(claims)}</b><span>Claims</span></div>
     <div class="stat"><b>{len(evidence)}</b><span>Evidence</span></div>
     <div class="stat"><b>{len(gaps)}</b><span>Gaps</span></div>

@@ -884,3 +884,114 @@ class TestArgumentMining:
         assert "Cite-grounded argument mining" in md
         save_argument_report(g, papers, tmp_path / "argument_graph.md")
         assert (tmp_path / "argument_graph.md").exists()
+
+
+class TestFullTextDepth:
+    def test_split_sections_imrad(self):
+        from src.ingest.pdf_text import split_sections
+        from src.models import PaperSectionKind
+
+        text = (
+            "Abstract\nA short abstract about LNPs.\n\n"
+            "Introduction\nWe propose a mechanism.\n\n"
+            "Methods\nMice received 1 mg/kg mRNA-LNP.\n\n"
+            "Results\nEscape efficiency was less than 2%.\n\n"
+            "Discussion\nEndosomal escape remains poorly understood.\n\n"
+            "Limitations\nSingle cell line only.\n\n"
+            "Conclusions\nMechanism-guided design is needed."
+        )
+        secs = split_sections(text)
+        kinds = {s.kind for s in secs}
+        assert PaperSectionKind.METHODS in kinds
+        assert PaperSectionKind.RESULTS in kinds
+        assert PaperSectionKind.LIMITATIONS in kinds
+        methods = next(s for s in secs if s.kind == PaperSectionKind.METHODS)
+        assert "1 mg/kg" in methods.text
+
+    def test_paper_text_blob_prefers_full_text(self):
+        p = Paper(
+            title="T",
+            abstract="Short abstract only.",
+            full_text="Abstract\n" + ("Body sentence about endosomal escape. " * 20),
+            full_text_source="fixture",
+        )
+        assert p.has_full_text()
+        blob = p.text_blob()
+        assert "endosomal escape" in blob
+        assert len(blob) > len(p.abstract)
+
+    def test_attach_fixture_fulltext(self):
+        from src.ingest.pdf_text import attach_fulltext_to_papers
+        from src.ingest.pipeline import load_fixture
+
+        papers = load_fixture()
+        papers, stats = attach_fulltext_to_papers(papers, use_fixture=True, download=False)
+        assert stats.n_from_fixture >= 6
+        ft = [p for p in papers if p.has_full_text()]
+        assert len(ft) >= 6
+        for p in ft:
+            assert p.sections
+            assert p.full_text_source == "fixture"
+            assert "Methods" in (p.full_text or "") or any(
+                s.kind.value == "methods" for s in p.sections
+            )
+
+    def test_fulltext_lifts_claim_evidence_and_stays_grounded(self):
+        from src.ingest.pdf_text import (
+            attach_fulltext_to_papers,
+            load_fulltext_fixture,
+            match_fulltext_fixture,
+            _fixture_index,
+        )
+        from src.ingest.pipeline import load_fixture
+        from src.eval.memorization import quote_is_grounded
+
+        papers = load_fixture()[:20]
+        idx = _fixture_index(load_fulltext_fixture())
+        target = None
+        for p in papers:
+            if match_fulltext_fixture(p, idx):
+                target = p
+                break
+        assert target is not None
+        c0 = extract_claims_heuristic(target)
+        e0 = extract_evidence_heuristic(target)
+
+        attach_fulltext_to_papers([target], use_fixture=True)
+        assert target.has_full_text()
+        c1 = extract_claims_heuristic(target)
+        e1 = extract_evidence_heuristic(target)
+        assert len(c1) + len(e1) >= len(c0) + len(e0)
+        blob = target.text_blob()
+        for c in c1:
+            assert quote_is_grounded(c.quote_span or c.text, blob)
+        for e in e1:
+            assert quote_is_grounded(e.quote_span or e.text, blob)
+
+    def test_extract_pdf_roundtrip(self, tmp_path):
+        """Generate a tiny PDF and ensure text extraction recovers body."""
+        import fitz
+
+        from src.ingest.pdf_text import extract_text_from_pdf, attach_full_text
+
+        pdf_path = tmp_path / "mini.pdf"
+        doc = fitz.open()
+        page = doc.new_page()
+        body = (
+            "Abstract\nIonizable lipids enable mRNA LNP delivery.\n\n"
+            "Methods\nWe measured endosomal escape with Gal8 assays in HeLa cells.\n\n"
+            "Results\nLess than 2% of mRNA reached the cytosol.\n\n"
+            "Limitations\nThe exact molecular mechanism remains poorly understood."
+        )
+        page.insert_text((72, 72), body, fontsize=11)
+        doc.save(pdf_path)
+        doc.close()
+
+        text = extract_text_from_pdf(pdf_path)
+        assert "endosomal escape" in text.lower() or "Gal8" in text
+        p = Paper(title="Mini PDF paper", abstract="Ionizable lipids enable mRNA LNP delivery.")
+        attach_full_text(p, text, source="pdf", pdf_path=str(pdf_path))
+        assert p.has_full_text()
+        assert p.pdf_path == str(pdf_path)
+        kinds = {s.kind.value for s in p.sections}
+        assert "methods" in kinds or "results" in kinds or len(p.full_text or "") > 80

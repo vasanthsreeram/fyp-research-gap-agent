@@ -136,6 +136,16 @@ def run(
         "--novelty-backend",
         help="Corpus novelty backend: lexical | embedding | auto (default lexical for offline demos)",
     ),
+    fulltext: bool = typer.Option(
+        True,
+        "--fulltext/--no-fulltext",
+        help="Attach full text (fixture JSONL / local PDF / optional download) before extract",
+    ),
+    fulltext_download: bool = typer.Option(
+        False,
+        "--fulltext-download",
+        help="Allow live PDF download (arXiv) when attaching full text",
+    ),
 ):
     """End-to-end pipeline: ingest → extract → gap-score → suggest → report."""
     # Eager keychain resolve for auto/llm mode
@@ -210,6 +220,32 @@ def run(
     if not loaded_papers:
         logger.error("No papers available. Aborting.")
         raise typer.Exit(1)
+
+    # 1b. Full-text PDF depth (fixture offline path by default)
+    ft_stats = None
+    if fulltext:
+        from src.ingest.pdf_text import attach_fulltext_to_papers, fulltext_markdown_report
+
+        loaded_papers, ft_stats = attach_fulltext_to_papers(
+            loaded_papers,
+            use_fixture=True,
+            download=fulltext_download,
+            skip_existing=True,
+        )
+        manifest.n_fulltext = sum(1 for p in loaded_papers if p.has_full_text())
+        logger.info(
+            "Full-text: %d/%d papers (fixture=%d pdf=%d download=%d)",
+            manifest.n_fulltext,
+            len(loaded_papers),
+            ft_stats.n_from_fixture,
+            ft_stats.n_from_pdf,
+            ft_stats.n_from_download,
+        )
+        if save:
+            REPORTS_DIR.mkdir(parents=True, exist_ok=True)
+            (REPORTS_DIR / "fulltext_coverage.md").write_text(
+                fulltext_markdown_report(loaded_papers, ft_stats)
+            )
 
     if save:
         PROC_DIR.mkdir(parents=True, exist_ok=True)
@@ -436,8 +472,8 @@ def run(
     print(f"\n{'=' * 60}")
     print(f"RUN COMPLETE — {manifest.run_id}")
     print(
-        f"  Papers: {len(loaded_papers)} | Claims: {len(all_claims)} | "
-        f"Evidence: {len(all_evidence)}"
+        f"  Papers: {len(loaded_papers)} | Full-text: {getattr(manifest, 'n_fulltext', 0)} | "
+        f"Claims: {len(all_claims)} | Evidence: {len(all_evidence)}"
     )
     print(f"  Gaps: {len(all_gaps)} | Topics: {len(all_topics)} | Protocols: {len(all_protocols)}")
     n_x = sum(1 for g in all_gaps if getattr(g.kind, "value", "") == "cross_paper_tension")
@@ -511,6 +547,68 @@ def status():
         print(status_path.read_text())
     else:
         print("STATUS.md not found.")
+
+
+@app.command("fulltext")
+def fulltext_cmd(
+    papers_path: Optional[Path] = typer.Option(None, "--papers", "-p", help="papers.jsonl"),
+    use_fixture_papers: bool = typer.Option(True, "--fixture/--no-fixture", help="Load fixture papers if no cache"),
+    limit: int = typer.Option(52, "--limit", "-n"),
+    download: bool = typer.Option(False, "--download", help="Allow live arXiv/OA PDF download"),
+    max_attach: Optional[int] = typer.Option(None, "--max-attach", help="Cap number of full-text attaches"),
+    save: bool = typer.Option(True, "--save/--no-save"),
+):
+    """Attach full text (offline fixture body / local PDF / optional download) and report coverage."""
+    from src.ingest import ingest_papers
+    from src.ingest.pdf_text import attach_fulltext_to_papers, fulltext_markdown_report
+
+    papers = _load_papers(papers_path) if papers_path else _load_papers()
+    if not papers:
+        papers = ingest_papers(use_fixture=use_fixture_papers, save=False, limit=limit)
+    else:
+        papers = papers[: max(1, limit)]
+
+    papers, stats = attach_fulltext_to_papers(
+        papers,
+        use_fixture=True,
+        download=download,
+        max_attach=max_attach,
+        skip_existing=True,
+    )
+    md = fulltext_markdown_report(papers, stats)
+    REPORTS_DIR.mkdir(parents=True, exist_ok=True)
+    out = REPORTS_DIR / "fulltext_coverage.md"
+    out.write_text(md)
+    if save:
+        PROC_DIR.mkdir(parents=True, exist_ok=True)
+        with open(PROC_DIR / "papers.jsonl", "w") as f:
+            for p in papers:
+                f.write(p.model_dump_json() + "\n")
+        # Also dump section index for inspection
+        with open(PROC_DIR / "fulltext_sections.jsonl", "w") as f:
+            for p in papers:
+                if not p.has_full_text():
+                    continue
+                f.write(
+                    json.dumps(
+                        {
+                            "paper_id": p.id,
+                            "title": p.title,
+                            "full_text_source": p.full_text_source,
+                            "n_chars": len(p.full_text or ""),
+                            "sections": [s.model_dump() for s in p.sections],
+                        }
+                    )
+                    + "\n"
+                )
+    n_ft = sum(1 for p in papers if p.has_full_text())
+    print(f"Full-text attached: {n_ft}/{len(papers)}")
+    print(f"  fixture={stats.n_from_fixture} local_pdf={stats.n_from_pdf} download={stats.n_from_download} failed={stats.n_failed}")
+    print(f"Report → {out}")
+    for p in papers:
+        if p.has_full_text():
+            kinds = ",".join(s.kind.value for s in p.sections[:8])
+            print(f"  - {p.title[:70]} [{p.full_text_source}] secs={kinds}")
 
 
 @app.command("fetch-papers")

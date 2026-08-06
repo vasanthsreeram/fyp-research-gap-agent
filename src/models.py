@@ -65,8 +65,32 @@ class CiteMarkerKind(str, Enum):
     BRACKET_NUM = "bracket_num"
 
 
+class PaperSectionKind(str, Enum):
+    """Coarse IMRaD-ish section labels for full-text depth."""
+
+    ABSTRACT = "abstract"
+    INTRODUCTION = "introduction"
+    METHODS = "methods"
+    RESULTS = "results"
+    DISCUSSION = "discussion"
+    CONCLUSION = "conclusion"
+    LIMITATIONS = "limitations"
+    SUPPLEMENTARY = "supplementary"
+    OTHER = "other"
+
+
+class PaperSection(BaseModel):
+    """A labeled span of full text (offset into Paper.full_text)."""
+
+    kind: PaperSectionKind = PaperSectionKind.OTHER
+    title: str = ""
+    text: str = ""
+    start_char: int = 0
+    end_char: int = 0
+
+
 class Paper(BaseModel):
-    """Ingested paper / preprint metadata + abstract text."""
+    """Ingested paper / preprint metadata + abstract (+ optional full text)."""
 
     id: str = Field(default_factory=lambda: _id("paper"))
     title: str
@@ -78,14 +102,47 @@ class Paper(BaseModel):
     s2_id: Optional[str] = None
     venue: Optional[str] = None
     url: Optional[str] = None
-    source: str = "unknown"  # semantic_scholar | arxiv | fixture
+    source: str = "unknown"  # semantic_scholar | arxiv | fixture | openalex
     keywords: list[str] = Field(default_factory=list)
     citation_count: Optional[int] = None
     ingested_at: datetime = Field(default_factory=datetime.utcnow)
+    # Stage 3 full-text PDF depth (optional; abstract-only when empty)
+    full_text: Optional[str] = None
+    sections: list[PaperSection] = Field(default_factory=list)
+    pdf_path: Optional[str] = None
+    pdf_url: Optional[str] = None
+    full_text_source: Optional[str] = None  # fixture | pdf | arxiv_pdf | oa_pdf | manual
 
-    def text_blob(self) -> str:
+    def has_full_text(self) -> bool:
+        return bool((self.full_text or "").strip()) and len((self.full_text or "").strip()) > len(
+            (self.abstract or "").strip()
+        ) + 80
+
+    def text_blob(self, *, prefer_full_text: bool = True) -> str:
+        """Text used by extractors / arg-mining / mem-bench.
+
+        When full_text is attached, prefer it (title + body) so quote grounding
+        and claim/evidence mining run over body sections, not abstract alone.
+        """
+        if prefer_full_text and (self.full_text or "").strip():
+            body = (self.full_text or "").strip()
+            title = (self.title or "").strip()
+            # Avoid duplicating title if already first line of body
+            if title and not body.lower().startswith(title.lower()[: min(40, len(title))]):
+                return f"{title}\n\n{body}".strip()
+            return body
         parts = [self.title or "", self.abstract or ""]
         return "\n\n".join(p for p in parts if p).strip()
+
+    def section_text(self, *kinds: PaperSectionKind | str) -> str:
+        """Concatenate text from selected section kinds (empty if none)."""
+        if not kinds:
+            return ""
+        want: set[str] = set()
+        for k in kinds:
+            want.add(k.value if isinstance(k, PaperSectionKind) else str(k).lower())
+        chunks = [s.text for s in self.sections if s.kind.value in want and (s.text or "").strip()]
+        return "\n\n".join(chunks).strip()
 
 
 class Claim(BaseModel):
@@ -261,6 +318,7 @@ class RunManifest(BaseModel):
     n_gaps: int = 0
     n_topics: int = 0
     n_protocols: int = 0
+    n_fulltext: int = 0
     extractor_mode: str = "heuristic"
     aligner_mode: str = "auto"  # auto | lexical | embedding (resolved value recorded at finish)
     notes: str = ""

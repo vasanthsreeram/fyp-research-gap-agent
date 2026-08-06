@@ -219,11 +219,14 @@ def _confidence_for_sentence(sent: str, base: float) -> float:
     return round(conf, 3)
 
 
-def extract_claims_heuristic(paper: Paper, max_per_paper: int = 8) -> list[Claim]:
+def extract_claims_heuristic(paper: Paper, max_per_paper: int | None = None) -> list[Claim]:
     """
     Higher-recall heuristic claim extractor with structured slots.
     Pulls theory/mechanism sentences + domain-salient claim-like sentences.
+    Full-text papers get a higher per-paper cap so body sections contribute.
     """
+    if max_per_paper is None:
+        max_per_paper = 16 if paper.has_full_text() else 8
     claims: list[Claim] = []
     text = paper.text_blob()
     if not text:
@@ -296,12 +299,15 @@ def extract_claims_llm(paper: Paper) -> list[Claim]:
         '"uncertainty":str|null'  # hedges / unknowns
         "}]}. "
         "Rules: (1) Only claims explicitly stated or strongly implied in the text. "
-        "(2) quote_span MUST be a contiguous verbatim snippet from the abstract. "
+        "(2) quote_span MUST be a contiguous verbatim snippet from the provided text. "
         "(3) Do not invent citations, DOIs, years, or results absent from the text. "
-        "(4) Prefer 3-8 claims. (5) Lower confidence when hedging or evidence is thin. "
+        "(4) Prefer 3-10 claims (include Methods/Results/Limitations when full text). "
+        "(5) Lower confidence when hedging or evidence is thin. "
         "(6) Fill structured fields when possible; leave null if not supported."
     )
-    user_text = f"Title: {paper.title}\n\nAbstract:\n{(paper.abstract or '')[:4000]}"
+    # Prefer full text when attached (truncated); else abstract
+    body = (paper.full_text or paper.abstract or "")[:12000]
+    user_text = f"Title: {paper.title}\n\nText:\n{body}"
 
     try:
         client = get_client()

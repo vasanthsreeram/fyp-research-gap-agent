@@ -250,8 +250,10 @@ def mine_argument_units(
     min_sentence_chars: int = 40,
     max_units_per_paper: int = 8,
 ) -> list[ArgumentUnit]:
-    """Split each paper's abstract into sentences and mine argument units.
+    """Split each paper's text into sentences and mine argument units.
 
+    Uses Paper.text_blob() (full text when attached, else abstract). Full-text
+    papers automatically allow more units so body sections contribute.
     Units are quote-grounded (quote_span is the normalized sentence) and carry
     role + citation markers. Claim/evidence provenance is attached when an
     exact quote match exists.
@@ -276,17 +278,38 @@ def mine_argument_units(
         blob = p.text_blob()
         if not blob:
             continue
+        # Full-text body is denser — raise unit budget so Methods/Results/Limitations appear.
+        paper_cap = max_units_per_paper
+        if p.has_full_text() and max_units_per_paper <= 8:
+            paper_cap = 16
         # Work paragraph-wise so the title never merges with abstract sentences.
         paragraphs = [para.strip() for para in re.split(r"\n+", blob) if para.strip()]
         title = (p.title or "").strip()
+        # Prefer body section order when available (results/limitations first for dialectic density)
+        if p.sections:
+            priority = {
+                "limitations": 0,
+                "discussion": 1,
+                "results": 2,
+                "conclusion": 3,
+                "introduction": 4,
+                "methods": 5,
+                "abstract": 6,
+            }
+            ordered = sorted(
+                [s for s in p.sections if (s.text or "").strip()],
+                key=lambda s: priority.get(s.kind.value, 9),
+            )
+            if ordered:
+                paragraphs = [s.text.strip() for s in ordered]
         taken = 0
         for para in paragraphs:
-            if taken >= max_units_per_paper:
+            if taken >= paper_cap:
                 break
             if para == title:
                 continue  # titles are not argumentative units with citation cues
             for sent in [s.strip() for s in _SENT_SPLIT.split(para) if s.strip()]:
-                if taken >= max_units_per_paper:
+                if taken >= paper_cap:
                     break
                 if len(sent) < min_sentence_chars:
                     continue

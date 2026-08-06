@@ -3,7 +3,7 @@
 _Prototype structured protocols derived from topic proposals. Not wet-lab SOPs — for design discussion and preregistration sketches._
 
 ## 1. Protocol: Payload competition in bifunctional ncRNA–mRNA co-delivery nanoparticles
-- **ID**: `proto_221ee579db1c` · **topic**: `topic_c06199f2decf` · **pack**: `hybrid_ncrna`
+- **ID**: `proto_7852f5abcaa3` · **topic**: `topic_dc30c1e71932` · **pack**: `hybrid_ncrna`
 - **Primary aim**: Test whether when ncRNA and mRNA share a single LNP, endosomal escape capacity is a zero-sum resource
 - **Hypothesis**: When ncRNA and mRNA share a single LNP, endosomal escape capacity is a zero-sum resource; optimizing mass ratio and staggered release chemistry can restore translation without sacrificing silencing.
 - **Expected readout**: Identify a ratio/chemistry window with ≥70% of single-payload translation and ≥50% target knockdown.
@@ -59,10 +59,10 @@ _Prototype structured protocols derived from topic proposals. Not wet-lab SOPs �
 
 **Feasibility:** Standard formulation + reporter assays; moderate complexity.
 
-**Rationale:** Derived from topic 'Payload competition in bifunctional ncRNA–mRNA co-delivery nanoparticles' (pack=hybrid_ncrna, priority=0.68). Anchored on gap [untested_claim] 'Untested: We hypothesized that bifunctional designs displaying both endosomal-disrupting p' (overall=0.80, testability=0.72). Addresses 3 scored gaps in 'hybrid_ncrna' (pack=hybrid_ncrna, cluster mean overall=0.68, rank=0.89 (pack-balanced)). Success would advance therapeutically relevant nucleic acid delivery and/or hybrid ncRNA mechanisms.
+**Rationale:** Derived from topic 'Payload competition in bifunctional ncRNA–mRNA co-delivery nanoparticles' (pack=hybrid_ncrna, priority=0.67). Anchored on gap [cross_paper_tension] 'Cross-paper tension: However, the exact molecular mechanism of bilayer disruption remains controversi' (overall=0.79, testability=0.68). Addresses 3 scored gaps in 'hybrid_ncrna' (pack=hybrid_ncrna, cluster mean overall=0.67, rank=0.88 (pack-balanced)). Success would advance therapeutically relevant nucleic acid delivery and/or hybrid ncRNA mechanisms.
 
 ## 2. Protocol: Non-hepatic gene editing via serum-stable hybrid DNA–LNP scaffolds
-- **ID**: `proto_f00179ec111f` · **topic**: `topic_4897d5350cad` · **pack**: `gene_editing`
+- **ID**: `proto_af54cbdc8881` · **topic**: `topic_2565649fed30` · **pack**: `gene_editing`
 - **Primary aim**: Test whether dNA-organized ionizable lipid domains improve serum stability and spleen/immune-cell editing without proportional increases in off-target genomic injury
 - **Hypothesis**: DNA-organized ionizable lipid domains improve serum stability and spleen/immune-cell editing without proportional increases in off-target genomic injury.
 - **Expected readout**: ≥2× extrahepatic editing at matched liver exposure and ≤baseline off-target rate.
@@ -121,7 +121,7 @@ _Prototype structured protocols derived from topic proposals. Not wet-lab SOPs �
 **Rationale:** Derived from topic 'Non-hepatic gene editing via serum-stable hybrid DNA–LNP scaffolds' (pack=gene_editing, priority=0.67). Anchored on gap [delivery_barrier] 'Limitation: Scale-up of scaffold synthesis remains a practical barrier to clinical manufactu' (overall=0.73, testability=0.70). Addresses 3 scored gaps in 'gene_therapy' (pack=gene_editing, cluster mean overall=0.67, rank=0.85 (pack-balanced)). Success would advance therapeutically relevant nucleic acid delivery and/or hybrid ncRNA mechanisms.
 
 ## 3. Protocol: Ligand-displaying LNPs for extrahepatic targeting: avidity vs specificity
-- **ID**: `proto_18264c17f03f` · **topic**: `topic_f9cd6c0e906e` · **pack**: `lnp_core`
+- **ID**: `proto_ead9004ad41d` · **topic**: `topic_fb36cdf6e466` · **pack**: `lnp_core`
 - **Primary aim**: Test whether multivalent display of low-affinity targeting ligands (e
 - **Hypothesis**: Multivalent display of low-affinity targeting ligands (e.g., mannose, transferrin, or anti-CD3 scFv) on LNP surfaces achieves higher tissue selectivity than high-affinity monovalent targeting, due to reduced off-target uptake by liver macrophages.
 - **Expected readout**: Target-to-liver uptake ratio; ≥5× improvement over non-targeted LNPs.
@@ -177,10 +177,68 @@ _Prototype structured protocols derived from topic proposals. Not wet-lab SOPs �
 
 **Feasibility:** Lipid-PEG-ligand chemistry is standard; main risk is synthesis scale-up.
 
-**Rationale:** Derived from topic 'Ligand-displaying LNPs for extrahepatic targeting: avidity vs specificity' (pack=lnp_core, priority=0.69). Anchored on gap [delivery_barrier] 'Limitation: Nevertheless, extrahepatic delivery was not achieved, and endosomal escape remai' (overall=0.78, testability=0.70). Addresses 3 scored gaps in 'targeting' (pack=lnp_core, cluster mean overall=0.69, rank=0.80 (pack-balanced)). Success would advance therapeutically relevant nucleic acid delivery and/or hybrid ncRNA mechanisms.
+**Rationale:** Derived from topic 'Ligand-displaying LNPs for extrahepatic targeting: avidity vs specificity' (pack=lnp_core, priority=0.71). Anchored on gap [delivery_barrier] 'Limitation: Extrahepatic delivery remains elusive at therapeutically relevant doses without ' (overall=0.80, testability=0.70). Addresses 3 scored gaps in 'targeting' (pack=lnp_core, cluster mean overall=0.71, rank=0.82 (pack-balanced)). Success would advance therapeutically relevant nucleic acid delivery and/or hybrid ncRNA mechanisms.
 
-## 4. Protocol: Decoupling innate immune activation from LNP delivery potency
-- **ID**: `proto_e4b8518e6878` · **topic**: `topic_0bfa80e48dee` · **pack**: `lnp_core`
+## 4. Protocol: Quantitative bottleneck analysis of the LNP delivery cascade
+- **ID**: `proto_560d844bd9f9` · **topic**: `topic_b365555f4591` · **pack**: `lnp_core`
+- **Primary aim**: Test whether endosomal escape—not uptake or encapsulation—is the dominant loss term in the delivery cascade for most clinical-like LNP compositions, and 10× escape gains are necessary and sufficient for transformative dose reduction
+- **Hypothesis**: Endosomal escape—not uptake or encapsulation—is the dominant loss term in the delivery cascade for most clinical-like LNP compositions, and 10× escape gains are necessary and sufficient for transformative dose reduction.
+- **Expected readout**: Ranked elasticities per cascade step; validated 5× dose reduction via top lever.
+
+### Steps
+1. Build a quantitative cascade map (injection→uptake→escape→translation) with barcoded mRNA
+2. Perturb each step independently and measure sensitivity of protein output
+3. Identify the step with highest elasticity for dose reduction
+
+### Controls
+- Clinical-like reference LNP (SM-102 or MC3 class) at matched dose
+- Non-ionizable lipid control particle
+- Free nucleic acid (no particle)
+- Vehicle-only
+
+### Assay panel
+- Size / PDI / zeta (DLS) and encapsulation efficiency
+- In vitro transfection across ≥3 cell types (hepato, endo, immune)
+- Endosomal escape proxy (galectin puncta or calcein release)
+- In vivo reporter biodistribution (liver vs extrahepatic organs)
+- Repeat-dose PK / anti-PEG IgM if multi-dose claim
+
+### Success criteria
+- Primary: Ranked elasticities per cascade step; validated 5× dose reduction via top lever.
+- Pre-register binary pass if primary numeric threshold is met with the study's planned analysis (hints in readout:  5×).
+- Secondary: no worse than reference on pre-specified safety panel (viability drop ≤20% in vitro; no unexpected grade of systemic cytokines in vivo).
+- Replicates: ≥3 independent formulations for in vitro; in vivo n powered for primary effect size.
+
+### Stop rules
+- Stop expansion if lead fails primary readout in two independent formulation lots.
+- Stop in vivo if acute reactogenicity exceeds reference by pre-set cytokine fold-change.
+- Redesign (do not force dose escalation) if QC (PDI>0.3 or EE%<70%) is unstable across lots.
+- Kill criterion tied to feasibility note: Requires careful assay development; high scientific payoff.
+
+### Timeline
+- Week 0–1: freeze hypothesis, SOPs, power calc, preregister primary readout
+- Week 2–4: formulation library + QC (size, EE%, endotoxin)
+- Week 5–7: in vitro screen with full control set; down-select top 3–5
+- Week 8–11: in vivo pilot (n small) on top candidates + reference
+- Week 12: stats, failure analysis, decide kill / expand / redesign
+
+### Risks
+- In vitro transfection poorly predicts in vivo tropism
+- Protein corona differs across serum lots / species
+- Microscopy endosomal-escape assays are low-throughput and operator-sensitive
+
+### Materials (skeleton)
+- Ionizable lipid + helper + cholesterol + PEG-lipid set (or pack-specific scaffold)
+- Reporter / therapeutic nucleic acid cargo (sequence-verified)
+- Reference clinical-like LNP reagents
+- Cell lines relevant to claim + serum for corona / stability assays
+
+**Feasibility:** Requires careful assay development; high scientific payoff.
+
+**Rationale:** Derived from topic 'Quantitative bottleneck analysis of the LNP delivery cascade' (pack=lnp_core, priority=0.70). Anchored on gap [untested_claim] 'Untested: Conclusions Ionizable lipid design is clinically validated yet mechanistically u' (overall=0.76, testability=0.72). Addresses 3 scored gaps in 'delivery_efficiency' (pack=lnp_core, cluster mean overall=0.70, rank=0.81 (pack-balanced)). Success would advance therapeutically relevant nucleic acid delivery and/or hybrid ncRNA mechanisms.
+
+## 5. Protocol: Decoupling innate immune activation from LNP delivery potency
+- **ID**: `proto_786c4447e20c` · **topic**: `topic_53f001316ffe` · **pack**: `lnp_core`
 - **Primary aim**: Test whether ionizable lipid structure independently drives TLR/inflammasome activation versus endosomal escape
 - **Hypothesis**: Ionizable lipid structure independently drives TLR/inflammasome activation versus endosomal escape; lipids can be optimized for high delivery with low reactogenicity.
 - **Expected readout**: ≥2× potency/inflammation ratio vs SM-102 or MC3 reference LNPs.
@@ -235,64 +293,4 @@ _Prototype structured protocols derived from topic proposals. Not wet-lab SOPs �
 
 **Feasibility:** Cell reporter assays are accessible; in vivo cytokine panels standard.
 
-**Rationale:** Derived from topic 'Decoupling innate immune activation from LNP delivery potency' (pack=lnp_core, priority=0.69). Anchored on gap [delivery_barrier] 'Limitation: Decoupling immunogenicity from delivery remains a major challenge.' (overall=0.73, testability=0.70). Addresses 3 scored gaps in 'immunogenicity' (pack=lnp_core, cluster mean overall=0.69, rank=0.79 (pack-balanced)). Success would advance therapeutically relevant nucleic acid delivery and/or hybrid ncRNA mechanisms.
-
-## 5. Protocol: Mechanistic understanding of LNP endosomal escape: fusion vs destabilization
-- **ID**: `proto_2f8db00f1de4` · **topic**: `topic_8035249b0577` · **pack**: `lnp_core`
-- **Primary aim**: Test whether endosomal escape of LNPs proceeds primarily through membrane destabilization (ionizable lipid-facilitated flip-flop and bilayer disruption) rather than fusogenic mechanisms, and can be enhanced by helper lipids that lower the lamellar-to-hexagonal phase transition temperature
-- **Hypothesis**: Endosomal escape of LNPs proceeds primarily through membrane destabilization (ionizable lipid-facilitated flip-flop and bilayer disruption) rather than fusogenic mechanisms, and can be enhanced by helper lipids that lower the lamellar-to-hexagonal phase transition temperature.
-- **Expected readout**: Quantitative fraction of delivered cargo reaching cytosol vs lysosomal degradation.
-
-### Steps
-1. Labelled lipid mixing vs content release assays to distinguish fusion from destabilization
-2. Cryo-ET of LNPs in endosomal compartments at timed intervals after uptake
-3. Vary helper lipid ratios and correlate with endosomal escape efficiency via FRET
-
-### Controls
-- Clinical-like reference LNP (SM-102 or MC3 class) at matched dose
-- Non-ionizable lipid control particle
-- Free nucleic acid (no particle)
-- Vehicle-only
-
-### Assay panel
-- Size / PDI / zeta (DLS) and encapsulation efficiency
-- In vitro transfection across ≥3 cell types (hepato, endo, immune)
-- Endosomal escape proxy (galectin puncta or calcein release)
-- In vivo reporter biodistribution (liver vs extrahepatic organs)
-- Repeat-dose PK / anti-PEG IgM if multi-dose claim
-
-### Success criteria
-- Primary: Quantitative fraction of delivered cargo reaching cytosol vs lysosomal degradation.
-- Pre-register a binary pass/fail on the primary readout vs reference LNP before unblinding in vivo arms.
-- Secondary: no worse than reference on pre-specified safety panel (viability drop ≤20% in vitro; no unexpected grade of systemic cytokines in vivo).
-- Replicates: ≥3 independent formulations for in vitro; in vivo n powered for primary effect size.
-
-### Stop rules
-- Stop expansion if lead fails primary readout in two independent formulation lots.
-- Stop in vivo if acute reactogenicity exceeds reference by pre-set cytokine fold-change.
-- Redesign (do not force dose escalation) if QC (PDI>0.3 or EE%<70%) is unstable across lots.
-- Kill criterion tied to feasibility note: Requires advanced microscopy (cryo-ET) — moderate; FRET assays are accessible.
-
-### Timeline
-- Week 0–1: freeze hypothesis, SOPs, power calc, preregister primary readout
-- Week 2–4: formulation library + QC (size, EE%, endotoxin)
-- Week 5–7: in vitro screen with full control set; down-select top 3–5
-- Week 8–11: in vivo pilot (n small) on top candidates + reference
-- Week 12: stats, failure analysis, decide kill / expand / redesign
-
-### Risks
-- In vitro transfection poorly predicts in vivo tropism
-- Protein corona differs across serum lots / species
-- Microscopy endosomal-escape assays are low-throughput and operator-sensitive
-
-### Materials (skeleton)
-- Ionizable lipid + helper + cholesterol + PEG-lipid set (or pack-specific scaffold)
-- Reporter / therapeutic nucleic acid cargo (sequence-verified)
-- Reference clinical-like LNP reagents
-- Cell lines relevant to claim + serum for corona / stability assays
-- Capability: Cryo-ET of LNPs in endosomal compartments at timed intervals after uptake
-- Capability: Vary helper lipid ratios and correlate with endosomal escape efficiency via FRET
-
-**Feasibility:** Requires advanced microscopy (cryo-ET) — moderate; FRET assays are accessible.
-
-**Rationale:** Derived from topic 'Mechanistic understanding of LNP endosomal escape: fusion vs destabilization' (pack=lnp_core, priority=0.68). Anchored on gap [delivery_barrier] 'Limitation: Nevertheless, extrahepatic delivery was not achieved, and endosomal escape remai' (overall=0.78, testability=0.70). Addresses 3 scored gaps in 'endosomal_escape' (pack=lnp_core, cluster mean overall=0.68, rank=0.78 (pack-balanced)). Success would advance therapeutically relevant nucleic acid delivery and/or hybrid ncRNA mechanisms.
+**Rationale:** Derived from topic 'Decoupling innate immune activation from LNP delivery potency' (pack=lnp_core, priority=0.68). Anchored on gap [delivery_barrier] 'Limitation: Decoupling immunogenicity from delivery remains a major challenge.' (overall=0.73, testability=0.70). Addresses 3 scored gaps in 'immunogenicity' (pack=lnp_core, cluster mean overall=0.68, rank=0.79 (pack-balanced)). Success would advance therapeutically relevant nucleic acid delivery and/or hybrid ncRNA mechanisms.
