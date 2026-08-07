@@ -7,10 +7,10 @@
 
 ## Status
 
-Stage 3: modular packages, claim-recall, LLM path, embedding gap alignment, **memorization safeguards v2**, **pack-aware topics**, **cross-paper tension**, **OpenAlex live**, **protocol cards**, **novelty-vs-corpus**, **cite-grounded argument mining**, **full-text PDF depth**, **52-paper corpus**, **dual-domain pack**, **feedback harness**.
+Stage 3: modular packages, claim-recall, LLM path, embedding gap alignment, **memorization safeguards v2**, **pack-aware topics**, **cross-paper tension**, **OpenAlex live**, **Europe PMC OA full-text**, **protocol cards**, **novelty-vs-corpus**, **cite-grounded argument mining**, **full-text depth (22/52)**, **52-paper corpus**, **dual-domain pack**, **feedback harness**.
 
-Latest heuristic extract on fixture: **52 papers (9 full-text) → 123 claims → 197 evidence → 128 gaps → novelty mean 0.78 → 5 pack-balanced topics → 5 protocol cards**.  
-Mem-bench **PASS** (ground 100%, unsup/cite/over/leak 0%, controlled 7/7). Domain pack **PASS**. Tests: **63 passed**.
+Latest heuristic extract on fixture: **52 papers (22 full-text) → 180 claims → 311 evidence → 174 gaps → novelty mean 0.79 → 5 pack-balanced topics → 5 protocol cards**.  
+Mem-bench **PASS** (ground 100%, unsup/cite/over/leak 0%, controlled 7/7). Domain pack **PASS**. Tests: **65 passed**.
 
 See [`docs/STATUS.md`](docs/STATUS.md), [`docs/memorization-eval.md`](docs/memorization-eval.md), and [`docs/supervisor-update-draft.md`](docs/supervisor-update-draft.md).
 
@@ -41,8 +41,10 @@ python -m src.cli protocols --limit 52 --fixture
 # Novelty vs corpus (scientifically surprising proxy)
 python -m src.cli novelty --limit 52 --fixture --backend lexical
 
-# Full-text coverage (fixture bodies / optional PDF download)
+# Full-text coverage (fixture bodies / Europe PMC OA / optional PDF download)
 python -m src.cli fulltext --limit 52 --fixture
+python -m src.cli europe-pmc-status
+# python -m src.cli run --fulltext-europe-pmc   # live OA on real DOIs
 
 # Live ingest (OpenAlex free, no key; S2 optional)
 python -m src.cli openalex-status
@@ -64,7 +66,7 @@ Outputs:
 
 ```
 ingest (S2 / OpenAlex / arXiv / fixture)
-    → full-text attach (fixture bodies / PDF extract / optional download)
+    → full-text attach (fixture bodies / PDF extract / Europe PMC OA / optional download)
     → extract claims + evidence (heuristic | llm)
     → gap align (lexical | embedding) + multi-axis score
     → cross-paper claim tension (multi-paper dialectics)
@@ -80,7 +82,7 @@ ingest (S2 / OpenAlex / arXiv / fixture)
 | Package | Role |
 |---------|------|
 | `src/models.py` | Pydantic schemas (+ FeedbackRecord; TopicProposal pack_id/rank_score; CROSS_PAPER_TENSION; ExperimentProtocol; Gap corpus novelty fields) |
-| `src/ingest/` | Semantic Scholar + **OpenAlex** + arXiv + fixture + S2 key resolve + **full-text PDF** |
+| `src/ingest/` | Semantic Scholar + **OpenAlex** + **Europe PMC OA** + arXiv + fixture + S2 key resolve + **full-text PDF** |
 | `src/extract/` | Claims, evidence, LLM helpers |
 | `src/gap/` | Lexical + embedding alignment, scoring, Chroma, **cross-paper tension**, **novelty-vs-corpus**, **argue mining** |
 | `src/topics/` | Pack-aware research topic proposals + **protocol cards** |

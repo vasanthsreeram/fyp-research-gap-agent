@@ -4,13 +4,13 @@
 |-------|-------|
 | **Cutoff year** | 2024 |
 | **Papers** | 52 (pre=31, post=21) |
-| **Claim grounding** | 123/123 (100%) |
-| **Evidence grounding** | 197/197 (100%) |
+| **Claim grounding** | 180/180 (100%) |
+| **Evidence grounding** | 311/311 (100%) |
 | **Cross-era leakage** | 0 (rate=0%) |
 | **Unsupported claims** | 0 (rate=0%) |
 | **Hallucinated citations** | 0 (rate=0%) |
 | **Overconfidence flags** | 0 (rate=0%) |
-| **Structure coverage** | hyp=66% any=100% full(≥3)=25/123 |
+| **Structure coverage** | hyp=58% any=100% full(≥3)=34/180 |
 | **Closed-book flagged** | 0/0 |
 | **Controlled cases** | PASS (7/7) |
 | **Pass grounding** | yes |
@@ -47,4 +47,4 @@
 - [ok] `ctrl_structure_fn` structure_claim_fields fills hypothesis/mechanism: {'hypothesis': 'We propose that ionizable lipids promote', 'evidence': None, 'mechanism': 'We propose that ionizable lipids promote', 'assumptions': [], 'uncertainty': None}
 - [ok] `ctrl_supported_passes` grounded claim not flagged unsupported: hits=0
 
-*Generated 2026-08-06T02:09:06.785007Z*
+*Generated 2026-08-07T02:07:40.173115Z*

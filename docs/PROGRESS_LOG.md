@@ -19,7 +19,26 @@
 | 2026-08-02 10:10 | **wave 9** | OpenAlex free live ingest + experiment protocol cards |
 | 2026-08-03 10:03 | **wave 10** | Novelty-vs-corpus scoring (nearest papers + redundancy) |
 | 2026-08-05 10:00 | **wave 11** | Cite-grounded argument mining (units + support/attack graph) |
+| 2026-08-06 10:00 | **wave 12** | Full-text PDF depth (fixture bodies + PyMuPDF) |
+| 2026-08-07 10:07 | **wave 13** | Europe PMC OA full-text + fixture FT 9→22 |
 
+
+### Wave 13 summary (2026-08-07 10:07 SGT)
+
+**Goal:** Bulk OA full-text path (no key) + deeper offline full-text coverage for hybrid/gene packs.
+
+**New / updated:**
+| Path | Role |
+|------|------|
+| `src/ingest/europe_pmc.py` | DOI→PMCID→fullTextXML→plain IMRaD text |
+| `src/ingest/pdf_text.py` | `europe_pmc=` attach path + stats |
+| `src/fixtures/fulltext_fixture.jsonl` | 9 → **22** sectioned bodies |
+| `src/cli.py` | `--fulltext-europe-pmc`, `europe-pmc-status`, `fulltext --europe-pmc` |
+| `tests/test_pipeline.py` | 63 → **65** tests |
+
+**E2E (heuristic, n=52 fixture):** full-text **22** · **180** claims · **311** evidence · **174** gaps · units **538** · mean corpus novelty **0.79** · 5 topics · 5 protocols · domain pack PASS · mem-bench PASS.
+
+**Europe PMC live probe:** sample DOI `10.1056/NEJMoa2034577` → PMC7745181 OA; Nature mRNA design paper JATS→~31k plain chars.
 
 ### Wave 10 summary (2026-08-03 10:03 SGT)
 
@@ -142,6 +161,9 @@ Corpus 52 + domain pack + feedback harness. See prior STATUS.
 - [x] Pack-aware topic ranking (prefer hybrid templates on hybrid gaps)
 - [x] Cross-paper claim tension gaps
 - [x] Live S2 key path (code ready; key pending)
+- [x] Cite-grounded argument mining / full-text PDF depth
+- [x] Europe PMC OA bulk full-text + fixture FT expansion (22/52)
 - [ ] Optional: deploy refreshed `site/public/data` bundle to fyp.vasanth.my
 - [ ] Collect real supervisor ratings via feedback CLI after meeting
-- [ ] Stage 3: cite-grounded argument mining / full-text PDF depth
+- [ ] Optional: live OpenAlex corpus + Europe PMC harvest on real DOIs (fixture DOIs mostly synthetic)
+- [ ] Optional: mechanism-chain / assay-panel gap templates for supervisor “surprising idea” demos

@@ -4,15 +4,15 @@
   "n_pre_cutoff": 31,
   "n_post_cutoff": 21,
   "claim_grounding": {
-    "n_items": 123,
-    "n_grounded": 123,
+    "n_items": 180,
+    "n_grounded": 180,
     "n_missing_quote": 0,
     "rate": 1.0,
     "ungrounded_ids": []
   },
   "evidence_grounding": {
-    "n_items": 197,
-    "n_grounded": 197,
+    "n_items": 311,
+    "n_grounded": 311,
     "n_missing_quote": 0,
     "rate": 1.0,
     "ungrounded_ids": []
@@ -26,14 +26,14 @@
   "overconfidence_hits": [],
   "overconfidence_rate": 0.0,
   "structure": {
-    "n_claims": 123,
-    "n_with_hypothesis": 81,
-    "n_with_evidence": 65,
-    "n_with_mechanism": 46,
+    "n_claims": 180,
+    "n_with_hypothesis": 104,
+    "n_with_evidence": 112,
+    "n_with_mechanism": 80,
     "n_with_assumptions": 3,
-    "n_with_uncertainty": 38,
-    "n_fully_slotted": 25,
-    "rate_hypothesis": 0.6585365853658537,
+    "n_with_uncertainty": 45,
+    "n_fully_slotted": 34,
+    "rate_hypothesis": 0.5777777777777777,
     "rate_any_structure": 1.0
   },
   "closed_book": [],
@@ -104,5 +104,5 @@
     "Closed-book title\u2192abstract overlap flag rate (optional; open/small models preferred)",
     "Controlled synthetic suite pass (all cases)"
   ],
-  "generated_at": "2026-08-06T02:09:06.785007Z"
+  "generated_at": "2026-08-07T02:07:40.173115Z"
 }

@@ -63,6 +63,7 @@ class FullTextAttachStats:
     n_from_fixture: int = 0
     n_from_pdf: int = 0
     n_from_download: int = 0
+    n_from_europe_pmc: int = 0
     n_failed: int = 0
     sources: dict[str, int] = field(default_factory=dict)
     attached_ids: list[str] = field(default_factory=list)
@@ -342,14 +343,18 @@ def attach_fulltext_to_papers(
     *,
     use_fixture: bool = True,
     download: bool = False,
+    europe_pmc: bool = False,
     pdf_dir: Optional[Path] = None,
     max_attach: Optional[int] = None,
     skip_existing: bool = True,
     fixture_path: Optional[Path] = None,
 ) -> tuple[list[Paper], FullTextAttachStats]:
-    """Attach full text where possible (fixture first, optional live PDF).
+    """Attach full text where possible (fixture → local PDF → Europe PMC → PDF URL).
 
     Returns (papers, stats). Papers list is the same objects (mutated in place).
+
+    ``europe_pmc=True`` enables live DOI→PMC OA fullTextXML (no API key).
+    ``download=True`` enables direct PDF URL fetch (arXiv / known pdf_url).
     """
     stats = FullTextAttachStats(n_input=len(papers))
     index = _fixture_index(load_fulltext_fixture(fixture_path)) if use_fixture else {}
@@ -419,7 +424,30 @@ def attach_fulltext_to_papers(
                 logger.warning("PDF extract failed for %s: %s", paper.id, e)
                 stats.n_failed += 1
 
-        # 3) Optional live download (arXiv etc.)
+        # 3) Europe PMC OA full text (DOI → PMCID → fullTextXML)
+        if europe_pmc and paper.doi:
+            try:
+                from src.ingest.europe_pmc import fetch_fulltext_for_paper
+
+                ft = fetch_fulltext_for_paper(paper)
+                if ft and len(ft.text) > 120:
+                    attach_full_text(
+                        paper,
+                        ft.text,
+                        source="europe_pmc",
+                        pdf_url=f"https://europepmc.org/articles/{ft.pmcid}",
+                    )
+                    stats.n_attached += 1
+                    stats.n_from_europe_pmc += 1
+                    stats.bump_source("europe_pmc")
+                    stats.attached_ids.append(paper.id)
+                    attached += 1
+                    continue
+            except Exception as e:
+                logger.warning("Europe PMC attach failed for %s: %s", paper.id, e)
+                stats.n_failed += 1
+
+        # 4) Optional live PDF download (arXiv etc.)
         if download:
             url = resolve_pdf_url(paper)
             if url:
@@ -447,11 +475,12 @@ def attach_fulltext_to_papers(
                     stats.n_failed += 1
 
     logger.info(
-        "Full-text attach: %d/%d attached (fixture=%d pdf=%d download=%d failed=%d)",
+        "Full-text attach: %d/%d attached (fixture=%d pdf=%d europe_pmc=%d download=%d failed=%d)",
         stats.n_attached,
         stats.n_input,
         stats.n_from_fixture,
         stats.n_from_pdf,
+        stats.n_from_europe_pmc,
         stats.n_from_download,
         stats.n_failed,
     )
@@ -479,7 +508,8 @@ def fulltext_markdown_report(papers: list[Paper], stats: Optional[FullTextAttach
             f"| Attached this pass | {stats.n_attached} |",
             f"| From fixture | {stats.n_from_fixture} |",
             f"| From local PDF | {stats.n_from_pdf} |",
-            f"| From download | {stats.n_from_download} |",
+            f"| From Europe PMC OA | {stats.n_from_europe_pmc} |",
+            f"| From PDF download | {stats.n_from_download} |",
             f"| Failed | {stats.n_failed} |",
         ]
     lines += ["", "## Papers with full text", ""]

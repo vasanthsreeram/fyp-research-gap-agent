@@ -16,9 +16,9 @@ Updated by daily progress cron + human/call notes.
 - Write notes + propose approaches; formal start ~August; early progress welcome
 - Audio/transcript: ~/.openclaw/workspace/tmp/fyp-prof-meeting/
 
-## Current stage: **Stage 3** (2026-08-06 10:00 SGT)
+## Current stage: **Stage 3** (2026-08-07 10:07 SGT)
 
-Wave 12 — **Full-text PDF depth** (sectioned body text → extract/argue; offline fixture + PDF extract path).
+Wave 13 — **Europe PMC OA bulk full-text + fixture depth 22/52**.
 
 ### Stage checklist
 - [x] S0 Freeze scope 1-pager for prof (problem, domain, eval, risks)
@@ -49,50 +49,52 @@ Wave 12 — **Full-text PDF depth** (sectioned body text → extract/argue; offl
 - [x] **S2 Experiment protocol cards** — controls, assay panel, success/stop rules, timeline (`ExperimentProtocol`; `protocols` CLI)
 - [x] **S3 Novelty-vs-corpus scoring** — `src/gap/novelty.py`; nearest papers; redundancy penalty; `novelty` CLI; report `novelty_corpus.md`
 - [x] **S3 Cite-grounded argument mining** — `src/gap/argue.py`; quote-grounded units w/ roles + citation cues; cross-paper support/attack relations; `ARGUE_MINED_CONFLICT` gaps; `argue` CLI; report `argument_graph.md`
-- [x] **S3 Full-text PDF depth** — `src/ingest/pdf_text.py`; Paper.full_text/sections; fixture bodies (9 papers); PyMuPDF extract; IMRaD split; `fulltext` CLI; run `--fulltext` (default on)
+- [x] **S3 Full-text PDF depth** — `src/ingest/pdf_text.py`; Paper.full_text/sections; fixture bodies; PyMuPDF extract; IMRaD split; `fulltext` CLI; run `--fulltext` (default on)
+- [x] **S3 Europe PMC OA bulk full-text** — `src/ingest/europe_pmc.py`; DOI→PMCID→fullTextXML→plain IMRaD; `europe-pmc-status`; run `--fulltext-europe-pmc`
+- [x] **S3 Fixture full-text expansion** — 9 → **22** sectioned bodies (hybrid/gene-editing heavy)
 - [ ] Register BG4801 when eligible
 - [ ] Optional: store S2 API key for dual-source live refresh (OpenAlex already unblocks live path)
 - [ ] Closed-book LLM mem probe on held-out titles (optional; run with small/open model)
-- [ ] Optional: bulk OA PDF download + more fixture full-texts beyond seed 9
+- [ ] Optional: Unpaywall/OA PDF bulk harvest into `data/raw/pdfs/` for remaining abstract-only DOIs (fixture DOIs are mostly synthetic)
 
-### What shipped (2026-08-06 10:00 SGT — wave 12 full-text PDF depth)
+### What shipped (2026-08-07 10:07 SGT — wave 13 Europe PMC + full-text 22)
 
 | Metric | Value |
 |--------|-------|
 | Papers | **52** (fixture; **21** year≥2024 held-out) |
-| Full-text attached | **9** (offline fixture bodies w/ IMRaD sections) |
-| Claims (heuristic) | **123** (was 88 abstract-only) |
-| Evidence | **197** (was 160) |
-| Gaps | **128** (incl. **1** cross-paper tension + **9** argue-mined conflict) |
-| Argument units | **412** (was 329) |
-| Argument relations | **40** (**13** attack, **27** support) |
+| Full-text attached | **22** (was 9; offline fixture IMRaD bodies) |
+| Claims (heuristic) | **180** (was 123) |
+| Evidence | **311** (was 197) |
+| Gaps | **174** (incl. argue-mined conflicts) |
+| Argument units | **538** (was 412) |
+| Argument relations | **40** (**20** attack, **20** support) |
 | Topics (balanced) | **5** — packs: hybrid + gene_editing + lnp_core |
 | Protocols | **5** |
-| Corpus novelty mean | **0.78** (lexical; own papers excluded) |
+| Corpus novelty mean | **0.79** (lexical; own papers excluded) |
 | Domain pack | **PASS** |
-| pytest | **63 passed** (was 58) |
+| pytest | **65 passed** (was 63) |
 | Mem-bench | **PASS** — ground 100%/100%, unsup/cite/over/leak 0% |
+| Europe PMC live | **OK** — sample DOI → PMC7745181 OA; JATS parse verified (~31k chars) |
 
-**New / updated (wave 12)**
+**New / updated (wave 13)**
 ```
-src/ingest/pdf_text.py           # PDF extract (PyMuPDF→pdfplumber), IMRaD split, fixture attach, download hook
-src/fixtures/fulltext_fixture.jsonl  # 9 sectioned bodies (LNP core + hybrid/gene seed)
-src/models.py                    # PaperSection(+Kind); Paper.full_text/sections/pdf_*; text_blob prefers body
-src/extract/claims.py + evidence.py  # higher caps + LLM prompt use full text when present
-src/gap/argue.py                 # section-priority mining; raised unit budget on full-text papers
-src/cli.py                       # run --fulltext/--fulltext-download; `fulltext` command
-src/report.py                    # full-text count in md/html
-tests/test_pipeline.py           # +5 TestFullTextDepth (incl. mini-PDF roundtrip)
-reports/fulltext_coverage.md
+src/ingest/europe_pmc.py         # DOI→PMCID search, fullTextXML fetch, JATS→plain IMRaD
+src/ingest/pdf_text.py           # europe_pmc attach path + stats.n_from_europe_pmc
+src/fixtures/fulltext_fixture.jsonl  # 9 → 22 bodies (hybrid/gene heavy)
+src/cli.py                       # --fulltext-europe-pmc; fulltext --europe-pmc; europe-pmc-status
+src/models.py                    # full_text_source includes europe_pmc
+tests/test_pipeline.py           # +2 Europe PMC tests; fixture attach ≥18
 ```
 
 **Demo commands**
 ```bash
 python -m src.cli run --limit 52 --fixture --mode heuristic --aligner lexical --format both
 python -m src.cli fulltext --limit 52 --fixture
+python -m src.cli europe-pmc-status
+# Live OA path (real DOIs only; most fixture DOIs are synthetic demo IDs):
+python -m src.cli fulltext --limit 5 --no-fixture --europe-pmc
 python -m src.cli argue --limit 52 --fixture --top 12
 python -m src.cli novelty --limit 52 --fixture --backend lexical
-python -m src.cli protocols --limit 52 --fixture
 python -m src.cli domain-pack --limit 52 --fixture
 python -m src.cli mem-bench --fixture --limit 52 --cutoff-year 2024
 python -m pytest tests/ -q
@@ -101,11 +103,12 @@ python -m pytest tests/ -q
 ### Known blockers / honesty notes
 - **Prototype stage** — heuristic extractor + fixture corpus for reliable offline demos; not a production lit-mining system.
 - Live Semantic Scholar still prefers an API key for reliable bulk refresh; **OpenAlex now provides a free no-key live path** (verified). Unauthenticated S2 remains rate-limit sensitive.
+- **Europe PMC** provides free OA fullTextXML (no key); verified live. Fixture corpus DOIs are largely **synthetic** for offline demos, so bulk Europe PMC attach on fixture will hit few/none — use live OpenAlex/S2 papers with real DOIs for OA harvest.
 - OpenAI key resolved from Keychain `openclaw/tgcallskill/openai-api-key` (not committed) for LLM extract / optional closed-book probe.
 - Closed-book LLM memorization probe not run in default cron path (offline-first); enable with `mem-bench --closed-book`. Prefer open/small models.
 - Cross-paper tension uses abstract-level stance cues (support vs limit lexicon) — proxy dialectic, not full argument mining.
 - **Argument mining is surface mining** (sentence roles + citation cues + token-similarity relations); roles/relations are heuristic labels, not RST. Units are literal quotes, so grounding/mem-safety holds.
-- **Full-text depth is seed coverage (9/52)** via synthetic sectioned bodies aligned to fixture titles + real PDF extract path (PyMuPDF). Not bulk publisher OA harvest; live `--fulltext-download` is opt-in (arXiv). Fixture bodies are demo-grade reconstructions for offline pipeline depth — not substitutes for licensed full PDFs in a real lit review.
+- **Full-text depth is 22/52** via demo-grade sectioned fixture bodies + real PDF extract path + Europe PMC OA path. Fixture bodies are **not** licensed publisher full texts — reconstructions for offline pipeline depth.
 - Protocol cards are **design sketches** (controls/assays/stop rules), not wet-lab SOPs or safety approvals.
 - Corpus novelty is **text-distance to other abstracts/bodies** (own sources excluded) — proxy for “surprising vs this corpus”, not global literature novelty or expert judgment.
 - Detectors are **proxy safeguards**, not proof of non-memorization — see `docs/memorization-eval.md`.
@@ -114,11 +117,12 @@ python -m pytest tests/ -q
 
 ## Next supervisor meeting: **30 July 2026, 14:00 SGT**
 - Deliverable: `docs/EMAIL_TO_SUPERVISOR.md` + `docs/supervisor-update-draft.md`
-- Demo: Pipeline run (52) + dual-domain pack + HTML report + **mem-bench v2** + **pack-aware topics** + **cross-paper tension** + **protocol cards** + **OpenAlex live** + **novelty-vs-corpus** + **argue mining** + **full-text depth (9 bodies)** + feedback CLI
+- Demo: Pipeline run (52) + dual-domain pack + HTML report + **mem-bench v2** + **pack-aware topics** + **cross-paper tension** + **protocol cards** + **OpenAlex live** + **novelty-vs-corpus** + **argue mining** + **full-text depth (22 bodies)** + **Europe PMC OA path** + feedback CLI
 - Board: https://fyp.vasanth.my
 - Questions: domain scope (LNP vs hybrid ncRNA weight), eval rubric labels, memorization rigor, next steps
 
 ## Last automated progress
+- 2026-08-07 10:07 SGT — Wave 13: Europe PMC OA full-text (`src/ingest/europe_pmc.py`) + fixture full-text **9→22**. E2E 52→**180c/311e/174g**, units **538**, full-text **22/52**; mem-bench PASS; domain pack PASS; **65 tests**. Live EPMC status OK.
 - 2026-08-06 10:00 SGT — Wave 12: Full-text PDF depth (`src/ingest/pdf_text.py`). Paper.full_text + IMRaD sections; 9 fixture bodies attached offline; PyMuPDF extract + optional arXiv download. E2E 52→**123c/197e/128g**, units **412**, full-text **9/52**; mem-bench PASS; domain pack PASS; **63 tests**.
 - 2026-08-05 10:00 SGT — Wave 11: Cite-grounded argument mining (`src/gap/argue.py`). 329 quote-grounded units w/ roles + citation cues, 40 cross-paper relations (11 attack / 29 support), 8 ARGUE_MINED_CONFLICT gaps. `argue` CLI + report; **58 tests**.
 - 2026-08-03 10:03 SGT — Wave 10: Novelty-vs-corpus scoring (`src/gap/novelty.py`). Gaps rescored with corpus_novelty + redundancy penalty. E2E mean_cn=0.79; **52 tests**.

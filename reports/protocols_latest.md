@@ -3,7 +3,7 @@
 _Prototype structured protocols derived from topic proposals. Not wet-lab SOPs — for design discussion and preregistration sketches._
 
 ## 1. Protocol: Payload competition in bifunctional ncRNA–mRNA co-delivery nanoparticles
-- **ID**: `proto_7852f5abcaa3` · **topic**: `topic_dc30c1e71932` · **pack**: `hybrid_ncrna`
+- **ID**: `proto_84224be19136` · **topic**: `topic_32f2bf31c427` · **pack**: `hybrid_ncrna`
 - **Primary aim**: Test whether when ncRNA and mRNA share a single LNP, endosomal escape capacity is a zero-sum resource
 - **Hypothesis**: When ncRNA and mRNA share a single LNP, endosomal escape capacity is a zero-sum resource; optimizing mass ratio and staggered release chemistry can restore translation without sacrificing silencing.
 - **Expected readout**: Identify a ratio/chemistry window with ≥70% of single-payload translation and ≥50% target knockdown.
@@ -59,10 +59,10 @@ _Prototype structured protocols derived from topic proposals. Not wet-lab SOPs �
 
 **Feasibility:** Standard formulation + reporter assays; moderate complexity.
 
-**Rationale:** Derived from topic 'Payload competition in bifunctional ncRNA–mRNA co-delivery nanoparticles' (pack=hybrid_ncrna, priority=0.67). Anchored on gap [cross_paper_tension] 'Cross-paper tension: However, the exact molecular mechanism of bilayer disruption remains controversi' (overall=0.79, testability=0.68). Addresses 3 scored gaps in 'hybrid_ncrna' (pack=hybrid_ncrna, cluster mean overall=0.67, rank=0.88 (pack-balanced)). Success would advance therapeutically relevant nucleic acid delivery and/or hybrid ncRNA mechanisms.
+**Rationale:** Derived from topic 'Payload competition in bifunctional ncRNA–mRNA co-delivery nanoparticles' (pack=hybrid_ncrna, priority=0.68). Anchored on gap [delivery_barrier] 'Limitation: However, delivery to extrahepatic tissues was minimal.' (overall=0.77, testability=0.70). Addresses 3 scored gaps in 'hybrid_ncrna' (pack=hybrid_ncrna, cluster mean overall=0.68, rank=0.89 (pack-balanced)). Success would advance therapeutically relevant nucleic acid delivery and/or hybrid ncRNA mechanisms.
 
 ## 2. Protocol: Non-hepatic gene editing via serum-stable hybrid DNA–LNP scaffolds
-- **ID**: `proto_af54cbdc8881` · **topic**: `topic_2565649fed30` · **pack**: `gene_editing`
+- **ID**: `proto_a444ae022205` · **topic**: `topic_12541611f99d` · **pack**: `gene_editing`
 - **Primary aim**: Test whether dNA-organized ionizable lipid domains improve serum stability and spleen/immune-cell editing without proportional increases in off-target genomic injury
 - **Hypothesis**: DNA-organized ionizable lipid domains improve serum stability and spleen/immune-cell editing without proportional increases in off-target genomic injury.
 - **Expected readout**: ≥2× extrahepatic editing at matched liver exposure and ≤baseline off-target rate.
@@ -118,10 +118,10 @@ _Prototype structured protocols derived from topic proposals. Not wet-lab SOPs �
 
 **Feasibility:** Requires editing readouts and careful scaffold manufacturing.
 
-**Rationale:** Derived from topic 'Non-hepatic gene editing via serum-stable hybrid DNA–LNP scaffolds' (pack=gene_editing, priority=0.67). Anchored on gap [delivery_barrier] 'Limitation: Scale-up of scaffold synthesis remains a practical barrier to clinical manufactu' (overall=0.73, testability=0.70). Addresses 3 scored gaps in 'gene_therapy' (pack=gene_editing, cluster mean overall=0.67, rank=0.85 (pack-balanced)). Success would advance therapeutically relevant nucleic acid delivery and/or hybrid ncRNA mechanisms.
+**Rationale:** Derived from topic 'Non-hepatic gene editing via serum-stable hybrid DNA–LNP scaffolds' (pack=gene_editing, priority=0.65). Anchored on gap [untested_claim] 'Untested: We hypothesized peptide branching improves endosomal buffering versus linear pep' (overall=0.72, testability=0.72). Addresses 3 scored gaps in 'gene_therapy' (pack=gene_editing, cluster mean overall=0.65, rank=0.84 (pack-balanced)). Success would advance therapeutically relevant nucleic acid delivery and/or hybrid ncRNA mechanisms.
 
 ## 3. Protocol: Ligand-displaying LNPs for extrahepatic targeting: avidity vs specificity
-- **ID**: `proto_ead9004ad41d` · **topic**: `topic_fb36cdf6e466` · **pack**: `lnp_core`
+- **ID**: `proto_4f3c523b679c` · **topic**: `topic_af77348f5103` · **pack**: `lnp_core`
 - **Primary aim**: Test whether multivalent display of low-affinity targeting ligands (e
 - **Hypothesis**: Multivalent display of low-affinity targeting ligands (e.g., mannose, transferrin, or anti-CD3 scFv) on LNP surfaces achieves higher tissue selectivity than high-affinity monovalent targeting, due to reduced off-target uptake by liver macrophages.
 - **Expected readout**: Target-to-liver uptake ratio; ≥5× improvement over non-targeted LNPs.
@@ -180,7 +180,7 @@ _Prototype structured protocols derived from topic proposals. Not wet-lab SOPs �
 **Rationale:** Derived from topic 'Ligand-displaying LNPs for extrahepatic targeting: avidity vs specificity' (pack=lnp_core, priority=0.71). Anchored on gap [delivery_barrier] 'Limitation: Extrahepatic delivery remains elusive at therapeutically relevant doses without ' (overall=0.80, testability=0.70). Addresses 3 scored gaps in 'targeting' (pack=lnp_core, cluster mean overall=0.71, rank=0.82 (pack-balanced)). Success would advance therapeutically relevant nucleic acid delivery and/or hybrid ncRNA mechanisms.
 
 ## 4. Protocol: Quantitative bottleneck analysis of the LNP delivery cascade
-- **ID**: `proto_560d844bd9f9` · **topic**: `topic_b365555f4591` · **pack**: `lnp_core`
+- **ID**: `proto_28c4bc773100` · **topic**: `topic_2c649c904769` · **pack**: `lnp_core`
 - **Primary aim**: Test whether endosomal escape—not uptake or encapsulation—is the dominant loss term in the delivery cascade for most clinical-like LNP compositions, and 10× escape gains are necessary and sufficient for transformative dose reduction
 - **Hypothesis**: Endosomal escape—not uptake or encapsulation—is the dominant loss term in the delivery cascade for most clinical-like LNP compositions, and 10× escape gains are necessary and sufficient for transformative dose reduction.
 - **Expected readout**: Ranked elasticities per cascade step; validated 5× dose reduction via top lever.
@@ -238,7 +238,7 @@ _Prototype structured protocols derived from topic proposals. Not wet-lab SOPs �
 **Rationale:** Derived from topic 'Quantitative bottleneck analysis of the LNP delivery cascade' (pack=lnp_core, priority=0.70). Anchored on gap [untested_claim] 'Untested: Conclusions Ionizable lipid design is clinically validated yet mechanistically u' (overall=0.76, testability=0.72). Addresses 3 scored gaps in 'delivery_efficiency' (pack=lnp_core, cluster mean overall=0.70, rank=0.81 (pack-balanced)). Success would advance therapeutically relevant nucleic acid delivery and/or hybrid ncRNA mechanisms.
 
 ## 5. Protocol: Decoupling innate immune activation from LNP delivery potency
-- **ID**: `proto_786c4447e20c` · **topic**: `topic_53f001316ffe` · **pack**: `lnp_core`
+- **ID**: `proto_db5599d414aa` · **topic**: `topic_8bee130d8962` · **pack**: `lnp_core`
 - **Primary aim**: Test whether ionizable lipid structure independently drives TLR/inflammasome activation versus endosomal escape
 - **Hypothesis**: Ionizable lipid structure independently drives TLR/inflammasome activation versus endosomal escape; lipids can be optimized for high delivery with low reactogenicity.
 - **Expected readout**: ≥2× potency/inflammation ratio vs SM-102 or MC3 reference LNPs.

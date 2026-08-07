@@ -926,15 +926,98 @@ class TestFullTextDepth:
 
         papers = load_fixture()
         papers, stats = attach_fulltext_to_papers(papers, use_fixture=True, download=False)
-        assert stats.n_from_fixture >= 6
+        assert stats.n_from_fixture >= 18
         ft = [p for p in papers if p.has_full_text()]
-        assert len(ft) >= 6
+        assert len(ft) >= 18
         for p in ft:
             assert p.sections
             assert p.full_text_source == "fixture"
             assert "Methods" in (p.full_text or "") or any(
                 s.kind.value == "methods" for s in p.sections
             )
+
+    def test_jats_xml_to_plain_offline(self):
+        from src.ingest.europe_pmc import jats_xml_to_plain
+
+        xml = """<?xml version="1.0"?>
+        <article>
+          <front><article-meta>
+            <abstract><p>LNPs deliver mRNA with low endosomal escape.</p></abstract>
+          </article-meta></front>
+          <body>
+            <sec>
+              <title>Introduction</title>
+              <p>We propose that ionizable lipids disrupt endosomal membranes.</p>
+            </sec>
+            <sec>
+              <title>Methods</title>
+              <p>Mice received 0.5 mg/kg mRNA-LNP and Gal8 assays were performed.</p>
+            </sec>
+            <sec>
+              <title>Results</title>
+              <p>Escape efficiency was less than 2% of internalized dose.</p>
+            </sec>
+            <sec>
+              <title>Discussion</title>
+              <p>The exact molecular mechanism remains poorly understood.</p>
+            </sec>
+            <sec>
+              <title>References</title>
+              <p>Should be skipped entirely from body text dump.</p>
+            </sec>
+          </body>
+        </article>
+        """
+        plain, n_sec = jats_xml_to_plain(xml)
+        assert "Abstract" in plain
+        assert "Methods" in plain
+        assert "Gal8" in plain
+        assert "less than 2%" in plain
+        assert "Should be skipped" not in plain
+        assert n_sec >= 3
+
+    def test_europe_pmc_attach_with_stub(self, monkeypatch):
+        from src.ingest import europe_pmc as epmc
+        from src.ingest.pdf_text import attach_fulltext_to_papers
+
+        body = (
+            "Abstract\nHybrid ncRNA co-delivery study.\n\n"
+            "Methods\nWe formulated bifunctional cargo LNPs.\n\n"
+            "Results\nRISC loading interfered with mRNA expression by 40%.\n\n"
+            "Limitations\nEndosomal escape remains poorly understood."
+        )
+
+        def fake_fetch(paper, **kwargs):
+            if paper.doi == "10.example/oa-hybrid":
+                return epmc.EuropePMCFullText(
+                    pmcid="PMC9999999",
+                    text=body,
+                    source="europe_pmc",
+                    n_sections=4,
+                    doi=paper.doi,
+                    title=paper.title,
+                )
+            return None
+
+        monkeypatch.setattr(epmc, "fetch_fulltext_for_paper", fake_fetch)
+        p = Paper(
+            id="paper_epmc_test",
+            title="Stub OA hybrid paper",
+            abstract="Short abstract only.",
+            doi="10.example/oa-hybrid",
+        )
+        papers, stats = attach_fulltext_to_papers(
+            [p],
+            use_fixture=False,
+            download=False,
+            europe_pmc=True,
+            skip_existing=False,
+        )
+        assert stats.n_from_europe_pmc == 1
+        assert papers[0].has_full_text()
+        assert papers[0].full_text_source == "europe_pmc"
+        assert "RISC loading" in (papers[0].full_text or "")
+        assert any(s.kind.value == "methods" for s in papers[0].sections)
 
     def test_fulltext_lifts_claim_evidence_and_stays_grounded(self):
         from src.ingest.pdf_text import (

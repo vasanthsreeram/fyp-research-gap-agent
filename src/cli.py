@@ -139,12 +139,17 @@ def run(
     fulltext: bool = typer.Option(
         True,
         "--fulltext/--no-fulltext",
-        help="Attach full text (fixture JSONL / local PDF / optional download) before extract",
+        help="Attach full text (fixture JSONL / local PDF / Europe PMC / optional PDF download) before extract",
     ),
     fulltext_download: bool = typer.Option(
         False,
         "--fulltext-download",
         help="Allow live PDF download (arXiv) when attaching full text",
+    ),
+    fulltext_europe_pmc: bool = typer.Option(
+        False,
+        "--fulltext-europe-pmc",
+        help="Allow live Europe PMC OA fullTextXML (DOI→PMCID; no API key)",
     ),
 ):
     """End-to-end pipeline: ingest → extract → gap-score → suggest → report."""
@@ -230,15 +235,17 @@ def run(
             loaded_papers,
             use_fixture=True,
             download=fulltext_download,
+            europe_pmc=fulltext_europe_pmc,
             skip_existing=True,
         )
         manifest.n_fulltext = sum(1 for p in loaded_papers if p.has_full_text())
         logger.info(
-            "Full-text: %d/%d papers (fixture=%d pdf=%d download=%d)",
+            "Full-text: %d/%d papers (fixture=%d pdf=%d europe_pmc=%d download=%d)",
             manifest.n_fulltext,
             len(loaded_papers),
             ft_stats.n_from_fixture,
             ft_stats.n_from_pdf,
+            ft_stats.n_from_europe_pmc,
             ft_stats.n_from_download,
         )
         if save:
@@ -555,10 +562,15 @@ def fulltext_cmd(
     use_fixture_papers: bool = typer.Option(True, "--fixture/--no-fixture", help="Load fixture papers if no cache"),
     limit: int = typer.Option(52, "--limit", "-n"),
     download: bool = typer.Option(False, "--download", help="Allow live arXiv/OA PDF download"),
+    europe_pmc: bool = typer.Option(
+        False,
+        "--europe-pmc/--no-europe-pmc",
+        help="Allow live Europe PMC OA fullTextXML by DOI (no API key)",
+    ),
     max_attach: Optional[int] = typer.Option(None, "--max-attach", help="Cap number of full-text attaches"),
     save: bool = typer.Option(True, "--save/--no-save"),
 ):
-    """Attach full text (offline fixture body / local PDF / optional download) and report coverage."""
+    """Attach full text (offline fixture body / local PDF / Europe PMC / optional download) and report coverage."""
     from src.ingest import ingest_papers
     from src.ingest.pdf_text import attach_fulltext_to_papers, fulltext_markdown_report
 
@@ -572,6 +584,7 @@ def fulltext_cmd(
         papers,
         use_fixture=True,
         download=download,
+        europe_pmc=europe_pmc,
         max_attach=max_attach,
         skip_existing=True,
     )
@@ -603,7 +616,10 @@ def fulltext_cmd(
                 )
     n_ft = sum(1 for p in papers if p.has_full_text())
     print(f"Full-text attached: {n_ft}/{len(papers)}")
-    print(f"  fixture={stats.n_from_fixture} local_pdf={stats.n_from_pdf} download={stats.n_from_download} failed={stats.n_failed}")
+    print(
+        f"  fixture={stats.n_from_fixture} local_pdf={stats.n_from_pdf} "
+        f"europe_pmc={stats.n_from_europe_pmc} download={stats.n_from_download} failed={stats.n_failed}"
+    )
     print(f"Report → {out}")
     for p in papers:
         if p.has_full_text():
@@ -676,6 +692,33 @@ def openalex_status_cmd(
     print(f"  hint:     {st['hint']}")
     ok = st["reachable"] is True or st["reachable"] is None
     raise typer.Exit(0 if ok else 1)
+
+
+@app.command("europe-pmc-status")
+def europe_pmc_status_cmd(
+    probe: bool = typer.Option(True, "--probe/--no-probe", help="Resolve a known OA DOI"),
+):
+    """Show Europe PMC OA full-text path status (no API key required)."""
+    from src.ingest.europe_pmc import europe_pmc_status
+
+    if not probe:
+        print("Europe PMC status")
+        print("  endpoint: https://www.ebi.ac.uk/europepmc/webservices/rest")
+        print("  probe:    skipped")
+        raise typer.Exit(0)
+
+    st = europe_pmc_status()
+    print("Europe PMC status")
+    print(f"  endpoint: {st['endpoint']}")
+    print(f"  ok:       {st['ok']}")
+    print(f"  sample:   {st.get('sample_doi')}")
+    print(f"  pmcid:    {st.get('pmcid')}")
+    print(f"  OA flag:  {st.get('is_open_access')}")
+    if st.get("title"):
+        print(f"  title:    {st['title'][:100]}")
+    if st.get("error"):
+        print(f"  error:    {st['error']}")
+    raise typer.Exit(0 if st.get("ok") else 1)
 
 
 @app.command("protocols")
