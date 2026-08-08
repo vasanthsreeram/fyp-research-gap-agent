@@ -151,6 +151,11 @@ def run(
         "--fulltext-europe-pmc",
         help="Allow live Europe PMC OA fullTextXML (DOI→PMCID; no API key)",
     ),
+    fulltext_unpaywall: bool = typer.Option(
+        False,
+        "--fulltext-unpaywall",
+        help="Allow live Unpaywall OA PDF harvest into data/raw/pdfs/ (DOI→PDF; no API key)",
+    ),
 ):
     """End-to-end pipeline: ingest → extract → gap-score → suggest → report."""
     # Eager keychain resolve for auto/llm mode
@@ -236,16 +241,18 @@ def run(
             use_fixture=True,
             download=fulltext_download,
             europe_pmc=fulltext_europe_pmc,
+            unpaywall=fulltext_unpaywall,
             skip_existing=True,
         )
         manifest.n_fulltext = sum(1 for p in loaded_papers if p.has_full_text())
         logger.info(
-            "Full-text: %d/%d papers (fixture=%d pdf=%d europe_pmc=%d download=%d)",
+            "Full-text: %d/%d papers (fixture=%d pdf=%d europe_pmc=%d unpaywall=%d download=%d)",
             manifest.n_fulltext,
             len(loaded_papers),
             ft_stats.n_from_fixture,
             ft_stats.n_from_pdf,
             ft_stats.n_from_europe_pmc,
+            ft_stats.n_from_unpaywall,
             ft_stats.n_from_download,
         )
         if save:
@@ -567,10 +574,15 @@ def fulltext_cmd(
         "--europe-pmc/--no-europe-pmc",
         help="Allow live Europe PMC OA fullTextXML by DOI (no API key)",
     ),
+    unpaywall: bool = typer.Option(
+        False,
+        "--unpaywall/--no-unpaywall",
+        help="Allow live Unpaywall OA PDF harvest by DOI (no API key)",
+    ),
     max_attach: Optional[int] = typer.Option(None, "--max-attach", help="Cap number of full-text attaches"),
     save: bool = typer.Option(True, "--save/--no-save"),
 ):
-    """Attach full text (offline fixture body / local PDF / Europe PMC / optional download) and report coverage."""
+    """Attach full text (offline fixture body / local PDF / Europe PMC / Unpaywall / optional download) and report coverage."""
     from src.ingest import ingest_papers
     from src.ingest.pdf_text import attach_fulltext_to_papers, fulltext_markdown_report
 
@@ -585,6 +597,7 @@ def fulltext_cmd(
         use_fixture=True,
         download=download,
         europe_pmc=europe_pmc,
+        unpaywall=unpaywall,
         max_attach=max_attach,
         skip_existing=True,
     )
@@ -618,7 +631,8 @@ def fulltext_cmd(
     print(f"Full-text attached: {n_ft}/{len(papers)}")
     print(
         f"  fixture={stats.n_from_fixture} local_pdf={stats.n_from_pdf} "
-        f"europe_pmc={stats.n_from_europe_pmc} download={stats.n_from_download} failed={stats.n_failed}"
+        f"europe_pmc={stats.n_from_europe_pmc} unpaywall={stats.n_from_unpaywall} "
+        f"download={stats.n_from_download} failed={stats.n_failed}"
     )
     print(f"Report → {out}")
     for p in papers:
@@ -714,6 +728,36 @@ def europe_pmc_status_cmd(
     print(f"  sample:   {st.get('sample_doi')}")
     print(f"  pmcid:    {st.get('pmcid')}")
     print(f"  OA flag:  {st.get('is_open_access')}")
+    if st.get("title"):
+        print(f"  title:    {st['title'][:100]}")
+    if st.get("error"):
+        print(f"  error:    {st['error']}")
+    raise typer.Exit(0 if st.get("ok") else 1)
+
+
+@app.command("unpaywall-status")
+def unpaywall_status_cmd(
+    probe: bool = typer.Option(True, "--probe/--no-probe", help="Resolve a known OA DOI"),
+    sample_doi: str = typer.Option("10.1371/journal.pbio.3002278", "--sample-doi", help="DOI to probe"),
+):
+    """Show Unpaywall OA PDF harvest path status (no API key required)."""
+    from src.ingest.unpaywall import unpaywall_status
+
+    if not probe:
+        print("Unpaywall status")
+        print("  endpoint: https://api.unpaywall.org/v2/{doi}?email=...")
+        print("  probe:    skipped")
+        raise typer.Exit(0)
+
+    st = unpaywall_status(sample_doi=sample_doi)
+    print("Unpaywall status")
+    print(f"  endpoint: {st['endpoint']}")
+    print(f"  mailto:   {st['mailto']}")
+    print(f"  ok:       {st['ok']}")
+    print(f"  sample:   {st.get('sample_doi')}")
+    print(f"  is_oa:    {st.get('is_oa')}")
+    if st.get("pdf_url"):
+        print(f"  pdf_url:  {st['pdf_url']}")
     if st.get("title"):
         print(f"  title:    {st['title'][:100]}")
     if st.get("error"):

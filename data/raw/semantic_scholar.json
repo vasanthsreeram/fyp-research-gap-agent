@@ -1,0 +1,2529 @@
+[
+  {
+    "paperId": "250bff83261f469d510907218eb95589b63c91c5",
+    "externalIds": {
+      "PubMedCentral": "12869450",
+      "DOI": "10.1021/acsbiomaterials.5c00463",
+      "CorpusId": 280005788,
+      "PubMed": "40644303"
+    },
+    "url": "https://www.semanticscholar.org/paper/250bff83261f469d510907218eb95589b63c91c5",
+    "title": "Structure\u2013Activity Relationship of Ionizable Lipids for siRNA and mRNA Lipid Nanoparticle Design",
+    "venue": "ACS Biomaterials Science & Engineering",
+    "year": 2025,
+    "citationCount": 10,
+    "openAccessPdf": {
+      "url": "",
+      "status": null,
+      "license": null,
+      "disclaimer": "Notice: Paper or abstract available at https://pmc.ncbi.nlm.nih.gov/articles/PMC12869450, which is subject to the license by the author or copyright owner provided with this content. Please go to the source to verify the license and copyright information for your use."
+    },
+    "authors": [
+      {
+        "authorId": "2152576925",
+        "name": "Sang M. Lee"
+      },
+      {
+        "authorId": "2149147396",
+        "name": "Yehui Sun"
+      },
+      {
+        "authorId": "2266268092",
+        "name": "Sumanta Chatterjee"
+      },
+      {
+        "authorId": "2054472464",
+        "name": "Hu Xiong"
+      },
+      {
+        "authorId": "2266234864",
+        "name": "Q. Cheng"
+      },
+      {
+        "authorId": "2266425660",
+        "name": "Xu Wang"
+      },
+      {
+        "authorId": "2400765",
+        "name": "D. Siegwart"
+      }
+    ],
+    "abstract": "Lipid nanoparticles (LNPs) represent the most effective vehicle class identified to date for delivering RNA. A stronger understanding of the structure\u2013activity relationships that govern successful mRNA delivery would enable the development of improved LNPs. Herein, ionizable lipids with high mRNA in vitro delivery efficacy among 465 lipids were selected to be evaluated for their in vivo activity and structure\u2013activity relationship. Variations of these ionizable amino hydroxy and amino lipid families were synthesized, and 42 lipids were evaluated to study how chemical alterations of the carbon chain within the core influence LNP potency. To further understand the relationship between chemical structure and in vivo hepatic delivery potency, physicochemical properties including size, PDI, pKa, and buffering capacity were measured. Our evaluations revealed that both the pKa and buffering capacity may be valuable in predicting in vivo hepatic delivery based on lipid structures, expanding the range of acceptable LNP pKa to 6.2\u20137.4, and showed that the buffering capacity may help predict formulations for successful hepatic delivery of mRNA-LNPs. This study reiterates the importance of the chemical structure of the ionizable amino lipid for LNPs and highlights the intricacies of its relationship with the physical properties of LNPs. We anticipate that understanding the structure\u2013activity relationship of ionizable lipids will be valuable for the continued rational design of ionizable amino lipids for the LNP delivery of small and large RNA cargoes."
+  },
+  {
+    "paperId": "5e8dab98499daaa9aa8eef75501b2a960d40b1a1",
+    "externalIds": {
+      "DOI": "10.1039/d5nr00433k",
+      "CorpusId": 277166343,
+      "PubMed": "40131321"
+    },
+    "url": "https://www.semanticscholar.org/paper/5e8dab98499daaa9aa8eef75501b2a960d40b1a1",
+    "title": "PEGylated lipid screening, composition optimization, and structure-activity relationship determination for lipid nanoparticle-mediated mRNA delivery.",
+    "venue": "Nanoscale",
+    "year": 2025,
+    "citationCount": 18,
+    "openAccessPdf": {
+      "url": "https://doi.org/10.1039/d5nr00433k",
+      "status": "HYBRID",
+      "license": "CCBYNC",
+      "disclaimer": "Notice: Paper or abstract available at https://api.unpaywall.org/v2/10.1039/d5nr00433k?email=<INSERT_YOUR_EMAIL> or https://doi.org/10.1039/d5nr00433k, which is subject to the license by the author or copyright owner provided with this content. Please go to the source to verify the license and copyright information for your use."
+    },
+    "authors": [
+      {
+        "authorId": "2363709096",
+        "name": "Ling Liu"
+      },
+      {
+        "authorId": "2263096138",
+        "name": "Jaeha Kim"
+      },
+      {
+        "authorId": "1582775647",
+        "name": "Zhongyu Li"
+      },
+      {
+        "authorId": "2269712745",
+        "name": "Mengwei Sun"
+      },
+      {
+        "authorId": "2221954231",
+        "name": "Trent P. Northen"
+      },
+      {
+        "authorId": "71855146",
+        "name": "Jackie Tang"
+      },
+      {
+        "authorId": "2243199587",
+        "name": "Emma Mcintosh"
+      },
+      {
+        "authorId": "36715961",
+        "name": "S. Karve"
+      },
+      {
+        "authorId": "2351144665",
+        "name": "Frank DeRosa"
+      }
+    ],
+    "abstract": "Lipid nanoparticles (LNPs) have emerged as effective carriers for mRNA delivery in vaccine and therapeutic applications, attracting substantial attention since the COVID-19 pandemic. Continued efforts are crucial to optimize LNP composition for improved delivery efficacy and to elucidate the underlying mechanisms driving differences in protein expression. This study systematically screened PEGylated lipids for intramuscular mRNA delivery, followed by optimization of the formulation composition, physicochemical characterization, and investigation of the structure-activity relationship (SAR). Using a model ionizable lipid, we initially evaluated twenty-nine PEGylated lipids from four lipid families (glyceride, phosphoethanolamine (PE), cholesterol, and ceramide), each varying in linker chemistries, tail structures, or PEG molecular weights. 1,2-Dimyristoyl-rac-glycero-3-methoxypolyethylene glycol - 5000 (DMG-PEG5k) was identified as a promising candidate from this screening. Using a design of experiments (DoE) approach, we further optimized the formulation to increase in vivo transfection efficacy, achieving an increase in protein expression over the DMG-PEG2k benchmark. To explore the SAR of the DoE formulations, advanced physicochemical characterization was conducted including Laurdan assay, SAXS, Cryo-TEM, and QCM-D, alongside standard LNP analysis. Among the key factors examined, high mRNA encapsulation efficiency, LNP membrane integrity (especially under acidic conditions), and ordered internal structures were identified as the critical parameters for transfection efficiency. mRNA encapsulation efficiency increased with a lower PEG-lipid fraction. LNP membrane integrity, assessed by the generalized polarization (GP) ratio at pH 7.5 and 4.5 from the Laurdan assay, was strongly affected by the ionizable lipid ratio and, to a lesser extent, the cholesterol ratio. A lower GP7.5/GP4.5 ratio correlated with enhanced protein expression, primarily driven by a higher GP4.5 observed with lower ionizable lipid and higher cholesterol fractions. Overall, balancing the ratios of all LNP components is critical for maximizing LNP functionality. This study presents a systematic evaluation and characterization of LNPs with different PEG-lipid moieties, deepens SAR understanding, and provides valuable guidelines for rationally designing more effective next-generation LNPs."
+  },
+  {
+    "paperId": "6239b1e51e0f945db38230b31f23abcfb76dd04f",
+    "externalIds": {
+      "PubMedCentral": "11804478",
+      "DOI": "10.1073/pnas.2409572122",
+      "CorpusId": 276018164,
+      "PubMed": "39883839"
+    },
+    "url": "https://www.semanticscholar.org/paper/6239b1e51e0f945db38230b31f23abcfb76dd04f",
+    "title": "Rational design and modular synthesis of biodegradable ionizable lipids via the Passerini reaction for mRNA delivery",
+    "venue": "Proceedings of the National Academy of Sciences of the United States of America",
+    "year": 2025,
+    "citationCount": 43,
+    "openAccessPdf": {
+      "url": "https://doi.org/10.1073/pnas.2409572122",
+      "status": "HYBRID",
+      "license": "CCBYNCND",
+      "disclaimer": "Notice: Paper or abstract available at https://pmc.ncbi.nlm.nih.gov/articles/PMC11804478, which is subject to the license by the author or copyright owner provided with this content. Please go to the source to verify the license and copyright information for your use."
+    },
+    "authors": [
+      {
+        "authorId": "2219234319",
+        "name": "Yue Xu"
+      },
+      {
+        "authorId": "2298244374",
+        "name": "Fanglin Gong"
+      },
+      {
+        "authorId": "2203076723",
+        "name": "Alex Golubovic"
+      },
+      {
+        "authorId": "133670045",
+        "name": "A. Strilchuk"
+      },
+      {
+        "authorId": "2218647741",
+        "name": "Jingan Chen"
+      },
+      {
+        "authorId": "2272765431",
+        "name": "Muye Zhou"
+      },
+      {
+        "authorId": "2298752205",
+        "name": "Songtao Dong"
+      },
+      {
+        "authorId": "2343080439",
+        "name": "Breanna Seto"
+      },
+      {
+        "authorId": "2381418012",
+        "name": "Bowen Li"
+      }
+    ],
+    "abstract": "Significance Effective delivery strategies are vital for message RNA (mRNA) vaccines and therapeutics, with lipid nanoparticles (LNPs) being forefront. Developing ionizable lipids, a key LNP component, traditionally involves complex, multistep synthesis and is hindered by limited knowledge of their structure-activity relationships for mRNA delivery. In this study, we introduce a modular platform that facilitates the rapid creation of extensive, chemically diverse libraries of biodegradable ionizable lipids. This platform led to the identification of A4B4-S3, which is formulated in mRNA-loaded LNPs, and outperforms the clinical benchmark SM-102 in mouse liver gene editing. Our results highlight the critical role of hydrogen bonding between ionizable lipids and ribose-phosphate complexes in mRNA delivery efficiency, offering a high-throughput approach for lipid synthesis and insights into their design."
+  },
+  {
+    "paperId": "30ff29a855456afd895fcb61662fbd438e2f859b",
+    "externalIds": {
+      "PubMedCentral": "11863198",
+      "DOI": "10.1038/s41551-024-01256-w",
+      "CorpusId": 273100907,
+      "PubMed": "39363106"
+    },
+    "url": "https://www.semanticscholar.org/paper/30ff29a855456afd895fcb61662fbd438e2f859b",
+    "title": "Amine headgroups in ionizable lipids drive immune responses to lipid nanoparticles by binding to the receptors TLR4 and CD1d",
+    "venue": "Nature Biomedical Engineering",
+    "year": 2024,
+    "citationCount": 99,
+    "openAccessPdf": {
+      "url": "",
+      "status": "CLOSED",
+      "license": null,
+      "disclaimer": "Notice: Paper or abstract available at https://pmc.ncbi.nlm.nih.gov/articles/PMC11863198, which is subject to the license by the author or copyright owner provided with this content. Please go to the source to verify the license and copyright information for your use."
+    },
+    "authors": [
+      {
+        "authorId": "1601667027",
+        "name": "Namit Chaudhary"
+      },
+      {
+        "authorId": "5815517",
+        "name": "Lisa N. Kasiewicz"
+      },
+      {
+        "authorId": "1601666716",
+        "name": "Alexandra N. Newby"
+      },
+      {
+        "authorId": "51315022",
+        "name": "Mariah L. Arral"
+      },
+      {
+        "authorId": "2307254942",
+        "name": "Sai S Yerneni"
+      },
+      {
+        "authorId": "6800131",
+        "name": "Jilian R. Melamed"
+      },
+      {
+        "authorId": "2289925999",
+        "name": "Samuel T. LoPresti"
+      },
+      {
+        "authorId": "14517985",
+        "name": "Katherine C. Fein"
+      },
+      {
+        "authorId": "2207162653",
+        "name": "Daria M. Strelkova Petersen"
+      },
+      {
+        "authorId": "2406785744",
+        "name": "Sushant Kumar"
+      },
+      {
+        "authorId": "2317642994",
+        "name": "Rahul Purwar"
+      },
+      {
+        "authorId": "2258091515",
+        "name": "Kathryn A. Whitehead"
+      }
+    ],
+    "abstract": "Lipid nanoparticles (LNPs) are the most clinically advanced delivery vehicle for RNA therapeutics, partly because of established lipid structure\u2013activity relationships focused on formulation potency. Yet such knowledge has not extended to LNP immunogenicity. Here we show that the innate and adaptive immune responses elicited by LNPs are linked to their ionizable lipid chemistry. Specifically, we show that the amine headgroups in ionizable lipids drive LNP immunogenicity by binding to Toll-like receptor 4 and CD1d and by promoting lipid-raft formation. Immunogenic LNPs favour a type-1 T-helper-cell-biased immune response marked by increases in the immunoglobulins IgG2c and IgG1 and in the pro-inflammatory cytokines tumour necrosis factor, interferon \u03b3 and the interleukins IL-6 and IL-2. Notably, the inflammatory signals originating from these receptors inhibit the production of anti-poly(ethylene glycol) IgM antibodies, preventing the often-observed loss of efficacy in the LNP-mediated delivery of siRNA and mRNA. Moreover, we identified computational methods for the prediction of the structure-dependent innate and adaptive responses of LNPs. Our findings may help accelerate the discovery of well-tolerated ionizable lipids suitable for repeated dosing. Amine headgroups in ionizable lipids drive the immunogenicity of lipid nanoparticles by binding to Toll-like receptor 4 and CD1d and by promoting lipid-raft formation."
+  },
+  {
+    "paperId": "da0dbd5c731b3c8e99d1d6611c558e508d2f39f4",
+    "externalIds": {
+      "DOI": "10.1016/j.biomaterials.2023.122243",
+      "CorpusId": 259519913,
+      "PubMed": "37480759"
+    },
+    "url": "https://www.semanticscholar.org/paper/da0dbd5c731b3c8e99d1d6611c558e508d2f39f4",
+    "title": "Understanding structure activity relationships of Good HEPES lipids for lipid nanoparticle mRNA vaccine applications.",
+    "venue": "Biomaterials",
+    "year": 2023,
+    "citationCount": 24,
+    "openAccessPdf": {
+      "url": "https://doi.org/10.1016/j.biomaterials.2023.122243",
+      "status": "HYBRID",
+      "license": "CCBYNCND",
+      "disclaimer": "Notice: Paper or abstract available at https://api.unpaywall.org/v2/10.1016/j.biomaterials.2023.122243?email=<INSERT_YOUR_EMAIL> or https://doi.org/10.1016/j.biomaterials.2023.122243, which is subject to the license by the author or copyright owner provided with this content. Please go to the source to verify the license and copyright information for your use."
+    },
+    "authors": [
+      {
+        "authorId": "40245162",
+        "name": "R. Goldman"
+      },
+      {
+        "authorId": "2120285961",
+        "name": "Namratha Turuvekere Vittala Murthy"
+      },
+      {
+        "authorId": "2221954231",
+        "name": "Trent P. Northen"
+      },
+      {
+        "authorId": "2326596082",
+        "name": "A. Balakrishnan"
+      },
+      {
+        "authorId": "4887087",
+        "name": "Sudha Chivukula"
+      },
+      {
+        "authorId": "49014886",
+        "name": "Hillary Danz"
+      },
+      {
+        "authorId": "10309818",
+        "name": "T. Tibbitts"
+      },
+      {
+        "authorId": "48320416",
+        "name": "Anusha Dias"
+      },
+      {
+        "authorId": "34243942",
+        "name": "Jorel Vargas"
+      },
+      {
+        "authorId": "2146803913",
+        "name": "D. Cooper"
+      },
+      {
+        "authorId": "52546596",
+        "name": "H. Gopani"
+      },
+      {
+        "authorId": "2080108219",
+        "name": "A. Beaulieu"
+      },
+      {
+        "authorId": "6445132",
+        "name": "K. Kalnin"
+      },
+      {
+        "authorId": "120790979",
+        "name": "T. Plitnik"
+      },
+      {
+        "authorId": "6999019",
+        "name": "Saswata Karmakar"
+      },
+      {
+        "authorId": "2221956817",
+        "name": "Ramesh Dasari"
+      },
+      {
+        "authorId": "2221959493",
+        "name": "Ryan Landis"
+      },
+      {
+        "authorId": "36715961",
+        "name": "S. Karve"
+      },
+      {
+        "authorId": "46695268",
+        "name": "F. Derosa"
+      }
+    ],
+    "abstract": "Lipid nanoparticles (LNPs) have shown great promise as delivery vehicles to transport messenger ribonucleic acid (mRNA) into cells and act as vaccines for infectious diseases including COVID-19 and influenza. The ionizable lipid incorporated within the LNP is known to be one of the main driving factors for potency and tolerability. Herein, we describe a novel family of ionizable lipids synthesized with a piperazine core derived from the HEPES Good buffer. These ionizable lipids have unique asymmetric tails and two dissimilar degradable moieties incorporated within the structure. Lipids tails of varying lengths, degrees of unsaturation, branching, and the inclusion of additional ester moieties were evaluated for protein expression. We observed several key lipid structure activity relationships that correlated with improved protein production in vivo, including lipid tails of 12 carbons on the ester side and the effect of carbon spacing on the disulfide arm of the lipids. Differences in LNP physical characteristics were observed for lipids containing an extra ester moiety. The LNP structure and lipid bilayer packing, visualized through Cryo-TEM, affected the amount of protein produced in vivo. In non-human primates, the Good HEPES LNPs formulated with an mRNA encoding an influenza hemagglutinin (HA) antigen successfully generated functional HA inhibition (HAI) antibody titers comparable to the industry standards MC3 and SM-102 LNPs, demonstrating their promise as a potential vaccine."
+  },
+  {
+    "paperId": "a7d0bc3c221d8a1eca06c3f4f485793db844849f",
+    "externalIds": {
+      "DOI": "10.1002/adma.202415643",
+      "CorpusId": 276248546,
+      "PubMed": "39924757"
+    },
+    "url": "https://www.semanticscholar.org/paper/a7d0bc3c221d8a1eca06c3f4f485793db844849f",
+    "title": "Modular Design of Lipopeptide\u2010Based Organ\u2010Specific Targeting (POST) Lipid Nanoparticles for Highly Efficient RNA Delivery",
+    "venue": "Advances in Materials",
+    "year": 2025,
+    "citationCount": 25,
+    "openAccessPdf": {
+      "url": "",
+      "status": "CLOSED",
+      "license": null,
+      "disclaimer": "Notice: Paper or abstract available at https://api.unpaywall.org/v2/10.1002/adma.202415643?email=<INSERT_YOUR_EMAIL> or https://doi.org/10.1002/adma.202415643, which is subject to the license by the author or copyright owner provided with this content. Please go to the source to verify the license and copyright information for your use."
+    },
+    "authors": [
+      {
+        "authorId": "2107391222",
+        "name": "Chuanmei Tang"
+      },
+      {
+        "authorId": "2297443188",
+        "name": "Yexi Zhang"
+      },
+      {
+        "authorId": "2344951999",
+        "name": "Bowen Li"
+      },
+      {
+        "authorId": "48026070",
+        "name": "Xiangwei Fan"
+      },
+      {
+        "authorId": "2239479803",
+        "name": "Zixuan Wang"
+      },
+      {
+        "authorId": "145448075",
+        "name": "R. Su"
+      },
+      {
+        "authorId": "2210893855",
+        "name": "Wei Qi"
+      },
+      {
+        "authorId": "49418424",
+        "name": "Yuefei Wang"
+      }
+    ],
+    "abstract": "Lipid nanoparticles (LNPs) with highly efficient and specific extrahepatic targeting abilities are promising in gene delivery, and the lipopeptides (LPs) with excellent designability and functionality are expected to empower the construction of functional LNPs. This study aims to develop highly efficient ionizable components that accurately match different targeting lipid systems through the modular design of LPs. Based on this, a lipopeptide\u2010based organ\u2010specific targeting (POST) LNP screening strategy is constructed, in which lysine\u2010histidine\u2010based lipopeptides (KH\u2010LPs) are designed as highly efficient ionizable components. The optimal KH\u2010LP LNP screened in vitro shows excellent siRNA/mRNA transfecting ability in various hard\u2010to\u2010transfect cell lines. Compared to the classic LNPs, the POST LNPs screened in vivo achieve even higher (or at least comparable) efficiency and specificity in delivering mRNA and siRNA to the lung, liver, and spleen, respectively. The structure\u2010activity relationship (SAR) proves that the modular regulation of LP structures can accurately provide the optimal ionizable components for different targeting lipid systems, demonstrating the potential of this strategy in developing efficient and selective targeting systems, which is expected to open up more possibilities for gene therapy."
+  },
+  {
+    "paperId": "d58f3063a5b3d7b7c21bc0c9d869812a42820c9c",
+    "externalIds": {
+      "DOI": "10.1016/j.ejpb.2024.114222",
+      "CorpusId": 267807046,
+      "PubMed": "38387850"
+    },
+    "url": "https://www.semanticscholar.org/paper/d58f3063a5b3d7b7c21bc0c9d869812a42820c9c",
+    "title": "Kinetics of RNA-LNP delivery and protein expression.",
+    "venue": "European journal of pharmaceutics and biopharmaceutics",
+    "year": 2024,
+    "citationCount": 23,
+    "openAccessPdf": {
+      "url": "https://ars.els-cdn.com/content/image/1-s2.0-S0939641124000481-ga1_lrg.jpg",
+      "status": "HYBRID",
+      "license": "CCBY",
+      "disclaimer": "Notice: Paper or abstract available at https://api.unpaywall.org/v2/10.1016/j.ejpb.2024.114222?email=<INSERT_YOUR_EMAIL> or https://doi.org/10.1016/j.ejpb.2024.114222, which is subject to the license by the author or copyright owner provided with this content. Please go to the source to verify the license and copyright information for your use."
+    },
+    "authors": [
+      {
+        "authorId": "2286390793",
+        "name": "Judith A M\u00fcller"
+      },
+      {
+        "authorId": "2285332575",
+        "name": "Nathalie Sch\u00e4ffler"
+      },
+      {
+        "authorId": "2253814647",
+        "name": "Thomas Kellerer"
+      },
+      {
+        "authorId": "3647797",
+        "name": "G. Schwake"
+      },
+      {
+        "authorId": "2285334907",
+        "name": "Thomas S Ligon"
+      },
+      {
+        "authorId": "2281532627",
+        "name": "Joachim O. R\u00e4dler"
+      }
+    ],
+    "abstract": "Lipid nanoparticles (LNPs) employing ionizable lipids are the most advanced technology for delivery of RNA, most notably mRNA, to cells. LNPs represent well-defined core-shell particles with efficient nucleic acid encapsulation, low immunogenicity and enhanced efficacy. While much is known about the structure and activity of LNPs, less attention is given to the timing of LNP uptake, cytosolic transfer and protein expression. However, LNP kinetics is a key factor determining delivery efficiency. Hence quantitative insight into the multi-cascaded pathway of LNPs is of interest to elucidate the mechanism of delivery. Here, we review experiments as well as theoretical modeling of the timing of LNP uptake, mRNA-release and protein expression. We describe LNP delivery as a sequence of stochastic transfer processes and review a mathematical model of subsequent protein translation from mRNA. We compile probabilities and numbers obtained from time resolved microscopy. Specifically, live-cell imaging on single cell arrays (LISCA) allows for high-throughput acquisition of thousands of individual GFP reporter expression time courses. The traces yield the distribution of mRNA life-times, expression rates and expression onset. Correlation analysis reveals an inverse dependence of gene expression efficiency and transfection onset-times. Finally, we discuss why timing of mRNA release is critical in the context of codelivery of multiple nucleic acid species as in the case of mRNA co-expression or CRISPR/Cas gene editing."
+  },
+  {
+    "paperId": "0f122f6f0c7bfcd37823ce3b904c0cd7518a9911",
+    "externalIds": {
+      "DOI": "10.1021/jacs.5c08376",
+      "CorpusId": 281313309,
+      "PubMed": "40947594"
+    },
+    "url": "https://www.semanticscholar.org/paper/0f122f6f0c7bfcd37823ce3b904c0cd7518a9911",
+    "title": "Strain-Promoted mRNA Transdermal Delivery by Lipoic Lipid Nanoparticles for Therapeutic Skin Genome Editing.",
+    "venue": "Journal of the American Chemical Society",
+    "year": 2025,
+    "citationCount": 13,
+    "openAccessPdf": {
+      "url": "",
+      "status": null,
+      "license": null,
+      "disclaimer": "Notice: Paper or abstract available at https://api.unpaywall.org/v2/10.1021/jacs.5c08376?email=<INSERT_YOUR_EMAIL> or https://doi.org/10.1021/jacs.5c08376, which is subject to the license by the author or copyright owner provided with this content. Please go to the source to verify the license and copyright information for your use."
+    },
+    "authors": [
+      {
+        "authorId": "47074131",
+        "name": "Chaorong Wang"
+      },
+      {
+        "authorId": "2057913736",
+        "name": "Qi Pan"
+      },
+      {
+        "authorId": "2143502690",
+        "name": "Shuang-Sheng Chen"
+      },
+      {
+        "authorId": "2164118730",
+        "name": "Yicheng Zhang"
+      },
+      {
+        "authorId": "2142167525",
+        "name": "Xiaojie Xu"
+      },
+      {
+        "authorId": "2283072896",
+        "name": "Xiaojie Yan"
+      },
+      {
+        "authorId": "66597009",
+        "name": "Jiajing Guo"
+      },
+      {
+        "authorId": "48994162",
+        "name": "Xiaohong Chen"
+      },
+      {
+        "authorId": "2145532649",
+        "name": "Bowen Li"
+      },
+      {
+        "authorId": "32091500",
+        "name": "Ganzorig Chimed"
+      },
+      {
+        "authorId": "2237742241",
+        "name": "Zhijia Liu"
+      },
+      {
+        "authorId": "2056741991",
+        "name": "Yuan Ping"
+      }
+    ],
+    "abstract": "Lipid nanoparticle (LNP)-mRNA formulations have revolutionized the field of nucleic acid therapeutics, yet their broader clinical application is constrained by inflammatory side effects and oxidative stress, particularly in the context of inflammatory diseases. Herein, we report the rational design and synthesis of a lipoic acid-based ionizable lipid library to address these limitations. By leveraging the antioxidant properties and thiol-mediated uptake potential of lipoic acid, we identified LA-A2B2CD3 as an optimal candidate through a structure-activity relationship study and design of experiment (DOE) optimization. LA-A2B2CD3 LNPs exhibited superior reactive oxygen species scavenging, enhanced mRNA translation, and reduced inflammatory cytokine production in vitro and in vivo. Mechanistic studies revealed that the efficient cellular uptake and the transdermal delivery capacity of LA-A2B2CD3 heavily rely on the reducible disulfide ring of lipoic acid. Application of LA-A2B2CD3 LNPs for the localized transdermal delivery of Cas9 mRNA and CD93 sgRNA in a murine model of psoriasis resulted in effective CD93 genome editing and the inhibition of the CD93-p38 MAPK-AKT-SMAD2/3 pathway, leading to significant therapeutic improvement. This work presents a robust, biocompatible LNP platform with minimized immunogenicity and strong potential for genome-editing therapies in inflammatory conditions, offering a transformative approach for the mRNA-based treatment of skin and other inflammation-related disorders."
+  },
+  {
+    "paperId": "6389707b4830ce4042eedfc662f7f7fe9fe0d9ec",
+    "externalIds": {
+      "DOI": "10.1021/jacs.2c10670",
+      "CorpusId": 255973145,
+      "PubMed": "36652629"
+    },
+    "url": "https://www.semanticscholar.org/paper/6389707b4830ce4042eedfc662f7f7fe9fe0d9ec",
+    "title": "Iterative Design of Ionizable Lipids for Intramuscular mRNA Delivery.",
+    "venue": "Journal of the American Chemical Society",
+    "year": 2023,
+    "citationCount": 100,
+    "openAccessPdf": {
+      "url": "",
+      "status": null,
+      "license": null,
+      "disclaimer": "Notice: Paper or abstract available at https://api.unpaywall.org/v2/10.1021/jacs.2c10670?email=<INSERT_YOUR_EMAIL> or https://doi.org/10.1021/jacs.2c10670, which is subject to the license by the author or copyright owner provided with this content. Please go to the source to verify the license and copyright information for your use."
+    },
+    "authors": [
+      {
+        "authorId": "2190811616",
+        "name": "Grayson Tilstra"
+      },
+      {
+        "authorId": "2126611709",
+        "name": "Julien Couture-Sen\u00e9cal"
+      },
+      {
+        "authorId": "2190811965",
+        "name": "Yan Ming Anson Lau"
+      },
+      {
+        "authorId": "2201767240",
+        "name": "Alanna M Manning"
+      },
+      {
+        "authorId": "145661424",
+        "name": "Daniel S M Wong"
+      },
+      {
+        "authorId": "2201769395",
+        "name": "Wanda W Janaeska"
+      },
+      {
+        "authorId": "2201770756",
+        "name": "Titobioluwa A Wuraola"
+      },
+      {
+        "authorId": "2180172563",
+        "name": "Janice Pang"
+      },
+      {
+        "authorId": "2201741076",
+        "name": "Omar F. Khan"
+      }
+    ],
+    "abstract": "Lipid nanoparticles (LNPs) are the most clinically advanced delivery vehicles for RNA and have enabled the development of RNA-based drugs such as the mRNA COVID-19 vaccines. Functional delivery of mRNA by an LNP greatly depends on the inclusion of an ionizable lipid, and small changes to these lipid structures can significantly improve delivery. However, the structure-function relationships between ionizable lipids and mRNA delivery are poorly understood, especially for LNPs administered intramuscularly. Here, we show that the iterative design of a novel series of ionizable lipids generates key structure-activity relationships and enables the optimization of chemically distinct lipids with efficacy that is on-par with the current state of the art. We find that the combination of ionizable lipids comprising an ethanolamine core and LNPs with an apparent pKa between 6.6 and 6.9 maximizes intramuscular mRNA delivery. Furthermore, we report a nonlinear relationship between the lipid-to-mRNA mass ratio and protein expression, suggesting that a critical mass ratio exists for LNPs and may depend on ionizable lipid structure. Our findings add to the mechanistic understanding of ionizable lipids and demonstrate that hydrogen bonding, ionization behavior, and lipid-to-mRNA mass ratio are key design parameters affecting intramuscular mRNA delivery. We validate these insights by applying them to the rational design of new ionizable lipids. Overall, our iterative design strategy efficiently generates potent ionizable lipids. This hypothesis-driven method reveals structure-activity relationships that lay the foundation for the optimization of ionizable lipids in future LNP-RNA drugs. We foresee that this design strategy can be extended to other optimization parameters beyond intramuscular expression."
+  },
+  {
+    "paperId": "63b024dd20dc48976e350ec997330cb68cd14547",
+    "externalIds": {
+      "PubMedCentral": "13015392",
+      "DOI": "10.64898/2026.03.20.712457",
+      "CorpusId": 286771020,
+      "PubMed": "41889911"
+    },
+    "url": "https://www.semanticscholar.org/paper/63b024dd20dc48976e350ec997330cb68cd14547",
+    "title": "Structure-Activity Mapping of Intraperitoneal mRNA-LNPs: Decoupling Tumor and Liver Biodistribution in Pancreatic Cancer",
+    "venue": "bioRxiv",
+    "year": 2026,
+    "citationCount": 0,
+    "openAccessPdf": {
+      "url": "https://www.biorxiv.org/content/biorxiv/early/2026/03/21/2026.03.20.712457.full.pdf",
+      "status": "GREEN",
+      "license": "CCBYNC",
+      "disclaimer": "Notice: Paper or abstract available at https://pmc.ncbi.nlm.nih.gov/articles/PMC13015392, which is subject to the license by the author or copyright owner provided with this content. Please go to the source to verify the license and copyright information for your use."
+    },
+    "authors": [
+      {
+        "authorId": "2255619783",
+        "name": "Farhana Islam"
+      },
+      {
+        "authorId": "2305181028",
+        "name": "Ashish Das"
+      },
+      {
+        "authorId": "2255866833",
+        "name": "Md Ashaduzzaman"
+      },
+      {
+        "authorId": "2293181590",
+        "name": "Ling Ding"
+      },
+      {
+        "authorId": "2304922122",
+        "name": "Neha Kumari"
+      },
+      {
+        "authorId": "2305506289",
+        "name": "Ran Dai"
+      },
+      {
+        "authorId": "2346607943",
+        "name": "David Oupick\u00fd"
+      }
+    ],
+    "abstract": "Pancreatic ductal adenocarcinoma (PDAC) remains difficult to treat with nucleic acid therapeutics because efficient intratumoral delivery is limited and off-target liver accumulation is common. Here, we developed a structure-activity map for intraperitoneally administered mRNA lipid nanoparticles (mRNA-LNPs) to identify formulation features that improve delivery to pancreatic tumors while reducing liver expression. A full-factorial library of 48 mRNA-LNP formulations was generated by varying ionizable lipid, sterol, phospholipid, and PEG-lipid components. Formulations were characterized for size, polydispersity, zeta potential, and encapsulation, then evaluated in an orthotopic KPC8060 pancreatic tumor model after intraperitoneal administration of firefly luciferase mRNA-loaded LNPs. Biodistribution was assessed by Rhodamine B fluorescence and functional delivery by luciferase expression 12 h after dosing. Lipid composition strongly influenced both physicochemical properties and in vivo performance. G0-C14-based formulations produced the smallest and most homogeneous particles, whereas FTT5-containing formulations were generally larger. Across the 48-formulation library, mRNA expression and nanoparticle biodistribution varied significantly among tumor, pancreas, liver, and spleen. Statistical, decision-tree, and predictive modeling analyses identified composition rules associated with organ-selective delivery. High tumor expression was associated primarily with G0-C14 combined with DSPC and \u03b2-sitosterol, whereas liver expression was favored by C12-200 or DLin-MC3-DMA with DOPE and DSPE-PEG. Notably, a G0-C14/DSPC/DSPE-PEG formulation emerged as a lead candidate, producing a greater than 6-fold increase in tumor luciferase signal relative to the library median while reducing liver exposure by approximately 60%. Histopathology showed no treatment-related liver or lung toxicity. These findings define actionable formulation rules for tuning intraperitoneal mRNA-LNP delivery in PDAC and support further development of tumor-selective mRNA therapeutics for pancreatic cancer."
+  },
+  {
+    "paperId": "010c724df4b29dcb52b6385e32505575920c3b8b",
+    "externalIds": {
+      "DOI": "10.1039/d3tb00649b",
+      "CorpusId": 259221645,
+      "PubMed": "37345430"
+    },
+    "url": "https://www.semanticscholar.org/paper/010c724df4b29dcb52b6385e32505575920c3b8b",
+    "title": "Rational design and combinatorial chemistry of ionizable lipids for RNA delivery.",
+    "venue": "Journal of materials chemistry. B",
+    "year": 2023,
+    "citationCount": 39,
+    "openAccessPdf": {
+      "url": "",
+      "status": "CLOSED",
+      "license": null,
+      "disclaimer": "Notice: Paper or abstract available at https://api.unpaywall.org/v2/10.1039/d3tb00649b?email=<INSERT_YOUR_EMAIL> or https://doi.org/10.1039/d3tb00649b, which is subject to the license by the author or copyright owner provided with this content. Please go to the source to verify the license and copyright information for your use."
+    },
+    "authors": [
+      {
+        "authorId": "2143570601",
+        "name": "Yue Xu"
+      },
+      {
+        "authorId": "2203076723",
+        "name": "Alex Golubovic"
+      },
+      {
+        "authorId": "15930321",
+        "name": "Shufen Xu"
+      },
+      {
+        "authorId": "36584693",
+        "name": "Annia Pan"
+      },
+      {
+        "authorId": "2381418012",
+        "name": "Bowen Li"
+      }
+    ],
+    "abstract": "In 2018, LNPs enabled the first FDA approval of a siRNA drug (Onpattro); two years later, two SARS-CoV-2 vaccines (Comirnaty, Spikevax) based on LNPs containing mRNA also arrived at the clinic, saving millions of lives during the COVID-19 pandemic. Notably, each of the three FDA-approved LNP formulations uses a unique ionizable lipid while the other three components, i.e., cholesterol, helper lipid, and PEGylated lipid, are almost identical. Therefore, ionizable lipids are critical to the delivery efficiency of mRNA. This review covers recent advances in ionizable lipids used in RNA delivery over the past several decades. We will discuss chemical structures, synthetic routes, and structure-activity relationships of ionizable lipids."
+  },
+  {
+    "paperId": "4bff292e9103f1712763f08beec919197803e635",
+    "externalIds": {
+      "DOI": "10.1002/wnan.1978",
+      "CorpusId": 270970845,
+      "PubMed": "38965928"
+    },
+    "url": "https://www.semanticscholar.org/paper/4bff292e9103f1712763f08beec919197803e635",
+    "title": "An overview of lipid constituents in lipid nanoparticle mRNA delivery systems.",
+    "venue": "Wiley Interdisciplinary Reviews: Nanomedicine and Nanobiotechnology",
+    "year": 2024,
+    "citationCount": 32,
+    "openAccessPdf": {
+      "url": "",
+      "status": null,
+      "license": null,
+      "disclaimer": "Notice: Paper or abstract available at https://api.unpaywall.org/v2/10.1002/wnan.1978?email=<INSERT_YOUR_EMAIL> or https://doi.org/10.1002/wnan.1978, which is subject to the license by the author or copyright owner provided with this content. Please go to the source to verify the license and copyright information for your use."
+    },
+    "authors": [
+      {
+        "authorId": "2297402313",
+        "name": "Shiqi Wu"
+      },
+      {
+        "authorId": "2220595276",
+        "name": "Lixin Lin"
+      },
+      {
+        "authorId": "2297422729",
+        "name": "Lu Shi"
+      },
+      {
+        "authorId": "2275344789",
+        "name": "Shuai Liu"
+      }
+    ],
+    "abstract": "mRNA therapeutics have shown great potential for a broad spectrum of disease treatment. However, the challenges of mRNA's inherent instability and difficulty in cellular entry have hindered its progress in the biomedical field. To address the cellular barriers and deliver mRNA to cells of interest, various delivery systems are designed. Among these, lipid nanoparticles (LNPs) stand out as the most extensively used mRNA delivery systems, particularly following the clinical approvals of corona virus disease 2019 (COVID-19) mRNA vaccines. LNPs are comprised of ionizable cationic lipids, phospholipids, cholesterol, and polyethylene glycol derived lipids (PEG-lipids). In this review, we primarily summarize the recent advancements of the LNP mRNA delivery technology, focusing on the structures of four lipid constituents and their biomedical applications. We delve into structure-activity relationships of the lipids, while also exploring the future prospects and challenges in developing more efficacious mRNA delivery systems. This article is categorized under: Therapeutic Approaches and Drug Discovery > Emerging Technologies Biology-Inspired Nanomaterials > Lipid-Based Structures Nanotechnology Approaches to Biology > Nanoscale Systems in Biology."
+  },
+  {
+    "paperId": "4337f8fbe1ac81a38b53eaea3fecc6833d0db1c6",
+    "externalIds": {
+      "DOI": "10.1021/acsami.4c02415",
+      "CorpusId": 269624511,
+      "PubMed": "38717294"
+    },
+    "url": "https://www.semanticscholar.org/paper/4337f8fbe1ac81a38b53eaea3fecc6833d0db1c6",
+    "title": "Cationic Lipid Pairs Enhance Liver-to-Lung Tropism of Lipid Nanoparticles for In Vivo mRNA Delivery.",
+    "venue": "ACS Applied Materials and Interfaces",
+    "year": 2024,
+    "citationCount": 28,
+    "openAccessPdf": {
+      "url": "",
+      "status": "CLOSED",
+      "license": null,
+      "disclaimer": "Notice: Paper or abstract available at https://api.unpaywall.org/v2/10.1021/acsami.4c02415?email=<INSERT_YOUR_EMAIL> or https://doi.org/10.1021/acsami.4c02415, which is subject to the license by the author or copyright owner provided with this content. Please go to the source to verify the license and copyright information for your use."
+    },
+    "authors": [
+      {
+        "authorId": "2288627421",
+        "name": "G. Zeng"
+      },
+      {
+        "authorId": "2168407912",
+        "name": "Zepeng He"
+      },
+      {
+        "authorId": "2221112345",
+        "name": "Haihong Yang"
+      },
+      {
+        "authorId": "2300368383",
+        "name": "Zhan Gao"
+      },
+      {
+        "authorId": "2300270403",
+        "name": "Xueer Ge"
+      },
+      {
+        "authorId": "143672776",
+        "name": "Lixin Liu"
+      },
+      {
+        "authorId": "2237742241",
+        "name": "Zhijia Liu"
+      },
+      {
+        "authorId": "2145263740",
+        "name": "Yongming Chen"
+      }
+    ],
+    "abstract": "Much of current clinical interest has focused on mRNA therapeutics for the treatment of lung-associated diseases, such as infections, genetic disorders, and cancers. However, the safe and efficient delivery of mRNA therapeutics to the lungs, especially to different pulmonary cell types, is still a formidable challenge. In this paper, we proposed a cationic lipid pair (CLP) strategy, which utilized the liver-targeted ionizable lipid and its derived quaternary ammonium lipid as the CLP to improve liver-to-lung tropism of four-component lipid nanoparticles (LNPs) for in vivo mRNA delivery. Interestingly, the structure-activity investigation identified that using liver-targeted ionizable lipids with higher mRNA delivery performance and their derived lipid counterparts is the optimal CLP design for improving lung-targeted mRNA delivery. The CLP strategy was also verified to be universal and suitable for clinically available ionizable lipids such as SM-102 and ALC-0315 to develop lung-targeted LNP delivery systems. Moreover, we demonstrated that CLP-based LNPs were safe and exhibited potent mRNA transfection in pulmonary endothelial and epithelial cells. As a result, we provided a powerful CLP strategy for shifting the mRNA delivery preference of LNPs from the liver to the lungs, exhibiting great potential for broadening the application scenario of mRNA-based therapy."
+  },
+  {
+    "paperId": "8f05793eafd420695282228ffafd1d4d420d7c87",
+    "externalIds": {
+      "DOI": "10.1002/adma.202522552",
+      "CorpusId": 285449364,
+      "PubMed": "41656866"
+    },
+    "url": "https://www.semanticscholar.org/paper/8f05793eafd420695282228ffafd1d4d420d7c87",
+    "title": "Optimizing Peptide Ionizable Lipids Enables Efficient and Low\u2010Toxicity mRNA Delivery for In Vivo Prime Editing and Protein Replacement Therapy",
+    "venue": "Advances in Materials",
+    "year": 2026,
+    "citationCount": 2,
+    "openAccessPdf": {
+      "url": "",
+      "status": null,
+      "license": null,
+      "disclaimer": "Notice: Paper or abstract available at https://api.unpaywall.org/v2/10.1002/adma.202522552?email=<INSERT_YOUR_EMAIL> or https://doi.org/10.1002/adma.202522552, which is subject to the license by the author or copyright owner provided with this content. Please go to the source to verify the license and copyright information for your use."
+    },
+    "authors": [
+      {
+        "authorId": "2337352566",
+        "name": "Qiu Wang"
+      },
+      {
+        "authorId": "2217480393",
+        "name": "Yi Lin"
+      },
+      {
+        "authorId": "2392265066",
+        "name": "Jiahui Xiao"
+      },
+      {
+        "authorId": "2393024096",
+        "name": "Keqing Xu"
+      },
+      {
+        "authorId": "2329051393",
+        "name": "Zijin Luo"
+      },
+      {
+        "authorId": "2325243179",
+        "name": "Hongyu Ren"
+      },
+      {
+        "authorId": "2378730282",
+        "name": "Fan Liu"
+      },
+      {
+        "authorId": "2412752831",
+        "name": "Lu Jia"
+      },
+      {
+        "authorId": "2289221456",
+        "name": "Tuo Wei"
+      },
+      {
+        "authorId": "2266234864",
+        "name": "Q. Cheng"
+      }
+    ],
+    "abstract": "Highly efficient mRNA lipid nanoparticle (LNP) often presents potential safety risks. Here, we establish a structure\u2013activity relationship framework for peptide ionizable lipids (PILs) to facilitate the rational design of safe and effective mRNA\u2010LNPs. The PIL structure comprises three modular components: building block, side\u2010chain length, and hydrophobic tail. Through systematic optimization, a lead compound (Dab4) with four building blocks and a moderate side chain length was identified, demonstrating minimized hepatotoxicity while maintaining superior delivery performance. Leveraging this framework, a series of Dab4\u2010derived PILs with three tail types, including alkyl (a\u2010tail), ester (aat\u2010tail), and hydroxyl (e\u2010tail), were synthesized. This tail chemistry determined organ tropism, with B12\u2010a13Dab4 (a\u2010tail) showing optimal performance in the liver. The B12\u2010a13Dab4 LNP exhibited significantly higher hepatic delivery efficiency and markedly improved biosafety compared with the FDA\u2010approved SM\u2010102 formulation. Moreover, B12\u2010a13Dab4 LNP efficiently triggers in vivo prime editing by co\u2010delivering PE7 mRNA and epegRNA, and achieves significant therapeutic effects in a Hereditary Tyrosinemia Type 1 (HT\u20101) model through repeated delivery fumarylacetoacetate hydrolase (FAH) mRNA. This study establishes rational design principles for PILs that strike a balance between efficacy and safety, offering a versatile mRNA\u2010LNP platform for the advancement of gene editing and protein replacement therapies."
+  },
+  {
+    "paperId": "8f9c39bd37cdabdca80784996c9d85f18c40c2e3",
+    "externalIds": {
+      "PubMedCentral": "13159103",
+      "DOI": "10.1002/advs.202515482",
+      "CorpusId": 287007562,
+      "PubMed": "41911333"
+    },
+    "url": "https://www.semanticscholar.org/paper/8f9c39bd37cdabdca80784996c9d85f18c40c2e3",
+    "title": "\u03b2\u2010Triketone\u2010Based Ionizable Cationic Lipids Synthesized via Click Chemistry for siRNA Delivery",
+    "venue": "Advancement of science",
+    "year": 2026,
+    "citationCount": 0,
+    "openAccessPdf": {
+      "url": "https://doi.org/10.1002/advs.202515482",
+      "status": "GOLD",
+      "license": "CCBY",
+      "disclaimer": "Notice: Paper or abstract available at https://pmc.ncbi.nlm.nih.gov/articles/PMC13159103, which is subject to the license by the author or copyright owner provided with this content. Please go to the source to verify the license and copyright information for your use."
+    },
+    "authors": [
+      {
+        "authorId": "2274795135",
+        "name": "Huatian Li"
+      },
+      {
+        "authorId": "2346993417",
+        "name": "Haocheng Tang"
+      },
+      {
+        "authorId": "2291001109",
+        "name": "Yiqing Mu"
+      },
+      {
+        "authorId": "2323248653",
+        "name": "Shangyu Chen"
+      },
+      {
+        "authorId": "2310682110",
+        "name": "Paul E Floreancig"
+      },
+      {
+        "authorId": "2291316293",
+        "name": "Junmei Wang"
+      },
+      {
+        "authorId": "2108618663",
+        "name": "Yixian Huang"
+      },
+      {
+        "authorId": "2254009122",
+        "name": "Song Li"
+      }
+    ],
+    "abstract": "Lipid nanoparticles (LNPs) have demonstrated their effectiveness as carriers for the delivery of RNA therapeutics. As the core components of the LNP system, ionizable cationic lipids (ICLs) are still the major focus of research in this field. In this study, we reported a class of novel \u03b2\u2010triketone\u2010based ICLs synthesized via click chemistry. We demonstrated that the reaction could be completed instantaneously, and a library of ICLs was generated in a short time. In vitro and in vivo screening identified a lipid that was comparable to FDA approved Dlin\u2010MC3\u2010DMA lipid in siRNA LNPs\u2010mediated gene silencing. In addition, we adopted a computational approach to characterizing the click chemistry in lipid synthesis, as well as the binding between siRNA and ICLs. Our work offers a novel approach to synthesizing ICLs of new structural features, which may not only improve our understanding of the structure\u2010activity relationship (SAR) of ICLs but also lead to the development of improved LNPs for more effective delivery of nucleic acid therapeutics."
+  },
+  {
+    "paperId": "964f37b48f4cf1f30fe676fd9e2185d81876eabb",
+    "externalIds": {
+      "PubMedCentral": "12265960",
+      "DOI": "10.1016/j.ymthe.2025.03.018",
+      "CorpusId": 277024493,
+      "PubMed": "40087866"
+    },
+    "url": "https://www.semanticscholar.org/paper/964f37b48f4cf1f30fe676fd9e2185d81876eabb",
+    "title": "CD47 peptide-cloaked lipid nanoparticles promote cell-specific mRNA delivery",
+    "venue": "Molecular Therapy",
+    "year": 2025,
+    "citationCount": 42,
+    "openAccessPdf": {
+      "url": "https://doi.org/10.1016/j.ymthe.2025.03.018",
+      "status": "HYBRID",
+      "license": "CCBYNCND",
+      "disclaimer": "Notice: Paper or abstract available at https://pmc.ncbi.nlm.nih.gov/articles/PMC12265960, which is subject to the license by the author or copyright owner provided with this content. Please go to the source to verify the license and copyright information for your use."
+    },
+    "authors": [
+      {
+        "authorId": "2264817043",
+        "name": "T. Papp"
+      },
+      {
+        "authorId": "2351603083",
+        "name": "Jianhao Zeng"
+      },
+      {
+        "authorId": "2107080021",
+        "name": "Hamna Shahnawaz"
+      },
+      {
+        "authorId": "2246605722",
+        "name": "Awurama Akyianu"
+      },
+      {
+        "authorId": "34769848",
+        "name": "L. Breda"
+      },
+      {
+        "authorId": "2292646220",
+        "name": "Amir Yadegari"
+      },
+      {
+        "authorId": "1393023079",
+        "name": "J. Steward"
+      },
+      {
+        "authorId": "2292719397",
+        "name": "Ruiqi Shi"
+      },
+      {
+        "authorId": "2292678938",
+        "name": "Qin Li"
+      },
+      {
+        "authorId": "2264395711",
+        "name": "Barbara L. Mui"
+      },
+      {
+        "authorId": "2264347251",
+        "name": "Ying K. Tam"
+      },
+      {
+        "authorId": "2264060227",
+        "name": "Drew Weissman"
+      },
+      {
+        "authorId": "2269205845",
+        "name": "Stefano Rivella"
+      },
+      {
+        "authorId": "51057723",
+        "name": "Vladimir Shuvaev"
+      },
+      {
+        "authorId": "2295111371",
+        "name": "Vladimir R. Muzykantov"
+      },
+      {
+        "authorId": "3506243",
+        "name": "H. Parhiz"
+      }
+    ],
+    "abstract": "mRNA-based therapeutics delivered via lipid nanoparticles (LNP-mRNA) hold great promise for treating diverse diseases. However, further improvements are needed to refine outcomes in non-vaccine, extrahepatic applications, such as minimizing the rapid clearance and off-target uptake in undesired tissues of the mononuclear phagocyte system (MPS). We propose modifying LNP surfaces with the phagocytic cell \u201cdon\u2019t eat me\u201d signal, CD47, in combination with our previously established antibody-based targeted LNP (tLNP) to create a CD47/tLNP platform with reduced phagocytic clearance and off-target effects and improved efficiency for cell-specific delivery. We showed that CD47 modification decreased macrophage and hepatic uptake both in vitro and in vivo. Combining CD47 modification with antibodies targeting endothelial cells, T cells, or hematopoietic stem cells (HSCs) increased targeting efficiency up to 3-fold compared to tLNP alone. Enhanced targeting of CD47/tLNP to HSCs with reduced off-targeting enabled the delivery of pro-apoptotic mRNA for HSC depletion as a preconditioning strategy prior to bone marrow transplant. Additionally, CD47-modified LNPs showed diminished inflammatory effects on hepatic tissue and an altered protein corona. Our CD47/tLNP-mRNA platform, with its reduced phagocytic clearance, mitigated inflammatory effects, and enhanced targeted delivery, should further facilitate the development of in vivo mRNA therapeutics."
+  },
+  {
+    "paperId": "63e8f1b474168ac8ec8516f441e69d2a981ac626",
+    "externalIds": {
+      "DOI": "10.1016/j.jconrel.2025.113737",
+      "CorpusId": 277809931,
+      "PubMed": "40233831"
+    },
+    "url": "https://www.semanticscholar.org/paper/63e8f1b474168ac8ec8516f441e69d2a981ac626",
+    "title": "Dimethylamino-based synthetic lipidoid nanoparticles for selective mRNA delivery to splenic antigen-presenting cells.",
+    "venue": "Journal of Controlled Release",
+    "year": 2025,
+    "citationCount": 9,
+    "openAccessPdf": {
+      "url": "https://doi.org/10.1016/j.jconrel.2025.113737",
+      "status": "HYBRID",
+      "license": "CCBYNCND",
+      "disclaimer": "Notice: Paper or abstract available at https://api.unpaywall.org/v2/10.1016/j.jconrel.2025.113737?email=<INSERT_YOUR_EMAIL> or https://doi.org/10.1016/j.jconrel.2025.113737, which is subject to the license by the author or copyright owner provided with this content. Please go to the source to verify the license and copyright information for your use."
+    },
+    "authors": [
+      {
+        "authorId": "2355565422",
+        "name": "Xue Liang"
+      },
+      {
+        "authorId": "2310570168",
+        "name": "Chenchen Zhang"
+      },
+      {
+        "authorId": "2310449005",
+        "name": "Qimeng Yin"
+      },
+      {
+        "authorId": "2355909856",
+        "name": "Yuerong Bai"
+      },
+      {
+        "authorId": "2355431036",
+        "name": "Jiahao Li"
+      },
+      {
+        "authorId": "2260351960",
+        "name": "Min Qiu"
+      }
+    ],
+    "abstract": "Targeted systemic mRNA delivery to extrahepatic tissues remains a formidable challenge, especially in the absence of targeting ligands on lipid nanoparticles. In this study, we introduce a series of dimethylamino-based ionizable lipidoids (DMA-Lipidoids) engineered for selective mRNA delivery to the spleen. Using a combinatorial approach, we synthesized 48 chemically distinct lipidoids by pairing four DMA-containing amine heads with 12 newly designed hyperbranched tails. Remarkably, lipidoids with tails H228, H226x, H246x, and H446x demonstrated exceptional spleen-targeting efficiency. To refine the lipidoid design, we constructed and screened a secondary library of 36 lipidoids containing DMA analogues. Through this two-round screening process, we identified lipidoids with both high potency and spleen selectivity. The lead candidate, DMA4-H228, achieved precise delivery of ovalbumin mRNA to antigen-presenting cells (APCs), driving interferon-\u03b1 (IFN \u03b1) production and APC activation. This robust immune response effectively inhibited tumor growth. Overall, these innovative DMA-lipidoids demonstrate strong spleen-targeting capabilities, offering a transformative platform for mRNA vaccine development."
+  },
+  {
+    "paperId": "50fbd94f37ba97ca3b5eb10505696b4a3fe41ff8",
+    "externalIds": {
+      "DOI": "10.1002/adma.202409812",
+      "CorpusId": 273237981,
+      "PubMed": "39390844"
+    },
+    "url": "https://www.semanticscholar.org/paper/50fbd94f37ba97ca3b5eb10505696b4a3fe41ff8",
+    "title": "Simplified Lipid Nanoparticles for Tissue\u2010 And Cell\u2010Targeted mRNA Delivery Facilitate Precision Tumor Therapy in a Lung Metastasis Mouse Model",
+    "venue": "Advances in Materials",
+    "year": 2024,
+    "citationCount": 74,
+    "openAccessPdf": {
+      "url": "https://onlinelibrary.wiley.com/doi/pdfdirect/10.1002/adma.202409812",
+      "status": "BRONZE",
+      "license": null,
+      "disclaimer": "Notice: Paper or abstract available at https://api.unpaywall.org/v2/10.1002/adma.202409812?email=<INSERT_YOUR_EMAIL> or https://doi.org/10.1002/adma.202409812, which is subject to the license by the author or copyright owner provided with this content. Please go to the source to verify the license and copyright information for your use."
+    },
+    "authors": [
+      {
+        "authorId": "2229781742",
+        "name": "Yuan Fei"
+      },
+      {
+        "authorId": "2325241602",
+        "name": "Xiaolu Yu"
+      },
+      {
+        "authorId": "2325272805",
+        "name": "Peiyu Liu"
+      },
+      {
+        "authorId": "2325243179",
+        "name": "Hongyu Ren"
+      },
+      {
+        "authorId": "2289221456",
+        "name": "Tuo Wei"
+      },
+      {
+        "authorId": "2266234864",
+        "name": "Q. Cheng"
+      }
+    ],
+    "abstract": "mRNA\u2010based applications have achieved remarkable success in the development of next\u2010generation vaccines and the treatment of diverse liver diseases. Overcoming the challenge of delivering mRNA to extrahepatic tissues, especially specific cells within tissues, is crucial for precision therapy. In this study, a platform is developed for selective mRNA delivery to desired cells within tissues by combining lipid nanoparticle (LNP)\u2010based targeted delivery with mRNA sequence\u2010controlled expression. Through systematic optimization, a three\u2010component LNP platform is developed, enabling targeted mRNA delivery to the lung, liver, and spleen. The incorporation of unique microRNA target sites into the mRNA scaffold further enhances control over protein translation in specific cells within the target tissue. This combined strategy, named SELECT (Simplified LNP with Engineered mRNA for Cell\u2010type Targeting), demonstrates its efficacy in distinguishing mRNA expression between tumor and normal cells based on intracellular microRNA abundance. SELECT encapsulating mRNA encoding a tumor\u2010specific cytotoxic protein, human ELANE, exhibits selective mRNA delivery to tumor lesions and significant inhibition of tumor growth in a mouse model of melanoma lung metastasis. Overall, SELECT has great potential as a new precision tumor treatment approach and also offers promising prospects for other mRNA therapies targeting specific cell types."
+  },
+  {
+    "paperId": "26ece2069c16754d2977ea95cacea868b3b10ffc",
+    "externalIds": {
+      "DOI": "10.1101/2025.11.12.687398",
+      "CorpusId": 283013048
+    },
+    "url": "https://www.semanticscholar.org/paper/26ece2069c16754d2977ea95cacea868b3b10ffc",
+    "title": "Anti-CD38-Targeted Piperazine-Derived Lipid Nanoparticles Overcome Hepatic Clearance for mRNA Delivery to Multiple Myeloma Cells In Vivo",
+    "venue": "bioRxiv",
+    "year": 2025,
+    "citationCount": 0,
+    "openAccessPdf": {
+      "url": "https://doi.org/10.1101/2025.11.12.687398",
+      "status": "GREEN",
+      "license": "CCBYNCND",
+      "disclaimer": "Notice: Paper or abstract available at https://api.unpaywall.org/v2/10.1101/2025.11.12.687398?email=<INSERT_YOUR_EMAIL> or https://doi.org/10.1101/2025.11.12.687398, which is subject to the license by the author or copyright owner provided with this content. Please go to the source to verify the license and copyright information for your use."
+    },
+    "authors": [
+      {
+        "authorId": "1450348550",
+        "name": "Christian G. Figueroa-Espada"
+      },
+      {
+        "authorId": "2206347114",
+        "name": "Hannah C. Geisler"
+      },
+      {
+        "authorId": "2206219157",
+        "name": "Ryann A. Joseph"
+      },
+      {
+        "authorId": "2337103983",
+        "name": "Adele S. Ricciardi"
+      },
+      {
+        "authorId": "1441586707",
+        "name": "Ann E. Metzloff"
+      },
+      {
+        "authorId": "2392417565",
+        "name": "Joshua O. Acosta-Gonz\u00e1lez"
+      },
+      {
+        "authorId": "2152089486",
+        "name": "Lulu Xue"
+      },
+      {
+        "authorId": "2312280467",
+        "name": "Hannah M. Yamagata"
+      },
+      {
+        "authorId": "2260509556",
+        "name": "Ajay S. Thatte"
+      },
+      {
+        "authorId": "2260523297",
+        "name": "Michael J. Mitchell"
+      }
+    ],
+    "abstract": "Multiple myeloma (MM) is an incurable plasma cell malignancy characterized by clonal heterogeneity, immune evasion, and therapeutic resistance. Messenger RNA (mRNA) therapeutics offer programmable strategies to express therapeutic proteins and gene editors, but their efficacy is limited by poor extrahepatic delivery. To overcome these barriers, we developed a lipid nanoparticle (LNP) platform for targeted mRNA delivery to MM cells in vivo. Through combinatorial screening, we identified C16-O1, a piperazine-based ionizable lipid that efficiently transfects both CD138+ and therapy-resistant CD138-MM subclones. For tumor selectivity, LNPs were functionalized with an antibody fragment against CD38, a clinically validated MM antigen. Anti-CD38 LNPs reached the tumor-site and significantly reduced hepatic accumulation in murine xenografts. As an in vitro proof-of-concept, delivery of Cas9 mRNA and an IRF4-targeting guide RNA induced gene knockout, cell-cycle arrest, and lenalidomide sensitization. Together, these findings establish a robust framework for targeted mRNA delivery in MM and other hematologic malignancies."
+  },
+  {
+    "paperId": "3b4adbb6a48545869dca9d1dde8307bac32da93c",
+    "externalIds": {
+      "PubMedCentral": "11259947",
+      "DOI": "10.1016/j.jconrel.2024.05.036",
+      "CorpusId": 270002165,
+      "PubMed": "38789090"
+    },
+    "url": "https://www.semanticscholar.org/paper/3b4adbb6a48545869dca9d1dde8307bac32da93c",
+    "title": "EGFR-targeted ionizable lipid nanoparticles enhance in vivo mRNA delivery to the placenta",
+    "venue": "Journal of Controlled Release",
+    "year": 2024,
+    "citationCount": 60,
+    "openAccessPdf": {
+      "url": "",
+      "status": "CLOSED",
+      "license": null,
+      "disclaimer": "Notice: Paper or abstract available at https://pmc.ncbi.nlm.nih.gov/articles/PMC11259947, which is subject to the license by the author or copyright owner provided with this content. Please go to the source to verify the license and copyright information for your use."
+    },
+    "authors": [
+      {
+        "authorId": "2206347114",
+        "name": "Hannah C. Geisler"
+      },
+      {
+        "authorId": "2206606728",
+        "name": "Aditi A Ghalsasi"
+      },
+      {
+        "authorId": "2077470568",
+        "name": "Hannah C. Safford"
+      },
+      {
+        "authorId": "87378107",
+        "name": "K. Swingle"
+      },
+      {
+        "authorId": "2260509556",
+        "name": "Ajay S. Thatte"
+      },
+      {
+        "authorId": "41022620",
+        "name": "Alvin J. Mukalel"
+      },
+      {
+        "authorId": "39478129",
+        "name": "Ningqiang Gong"
+      },
+      {
+        "authorId": "150904098",
+        "name": "Alex G. Hamilton"
+      },
+      {
+        "authorId": "2219978018",
+        "name": "Emily L. Han"
+      },
+      {
+        "authorId": "2262999904",
+        "name": "Benjamin E. Nachod"
+      },
+      {
+        "authorId": "2260514221",
+        "name": "Marshall S. Padilla"
+      },
+      {
+        "authorId": "2241736330",
+        "name": "Michael J. Mitchell"
+      }
+    ],
+    "abstract": "The full potential of ionizable lipid nanoparticles (LNPs) as an in vivo nucleic acid delivery platform has not yet been realized given that LNPs primarily accumulate in the liver following systemic administration, limiting their success to liver-centric conditions. The engineering of LNPs with antibody targeting moieties can enable extrahepatic tropism by facilitating site-specific LNP tethering and driving preferential LNP uptake into receptor-expressing cell types via receptor-mediated endocytosis. Obstetric conditions stemming from placental dysfunction, such as preeclampsia, are characterized by overexpression of cellular receptors, including the epidermal growth factor receptor (EGFR), making targeted LNP platforms an exciting potential treatment strategy for placental dysfunction during pregnancy. Herein, an EGFR antibody-conjugated LNP (aEGFR-LNP) platform was developed by engineering LNPs with increasing densities of antibody functionalization. aEGFR-LNPs were screened in vitro in immortalized placental trophoblasts and in vivo in non-pregnant and pregnant mice and compared to non-targeted formulations for extrahepatic, antibody-targeted mRNA LNP delivery to the placenta. Our top performing LNP with an intermediate density of antibody functionalization (1:5 aEGFR-LNP) mediated a ~twofold increase in mRNA delivery in murine placentas and a ~twofold increase in LNP uptake in EGFR-expressing trophoblasts compared to non-targeted counterparts. These results demonstrate the potential of antibody-conjugated LNPs for achieving extrahepatic tropism and the ability of aEGFR-LNPs in promoting mRNA delivery to EGFR-expressing cell types in the placenta for treating pregnancy complications."
+  },
+  {
+    "paperId": "5655b75b2ab01ebbc3f7871fc35c4fa03710d14f",
+    "externalIds": {
+      "PubMedCentral": "10323619",
+      "DOI": "10.1002/advs.202301929",
+      "CorpusId": 258299313,
+      "PubMed": "37092557"
+    },
+    "url": "https://www.semanticscholar.org/paper/5655b75b2ab01ebbc3f7871fc35c4fa03710d14f",
+    "title": "A Combinatorial Library of Lipid Nanoparticles for Cell Type\u2010Specific mRNA Delivery",
+    "venue": "Advancement of science",
+    "year": 2023,
+    "citationCount": 91,
+    "openAccessPdf": {
+      "url": "https://onlinelibrary.wiley.com/doi/pdfdirect/10.1002/advs.202301929",
+      "status": "GOLD",
+      "license": "CCBY",
+      "disclaimer": "Notice: Paper or abstract available at https://pmc.ncbi.nlm.nih.gov/articles/PMC10323619, which is subject to the license by the author or copyright owner provided with this content. Please go to the source to verify the license and copyright information for your use."
+    },
+    "authors": [
+      {
+        "authorId": "15376322",
+        "name": "G. Naidu"
+      },
+      {
+        "authorId": "39369817",
+        "name": "Seok\u2010Beom Yong"
+      },
+      {
+        "authorId": "3946520",
+        "name": "S. Ramishetti"
+      },
+      {
+        "authorId": "151192294",
+        "name": "Riccardo Rampado"
+      },
+      {
+        "authorId": "2213863122",
+        "name": "Preeti Sharma"
+      },
+      {
+        "authorId": "4708294",
+        "name": "Assaf Ezra"
+      },
+      {
+        "authorId": "49571343",
+        "name": "Meir Goldsmith"
+      },
+      {
+        "authorId": "1423277781",
+        "name": "I. Hazan-Halevy"
+      },
+      {
+        "authorId": "3699172",
+        "name": "Sushmita Chatterjee"
+      },
+      {
+        "authorId": "92946122",
+        "name": "Anjaiah Aitha"
+      },
+      {
+        "authorId": "145412840",
+        "name": "D. Peer"
+      }
+    ],
+    "abstract": "Ionizable lipid\u2010based nanoparticles (LNPs) are the most advanced non\u2010viral drug delivery systems for RNA therapeutics and vaccines. However, cell type\u2010specific, extrahepatic mRNA delivery is still a major hurdle, hampering the development of novel therapeutic modalities. Herein, a novel ionizable lipid library is synthesized by modifying hydrophobic tail chains and linkers. Combined with other helper lipids and utilizing a microfluidic mixing approach, stable LNPs are formed. Using Luciferase\u2010mRNA, mCherry mRNA, and Cre mRNA together with a TdTomato animal model, superior lipids forming LNPs for potent cell\u2010type specific mRNA delivery are identified. In vitro assays concluded that combining branched ester tail chains with hydroxylamine linker negatively affects mRNA delivery efficiency. In vivo studies identify Lipid 23 as a liver\u2010trophic, superior mRNA delivery lipid and Lipid 16 as a potent cell type\u2010specific ionizable lipid for the CD11bhi macrophage population without an additional targeting moiety. Finally, in vivo mRNA delivery efficiency and toxicity of these LNPs are compared with SM\u2010102\u2010based LNP (Moderna's LNP formulation) and are shown to be cell\u2010specific compared to SM\u2010102\u2010based LNPs. Overall, this study suggests that a structural combination of tail and linker can drive a novel functionality of LNPs in vivo."
+  },
+  {
+    "paperId": "d80cbd3287ca6810674b52a55325953765b65c3d",
+    "externalIds": {
+      "PubMedCentral": "8872770",
+      "DOI": "10.1073/pnas.2116271119",
+      "CorpusId": 246902168,
+      "PubMed": "35173043"
+    },
+    "url": "https://www.semanticscholar.org/paper/d80cbd3287ca6810674b52a55325953765b65c3d",
+    "title": "Lung-selective mRNA delivery of synthetic lipid nanoparticles for the treatment of pulmonary lymphangioleiomyomatosis",
+    "venue": "Proceedings of the National Academy of Sciences of the United States of America",
+    "year": 2022,
+    "citationCount": 411,
+    "openAccessPdf": {
+      "url": "https://doi.org/10.1073/pnas.2116271119",
+      "status": "HYBRID",
+      "license": "CCBYNCND",
+      "disclaimer": "Notice: Paper or abstract available at https://pmc.ncbi.nlm.nih.gov/articles/PMC8872770, which is subject to the license by the author or copyright owner provided with this content. Please go to the source to verify the license and copyright information for your use."
+    },
+    "authors": [
+      {
+        "authorId": "1816709562",
+        "name": "Min Qiu"
+      },
+      {
+        "authorId": "2111284853",
+        "name": "Yan Tang"
+      },
+      {
+        "authorId": "2138794806",
+        "name": "Jinjin Chen"
+      },
+      {
+        "authorId": "88768900",
+        "name": "Rachel E. Muriph"
+      },
+      {
+        "authorId": "12068304",
+        "name": "Zhongfeng Ye"
+      },
+      {
+        "authorId": "5633015",
+        "name": "Changfeng Huang"
+      },
+      {
+        "authorId": "27142648",
+        "name": "Jason J. Evans"
+      },
+      {
+        "authorId": "4397360",
+        "name": "E. Henske"
+      },
+      {
+        "authorId": "14325617",
+        "name": "Qiaobing Xu"
+      }
+    ],
+    "abstract": "Significance The current application of messenger RNA (mRNA)-based technology has largely been confined to liver diseases because of the lack of a specific and efficient extrahepatic in vivo systemic mRNA delivery system. Here, we have developed a library of N-series lipid nanoparticles (LNPs) that could specifically regulate the protein composition of protein corona on the surface of LNPs, which allows specific delivery of mRNA to the lung. We further demonstrated that our lung-targeting LNP could effectively deliver mouse tuberous sclerosis complex 2 (Tsc2) mRNA into TSC2-null cells and restore its function, resulting in enhanced control of tumor burden in a preclinical model of lymphangioleiomyomatosis, a destructive lung disease caused by loss-of-function mutations in the Tsc2 gene. Safe and efficacious systemic delivery of messenger RNA (mRNA) to specific organs and cells in vivo remains the major challenge in the development of mRNA-based therapeutics. Targeting of systemically administered lipid nanoparticles (LNPs) coformulated with mRNA has largely been confined to the liver and spleen. Using a library screening approach, we identified that N-series LNPs (containing an amide bond in the tail) are capable of selectively delivering mRNA to the mouse lung, in contrast to our previous discovery that O-series LNPs (containing an ester bond in the tail) that tend to deliver mRNA to the liver. We analyzed the protein corona on the liver- and lung-targeted LNPs using liquid chromatography\u2013mass spectrometry and identified a group of unique plasma proteins specifically absorbed onto the surface that may contribute to the targetability of these LNPs. Different pulmonary cell types can also be targeted by simply tuning the headgroup structure of N-series LNPs. Importantly, we demonstrate here the success of LNP-based RNA therapy in a preclinical model of lymphangioleiomyomatosis (LAM), a destructive lung disease caused by loss-of-function mutations in the Tsc2 gene. Our lung-targeting LNP exhibited highly efficient delivery of the mouse tuberous sclerosis complex 2 (Tsc2) mRNA for the restoration of TSC2 tumor suppressor in tumor and achieved remarkable therapeutic effect in reducing tumor burden. This research establishes mRNA LNPs as a promising therapeutic intervention for the treatment of LAM."
+  },
+  {
+    "paperId": "c7567a8f4c31d8caf20c886b7c5767cd31c389aa",
+    "externalIds": {
+      "DOI": "10.1021/acs.molpharmaceut.5c00385",
+      "CorpusId": 279995936,
+      "PubMed": "40641444"
+    },
+    "url": "https://www.semanticscholar.org/paper/c7567a8f4c31d8caf20c886b7c5767cd31c389aa",
+    "title": "Recent Advances in mRNA-LNP Delivery Systems for Extrahepatic Organs: A Review.",
+    "venue": "Molecular Pharmaceutics",
+    "year": 2025,
+    "citationCount": 9,
+    "openAccessPdf": {
+      "url": "",
+      "status": null,
+      "license": null,
+      "disclaimer": "Notice: Paper or abstract available at https://api.unpaywall.org/v2/10.1021/acs.molpharmaceut.5c00385?email=<INSERT_YOUR_EMAIL> or https://doi.org/10.1021/acs.molpharmaceut.5c00385, which is subject to the license by the author or copyright owner provided with this content. Please go to the source to verify the license and copyright information for your use."
+    },
+    "authors": [
+      {
+        "authorId": "2358634514",
+        "name": "Ying Bai"
+      },
+      {
+        "authorId": "2359410332",
+        "name": "Li Cui"
+      },
+      {
+        "authorId": "2249489150",
+        "name": "Tianshu Liu"
+      },
+      {
+        "authorId": "2359552654",
+        "name": "Zhen Wang"
+      },
+      {
+        "authorId": "2358811900",
+        "name": "Haiyan Cao"
+      },
+      {
+        "authorId": "2163276686",
+        "name": "Shukun He"
+      },
+      {
+        "authorId": "2269351074",
+        "name": "Jiani Qiu"
+      },
+      {
+        "authorId": "2341459826",
+        "name": "Yingxin Li"
+      },
+      {
+        "authorId": "2407650187",
+        "name": "Yilan Zhou"
+      },
+      {
+        "authorId": "2117867446",
+        "name": "Jiawei Shi"
+      },
+      {
+        "authorId": "2358788625",
+        "name": "Jing Wang"
+      }
+    ],
+    "abstract": "Lipid nanoparticles (LNPs) as gene delivery vectors have revolutionized the therapeutic paradigm in mRNA therapy. The pH-dependent lipid components can prevent endosomal retention of mRNA and promote the cytoplasmic translation of therapeutic proteins. However, current technologies still face two core challenges: the nonspecific liver accumulation rate of 30-90% after systemic administration, which is an organ targeting issue, and the inefficient cytoplasmic delivery with only 1-4% of nucleic acids escaping from endosomes. These problems severely limit their application in the treatment of extrahepatic diseases. This review systematically elaborates on the molecular composition and structure-function relationship of LNPs and explores the causes of their extrahepatic delivery obstacles. At the same time, we propose innovative strategies to enhance organ selectivity and endosomal escape efficiency. Additionally, through existing preclinical studies, key bottlenecks such as immune response control and quality control in large-scale production for the clinical translation of current technologies are revealed, providing a multidisciplinary theoretical framework for the development of the next generation of intelligent LNPs."
+  },
+  {
+    "paperId": "a988e62171c3fa140bdb20723d1e5d74189874e0",
+    "externalIds": {
+      "DOI": "10.1038/s41563-025-02331-6",
+      "CorpusId": 281046288,
+      "PubMed": "40890497"
+    },
+    "url": "https://www.semanticscholar.org/paper/a988e62171c3fa140bdb20723d1e5d74189874e0",
+    "title": "Peptide codes for organ-selective mRNA delivery",
+    "venue": "Nature Materials",
+    "year": 2025,
+    "citationCount": 28,
+    "openAccessPdf": {
+      "url": "",
+      "status": null,
+      "license": null,
+      "disclaimer": "Notice: The following paper fields have been elided by the publisher: {'abstract'}. Paper or abstract available at https://api.unpaywall.org/v2/10.1038/s41563-025-02331-6?email=<INSERT_YOUR_EMAIL> or https://doi.org/10.1038/s41563-025-02331-6, which is subject to the license by the author or copyright owner provided with this content. Please go to the source to verify the license and copyright information for your use."
+    },
+    "authors": [
+      {
+        "authorId": "2215198346",
+        "name": "Tie Chang"
+      },
+      {
+        "authorId": "2295892548",
+        "name": "Yifan Zheng"
+      },
+      {
+        "authorId": "2289602293",
+        "name": "Mingrui Jiang"
+      },
+      {
+        "authorId": "2275630845",
+        "name": "Siqi Jia"
+      },
+      {
+        "authorId": "2248021896",
+        "name": "Jianbo Bai"
+      },
+      {
+        "authorId": "2115546845",
+        "name": "Zhi Zheng"
+      },
+      {
+        "authorId": "2378720904",
+        "name": "Shixin Li"
+      },
+      {
+        "authorId": "2378722358",
+        "name": "Jia Guo"
+      },
+      {
+        "authorId": "2144333844",
+        "name": "Yue Wang"
+      },
+      {
+        "authorId": "2378902407",
+        "name": "Yiting Wang"
+      },
+      {
+        "authorId": "2268049815",
+        "name": "Haixia Liu"
+      },
+      {
+        "authorId": "2378608964",
+        "name": "Jianlin Liu"
+      },
+      {
+        "authorId": "2367120541",
+        "name": "Liangyu Ni"
+      },
+      {
+        "authorId": "2214283181",
+        "name": "Xingdi Cheng"
+      },
+      {
+        "authorId": "2238765420",
+        "name": "Shuai Liu"
+      },
+      {
+        "authorId": "2167636907",
+        "name": "Huijuan Zhang"
+      },
+      {
+        "authorId": "2291580755",
+        "name": "W. Pi"
+      },
+      {
+        "authorId": "2256982325",
+        "name": "Feng Lin"
+      },
+      {
+        "authorId": "2312443074",
+        "name": "Shiyi Liu"
+      },
+      {
+        "authorId": "2108301737",
+        "name": "Weijian Wang"
+      },
+      {
+        "authorId": "2249731821",
+        "name": "Guannan Wang"
+      },
+      {
+        "authorId": "2378607527",
+        "name": "Leyun Wang"
+      },
+      {
+        "authorId": "2276416429",
+        "name": "Lei Miao"
+      },
+      {
+        "authorId": "2281236112",
+        "name": "Xueguang Lu"
+      },
+      {
+        "authorId": "2297346236",
+        "name": "Ziqing Deng"
+      },
+      {
+        "authorId": "2294712240",
+        "name": "Bing Bai"
+      },
+      {
+        "authorId": "2153599169",
+        "name": "Zhao Qin"
+      },
+      {
+        "authorId": "2148962278",
+        "name": "Huajian Gao"
+      },
+      {
+        "authorId": "2237340589",
+        "name": "Yue Shao"
+      }
+    ],
+    "abstract": null
+  },
+  {
+    "paperId": "8c3b944717cdb8a936cea64be6f321c00f9451d9",
+    "externalIds": {
+      "PubMedCentral": "12030499",
+      "DOI": "10.3390/pharmaceutics17040459",
+      "CorpusId": 277518459,
+      "PubMed": "40284454"
+    },
+    "url": "https://www.semanticscholar.org/paper/8c3b944717cdb8a936cea64be6f321c00f9451d9",
+    "title": "Predictive Lung- and Spleen-Targeted mRNA Delivery with Biodegradable Ionizable Lipids in Four-Component LNPs",
+    "venue": "Pharmaceutics",
+    "year": 2025,
+    "citationCount": 15,
+    "openAccessPdf": {
+      "url": "https://www.mdpi.com/1999-4923/17/4/459/pdf?version=1743586829",
+      "status": "GOLD",
+      "license": "CCBY",
+      "disclaimer": "Notice: Paper or abstract available at https://pmc.ncbi.nlm.nih.gov/articles/PMC12030499, which is subject to the license by the author or copyright owner provided with this content. Please go to the source to verify the license and copyright information for your use."
+    },
+    "authors": [
+      {
+        "authorId": "2325240445",
+        "name": "Juan Heredero"
+      },
+      {
+        "authorId": "2325240746",
+        "name": "\u00c1lvaro Pe\u00f1a"
+      },
+      {
+        "authorId": "2348011558",
+        "name": "Esther Broset"
+      },
+      {
+        "authorId": "2325240153",
+        "name": "Beatriz Bland\u00edn"
+      },
+      {
+        "authorId": "2268280409",
+        "name": "Diego de Miguel"
+      },
+      {
+        "authorId": "2313989636",
+        "name": "Teresa Alejo"
+      },
+      {
+        "authorId": "2325240150",
+        "name": "Alfonso Toro"
+      },
+      {
+        "authorId": "2325240381",
+        "name": "Elena Mata"
+      },
+      {
+        "authorId": "2292909260",
+        "name": "A. L\u00f3pez-Gav\u00edn"
+      },
+      {
+        "authorId": "1398240655",
+        "name": "Ana Gallego-Lleyda"
+      },
+      {
+        "authorId": "2325239877",
+        "name": "Diego Casabona"
+      },
+      {
+        "authorId": "2249308680",
+        "name": "Ver\u00f3nica Lampaya"
+      },
+      {
+        "authorId": "2249334446",
+        "name": "Ana Larraga"
+      },
+      {
+        "authorId": "2325240720",
+        "name": "Esther P\u00e9rez-Herr\u00e1n"
+      },
+      {
+        "authorId": "2353454249",
+        "name": "David Luna"
+      },
+      {
+        "authorId": "2295188212",
+        "name": "Irene Orera"
+      },
+      {
+        "authorId": "2283007668",
+        "name": "Eduardo Romanos"
+      },
+      {
+        "authorId": "2353480744",
+        "name": "Alba Garc\u00eda"
+      },
+      {
+        "authorId": "2313984027",
+        "name": "Juan Mart\u00ednez-Oliv\u00e1n"
+      },
+      {
+        "authorId": "2325240414",
+        "name": "Javier Gim\u00e9nez-Warren"
+      }
+    ],
+    "abstract": "Background/Objectives: Lipid nanoparticles (LNPs) are leading mRNA delivery vehicles, with ionizable lipids (ILs) as their key component. However, the relationship between the IL structure and LNP endogenous organ-targeting is not well understood. In this study, we developed a novel library of biodegradable ILs featuring beta-propionate linkers, which, when incorporated into a four-component LNP formulation, show excellent extrahepatic selectivity and high protein expression. Methods: We explored the impact of structural modifications in the hydrophobic chains and polar-head groups in the ILs while keeping the linkers unchanged. In vivo results were evaluated to examine how structural changes influence the biodistribution to spleen or lungs. LNP formulations were assessed for their protein expression levels and organ-specific targeting. Additionally, protein corona formation by the best-performing LNPs was examined to provide further mechanistic insights. Results: Organ targeting was significantly influenced by structural changes in the ILs, allowing for precise control of the biodistribution between the spleen and lungs. Branched hydrophobic chains demonstrated a higher propensity for spleen targeting, while modifications in the polar-head group could drastically shift biodistribution from the lung to the spleen. This led to the identification of LNPs\u2019 zeta potential as a key determinant of their extrahepatic targeting properties. Notably, ionizable lipid A3T2C7, also known as CP-LC-1495, displayed strong lung selectivity (97%) and high protein expression in lung tissue (1.21 \u00d7 108 p/s). Similarly, several promising candidates for spleen-targeting LNPs displayed protein expression levels exceeding 1 \u00d7 107 p/s (selectivity >80%). Conclusions: This study elucidates the structure\u2013function relationships of ILs in passive organ-specific mRNA delivery, highlighting how the fine-tuning of hydrophobic chains, polar-head groups, and surface charge (zeta potential) allows for the precise control of LNP endogenous biodistribution, a mechanism influenced by protein corona formation. These findings enable the rational design of targeted LNP systems, enhancing their therapeutic potential for specific organs, such as the spleen and lungs."
+  },
+  {
+    "paperId": "537e941648fae073a56562c90cfcf1364bf3eea5",
+    "externalIds": {
+      "PubMedCentral": "11432440",
+      "DOI": "10.3390/ijms251810166",
+      "CorpusId": 272838041,
+      "PubMed": "39337651"
+    },
+    "url": "https://www.semanticscholar.org/paper/537e941648fae073a56562c90cfcf1364bf3eea5",
+    "title": "Development of mRNA Lipid Nanoparticles: Targeting and Therapeutic Aspects",
+    "venue": "International Journal of Molecular Sciences",
+    "year": 2024,
+    "citationCount": 74,
+    "openAccessPdf": {
+      "url": "https://doi.org/10.3390/ijms251810166",
+      "status": "GOLD",
+      "license": "CCBY",
+      "disclaimer": "Notice: Paper or abstract available at https://pmc.ncbi.nlm.nih.gov/articles/PMC11432440, which is subject to the license by the author or copyright owner provided with this content. Please go to the source to verify the license and copyright information for your use."
+    },
+    "authors": [
+      {
+        "authorId": "2243886353",
+        "name": "Yaping Liu"
+      },
+      {
+        "authorId": "2261981265",
+        "name": "Yingying Huang"
+      },
+      {
+        "authorId": "2323520379",
+        "name": "Guantao He"
+      },
+      {
+        "authorId": "2401443515",
+        "name": "Chun Guo"
+      },
+      {
+        "authorId": "2117142625",
+        "name": "Jinhua Dong"
+      },
+      {
+        "authorId": "2116667520",
+        "name": "Lin Wu"
+      }
+    ],
+    "abstract": "Lipid nanoparticles (LNPs) have emerged as leading non-viral carriers for messenger RNA (mRNA) delivery in clinical applications. Overcoming challenges in safe and effective mRNA delivery to target tissues and cells, along with controlling release from the delivery vehicle, remains pivotal in mRNA-based therapies. This review elucidates the structure of LNPs, the mechanism for mRNA delivery, and the targeted delivery of LNPs to various cells and tissues, including leukocytes, T-cells, dendritic cells, Kupffer cells, hepatic endothelial cells, and hepatic and extrahepatic tissues. Here, we discuss the applications of mRNA\u2013LNP vaccines for the prevention of infectious diseases and for the treatment of cancer and various genetic diseases. Although challenges remain in terms of delivery efficiency, specific tissue targeting, toxicity, and storage stability, mRNA\u2013LNP technology holds extensive potential for the treatment of diseases."
+  },
+  {
+    "paperId": "939178d0941073188521bdbb6f7f019332580d98",
+    "externalIds": {
+      "PubMedCentral": "12538540",
+      "DOI": "10.1002/adhm.202502019",
+      "CorpusId": 280213734,
+      "PubMed": "40685918"
+    },
+    "url": "https://www.semanticscholar.org/paper/939178d0941073188521bdbb6f7f019332580d98",
+    "title": "Suppressing t(4;11) Acute Leukemia by Lipopolymer Nanoparticle Delivery of siRNA Targeting KMT2A::AFF1 with Enhanced Extrahepatic Delivery",
+    "venue": "Advanced Healthcare Materials",
+    "year": 2025,
+    "citationCount": 1,
+    "openAccessPdf": {
+      "url": "",
+      "status": null,
+      "license": "CCBYNCND",
+      "disclaimer": "Notice: Paper or abstract available at https://pmc.ncbi.nlm.nih.gov/articles/PMC12538540, which is subject to the license by the author or copyright owner provided with this content. Please go to the source to verify the license and copyright information for your use."
+    },
+    "authors": [
+      {
+        "authorId": "2281916082",
+        "name": "Mohammad Nasrullah"
+      },
+      {
+        "authorId": "4546481",
+        "name": "R. Kc"
+      },
+      {
+        "authorId": "2079379962",
+        "name": "A. Rajendran"
+      },
+      {
+        "authorId": "2092640391",
+        "name": "Saba Abbasi Dezfouli"
+      },
+      {
+        "authorId": "3903570",
+        "name": "Cezary Kucharski"
+      },
+      {
+        "authorId": "2284527118",
+        "name": "Xiaoyan Jiang"
+      },
+      {
+        "authorId": "2340055748",
+        "name": "Spencer B Gibson"
+      },
+      {
+        "authorId": "2275460150",
+        "name": "Joseph Brandwein"
+      },
+      {
+        "authorId": "2240617785",
+        "name": "O. Heidenreich"
+      },
+      {
+        "authorId": "2276480202",
+        "name": "Hasan Uluda\u011f"
+      }
+    ],
+    "abstract": "Effective siRNA delivery in acute lymphoblastic leukemia (ALL) is limited by preferential hepatic accumulation. To address this, a lipopolymer (PEI\u2010C) is developed by conjugating lipid to polyethylenimine and formulated lipopolymer nanoparticles (LPNPs) via complexation with siRNA. The siRNA delivery efficiency of LPNPs is evaluated in vitro in t(4;11)\u2010positive ALL cells (RS4;11 and SEM) as well as \u201cnormal\u201d peripheral blood mononuclear cells (PBMCs) from human donors and bone marrow stromal cells (BMSCs) from mice. Molecular effects are assessed by quantifying target mRNA silencing and downstream apoptosis. In vivo biodistribution and therapeutic efficacy are examined in mouse models. LPNPs demonstrated significantly higher siRNA uptake than commercial reagents in PBMCs and BMSCs, reaching siRNA uptakes of 87.2% and 93.0% in RS4;11 and SEM cells, respectively. Molecular analyses revealed effective silencing of KMT2A::AFF1 mRNA (\u224880% in RS4;11), accompanied by BCL2 downregulation and increased apoptosis. In vivo, LPNPs showed efficient siRNA biodistribution to leukemia\u2010associated organs (spleen and bone marrow) and significantly reduced leukemia burden in a systemic RS4;11 xenograft mouse model and improved survival. These findings suggest that PEI\u2010C\u2010formulated LPNPs present a promising avenue for therapeutic siRNA delivery in ALL, effectively targeting leukemia\u2010associated organs, and warrant further exploration in clinical studies."
+  },
+  {
+    "paperId": "e5742e08d087613be65b20aadee9647fa900ace8",
+    "externalIds": {
+      "DOI": "10.1002/smll.202304378",
+      "CorpusId": 266181401,
+      "PubMed": "38072809"
+    },
+    "url": "https://www.semanticscholar.org/paper/e5742e08d087613be65b20aadee9647fa900ace8",
+    "title": "In Vivo mRNA CAR T Cell Engineering via Targeted Ionizable Lipid Nanoparticles with Extrahepatic Tropism.",
+    "venue": "Small",
+    "year": 2023,
+    "citationCount": 230,
+    "openAccessPdf": {
+      "url": "",
+      "status": "CLOSED",
+      "license": null,
+      "disclaimer": "Notice: Paper or abstract available at https://api.unpaywall.org/v2/10.1002/smll.202304378?email=<INSERT_YOUR_EMAIL> or https://doi.org/10.1002/smll.202304378, which is subject to the license by the author or copyright owner provided with this content. Please go to the source to verify the license and copyright information for your use."
+    },
+    "authors": [
+      {
+        "authorId": "10735994",
+        "name": "Margaret M. Billingsley"
+      },
+      {
+        "authorId": "39478129",
+        "name": "Ningqiang Gong"
+      },
+      {
+        "authorId": "41022620",
+        "name": "Alvin J. Mukalel"
+      },
+      {
+        "authorId": "2260509556",
+        "name": "Ajay S. Thatte"
+      },
+      {
+        "authorId": "1403594528",
+        "name": "Rakan El-Mayta"
+      },
+      {
+        "authorId": "2152136289",
+        "name": "Savan K Patel"
+      },
+      {
+        "authorId": "1441586707",
+        "name": "Ann E. Metzloff"
+      },
+      {
+        "authorId": "87378107",
+        "name": "K. Swingle"
+      },
+      {
+        "authorId": "2256557416",
+        "name": "Xuexiang Han"
+      },
+      {
+        "authorId": "2152089486",
+        "name": "Lulu Xue"
+      },
+      {
+        "authorId": "150904098",
+        "name": "Alex G. Hamilton"
+      },
+      {
+        "authorId": "2077470568",
+        "name": "Hannah C. Safford"
+      },
+      {
+        "authorId": "11903947",
+        "name": "M. Alameh"
+      },
+      {
+        "authorId": "2264817043",
+        "name": "T. Papp"
+      },
+      {
+        "authorId": "3506243",
+        "name": "H. Parhiz"
+      },
+      {
+        "authorId": "2269392198",
+        "name": "Drew Weissman"
+      },
+      {
+        "authorId": "2241736330",
+        "name": "Michael J. Mitchell"
+      }
+    ],
+    "abstract": "With six therapies approved by the Food and Drug Association, chimeric antigen receptor (CAR) T cells have reshaped cancer immunotherapy. However, these therapies rely on ex vivo viral transduction to induce permanent CAR expression in T cells, which contributes to high production costs and long-term side effects. Thus, this work aims to develop an in vivo CAR T cell engineering platform to streamline production while using mRNA to induce transient, tunable CAR expression. Specifically, an ionizable lipid nanoparticle (LNP) is utilized as these platforms have demonstrated clinical success in nucleic acid delivery. Though LNPs often accumulate in the liver, the LNP platform used here achieves extrahepatic transfection with enhanced delivery to the spleen, and it is further modified via antibody conjugation (Ab-LNPs) to target pan-T cell markers. The in vivo evaluation of these Ab-LNPs confirms that targeting is necessary for potent T cell transfection. When using these Ab-LNPs for the delivery of CAR mRNA, antibody and dose-dependent CAR expression and cytokine release are observed along with B cell depletion of up to 90%. In all, this work conjugates antibodies to LNPs with extrahepatic tropism, evaluates pan-T cell markers, and develops Ab-LNPs capable of generating functional CAR T cells in vivo."
+  },
+  {
+    "paperId": "3f39315919159385c8f6f904d04e1ea789b6a9e0",
+    "externalIds": {
+      "DOI": "10.1002/anie.202405444",
+      "CorpusId": 269237935,
+      "PubMed": "38637320"
+    },
+    "url": "https://www.semanticscholar.org/paper/3f39315919159385c8f6f904d04e1ea789b6a9e0",
+    "title": "One-Component Cationic Lipids for Systemic mRNA Delivery to Splenic T Cells.",
+    "venue": "Angewandte Chemie",
+    "year": 2024,
+    "citationCount": 73,
+    "openAccessPdf": {
+      "url": "",
+      "status": "CLOSED",
+      "license": null,
+      "disclaimer": "Notice: Paper or abstract available at https://api.unpaywall.org/v2/10.1002/anie.202405444?email=<INSERT_YOUR_EMAIL> or https://doi.org/10.1002/anie.202405444, which is subject to the license by the author or copyright owner provided with this content. Please go to the source to verify the license and copyright information for your use."
+    },
+    "authors": [
+      {
+        "authorId": "2297470704",
+        "name": "Xinyue Zhang"
+      },
+      {
+        "authorId": "2297353866",
+        "name": "Kexin Su"
+      },
+      {
+        "authorId": "2297402313",
+        "name": "Shiqi Wu"
+      },
+      {
+        "authorId": "2220595276",
+        "name": "Lixin Lin"
+      },
+      {
+        "authorId": "2275124697",
+        "name": "Shun He"
+      },
+      {
+        "authorId": "2297889629",
+        "name": "Xinxin Yan"
+      },
+      {
+        "authorId": "2297422729",
+        "name": "Lu Shi"
+      },
+      {
+        "authorId": "2275344789",
+        "name": "Shuai Liu"
+      }
+    ],
+    "abstract": "Unlocking the full potential of mRNA immunotherapy necessitates targeted delivery to specific cell subsets in the spleen. Four-component lipid nanoparticles (LNPs) utilized in numerous clinical trials are primarily limited in hepatocyte and muscular targeting, highlighting the imperative demand for targeted and simplified non-liver mRNA delivery systems. Herein, we report the rational design of one-component ionizable cationic lipids to selectively deliver mRNA to the spleen and T cells with high efficacy. Unlike the tertiary amine-based ionizable lipids involved in LNPs, the proposed cationic lipids rich in secondary amines can efficiently deliver mRNA both in vitro and in vivo as the standalone carriers. Furthermore, these vectors facilitate efficacious mRNA delivery to the T cell subsets following intravenous administration, demonstrating substantial potential for advancing immunotherapy applications. This straightforward strategy extends the utility of lipid family for extrahepatic mRNA delivery, offering new insights into vector development beyond LNPs to further the field of precise mRNA therapy."
+  },
+  {
+    "paperId": "f3398d40281b89860d00000f1095c6080677c847",
+    "externalIds": {
+      "PubMedCentral": "13203310",
+      "DOI": "10.3390/biomedicines14050957",
+      "CorpusId": 287705026,
+      "PubMed": "42193283"
+    },
+    "url": "https://www.semanticscholar.org/paper/f3398d40281b89860d00000f1095c6080677c847",
+    "title": "Functionalized Lipid Nanoparticles for Targeted RNA Delivery in Immune and Inflammatory Diseases",
+    "venue": "Biomedicines",
+    "year": 2026,
+    "citationCount": 1,
+    "openAccessPdf": {
+      "url": "https://doi.org/10.3390/biomedicines14050957",
+      "status": "GOLD",
+      "license": "CCBY",
+      "disclaimer": "Notice: Paper or abstract available at https://pmc.ncbi.nlm.nih.gov/articles/PMC13203310, which is subject to the license by the author or copyright owner provided with this content. Please go to the source to verify the license and copyright information for your use."
+    },
+    "authors": [
+      {
+        "authorId": "15552496",
+        "name": "Y. Jang"
+      },
+      {
+        "authorId": "2242072170",
+        "name": "H. Song"
+      },
+      {
+        "authorId": "14652244",
+        "name": "M. Shim"
+      },
+      {
+        "authorId": "2331701397",
+        "name": "Yoosoo Yang"
+      }
+    ],
+    "abstract": "Lipid nanoparticles (LNPs) have become an important platform for the delivery of RNA therapeutics, including messenger RNA (mRNA) and small interfering RNA (siRNA). However, most clinically approved LNP formulations exhibit strong liver tropism following systemic administration, which limits efficient delivery to extrahepatic tissues. This inherent biodistribution profile has therefore been recognized as a key challenge for expanding the therapeutic applications of RNA nanomedicine. Recent efforts have focused on engineering functionalized LNP systems to improve delivery specificity beyond the liver. Surface modification with targeting ligands\u2014such as antibodies, peptides, and nucleic acid aptamers\u2014can promote receptor-mediated uptake by specific immune cell populations, including macrophages, dendritic cells and T lymphocytes. In parallel, advances in lipid design have improved intracellular RNA delivery by facilitating endosomal escape. These developments have broadened the potential use of RNA nanomedicine for inflammatory disorders, including autoimmune diseases, neuroinflammation, and cardiovascular inflammation. Functionalized LNPs are also being investigated for in vivo engineering of immune cells. This review summarizes current strategies for designing functionalized LNP systems, highlights their emerging applications in immune and inflammatory diseases, and discusses key challenges for clinical translation."
+  },
+  {
+    "paperId": "59fb23cf9e69d9a384e5bd1fed6213a8b80ed78e",
+    "externalIds": {
+      "PubMedCentral": "12217163",
+      "DOI": "10.1038/s41467-025-60959-z",
+      "CorpusId": 270259080,
+      "PubMed": "40595685"
+    },
+    "url": "https://www.semanticscholar.org/paper/59fb23cf9e69d9a384e5bd1fed6213a8b80ed78e",
+    "title": "Cellular and biophysical barriers to lipid nanoparticle mediated delivery of RNA to the cytosol",
+    "venue": "bioRxiv",
+    "year": 2024,
+    "citationCount": 63,
+    "openAccessPdf": {
+      "url": "https://www.nature.com/articles/s41467-025-60959-z.pdf",
+      "status": "GOLD",
+      "license": "CCBY",
+      "disclaimer": "Notice: Paper or abstract available at https://pmc.ncbi.nlm.nih.gov/articles/PMC12217163, which is subject to the license by the author or copyright owner provided with this content. Please go to the source to verify the license and copyright information for your use."
+    },
+    "authors": [
+      {
+        "authorId": "2086715611",
+        "name": "Johanna M. Johansson"
+      },
+      {
+        "authorId": "1630882632",
+        "name": "Hampus Du Rietz"
+      },
+      {
+        "authorId": "89794220",
+        "name": "Hampus Hedlund"
+      },
+      {
+        "authorId": "2209686160",
+        "name": "Hanna C. Eriksson"
+      },
+      {
+        "authorId": "2304767660",
+        "name": "Erik Oude Blenke"
+      },
+      {
+        "authorId": "91014610",
+        "name": "A. Pote"
+      },
+      {
+        "authorId": "100516286",
+        "name": "S. Harun"
+      },
+      {
+        "authorId": "6097329",
+        "name": "P. Nordenfelt"
+      },
+      {
+        "authorId": "1850043",
+        "name": "L. Lindfors"
+      },
+      {
+        "authorId": "4562160",
+        "name": "Anders Wittrup"
+      }
+    ],
+    "abstract": "Lipid nanoparticle (LNP) formulation was the first approved delivery strategy for liver-targeted siRNA delivery and currently represent the most advanced platform for delivery of therapeutic mRNA in clinical use, after the approval of mRNA-based vaccines against the SARS-CoV-2 coronavirus. Still, poor efficiency of LNPs to promote cytosolic delivery of both mRNA and siRNA after internalization by target cells limits their potency and thus clinical application as RNA delivery vehicles \u2013 especially in extrahepatic tissues and tumors. It is still unclear how endosomal escape of LNP-delivered RNA cargo occurs, and why only a minute proportion of all therapeutic molecules reach the cytoplasm. Here, we explored the intracellular sorting, integrity and endosomal escape of both mRNA and siRNA loaded LNPs to characterize the nature of RNA release from endosomal compartments and pinpoint current bottlenecks. Using live-cell imaging and super-resolution microscopy of LNPs with fluorescently labeled RNA payload, we identify multiple distinct steps of substantial inefficiency in the cytosolic delivery of nucleic acid cargoes. We demonstrate that membrane damages marked by recruitment of galectins are conducive to cytosolic RNA delivery, while membrane perturbations recruiting the ESCRT machinery do not permit endosomal escape. By quantitative single-vesicle analysis, we show that only a small fraction of the nucleic acid cargo contained in the endosome is released to the cytosol upon LNP-triggered membrane damage detected by galectins. Unexpectedly, we also observe that only a subset of damaged endosomes contain RNA payload. Through FRET and super-resolution microscopy, using LNPs formulated with both fluorescently labeled ionizable lipid (MC3-BODIPY) and RNA, we find that RNA cargo and ionizable lipid segregate during endosomal sorting \u2013 both within single endosomes and to different endosomal compartments. Finally, we visualize localized MC3-BODIPY enrichment in endosomal membranes and membrane damage in direct proximity to siRNA-LNPs tethered to the luminal vesicle membrane. Taken together, this work has identified multiple mechanistically distinct barriers limiting intracellular RNA delivery by LNPs."
+  },
+  {
+    "paperId": "8f9fc1d48a18d06685d3f852bae7e27af428a6a3",
+    "externalIds": {
+      "PubMedCentral": "12706282",
+      "DOI": "10.1093/noajnl/vdaf236.041",
+      "CorpusId": 283916788
+    },
+    "url": "https://www.semanticscholar.org/paper/8f9fc1d48a18d06685d3f852bae7e27af428a6a3",
+    "title": "10128-ET-1 Development of Dual-Delivery Nanoparticles for Malignant Glioma: Tumor-Targeted and BBB-Penetrating siRNA/mRNA Therapeutics",
+    "venue": "Neuro-Oncology Advances",
+    "year": 2025,
+    "citationCount": 0,
+    "openAccessPdf": {
+      "url": "",
+      "status": null,
+      "license": null,
+      "disclaimer": "Notice: Paper or abstract available at https://pmc.ncbi.nlm.nih.gov/articles/PMC12706282, which is subject to the license by the author or copyright owner provided with this content. Please go to the source to verify the license and copyright information for your use."
+    },
+    "authors": [
+      {
+        "authorId": "6457382",
+        "name": "T. Hiu"
+      },
+      {
+        "authorId": "1410811002",
+        "name": "Ayaka Matsuo"
+      },
+      {
+        "authorId": "2257559754",
+        "name": "Makoto Matsumoto"
+      },
+      {
+        "authorId": "2111512842",
+        "name": "Hikaru Nakamura"
+      },
+      {
+        "authorId": "2333066087",
+        "name": "Shigeru Kawakami"
+      },
+      {
+        "authorId": "2316707655",
+        "name": "Takayuki Matsuo"
+      }
+    ],
+    "abstract": "Abstract Nucleic acid therapeutics, which allow for specific regulation of target genes, represent a promising strategy for cancer treatment. However, their clinical application to brain tumors remains limited, primarily due to the presence of the blood-brain barrier (BBB), a physiological obstacle that hinders drug delivery. In this study, we aimed to establish a novel dual drug delivery system (DDS) that enables both efficient brain penetration and tumor cell-specific targeting by employing a two-pronged approach using mRNA and siRNA. [1] Development of tumor-targeted siRNA-LNPs:We constructed lipid nanoparticles (LNPs) encapsulating VEGF-targeting siRNA, further modified with Fc-binding peptide lipids (FcBP) and anti-PD-L1 antibodies. These modifications significantly enhanced binding and growth-inhibitory effects against murine glioma cells (GL261). In a subcutaneous tumor model, the treatment resulted in a significant reduction in tumor volume and bioluminescence signals, demonstrating the therapeutic potential of this molecularly targeted DDS. [2] Brain delivery strategy using FUS and mRNA-LNPs: Luciferase mRNA-encapsulated LNPs were intravenously administered to normal mice, followed by focused ultrasound (FUS) irradiation in combination with microbubbles (MB), to transiently and selectively open the BBB. As a result, gene expression in the irradiated brain region was approximately 20-fold higher than in the non-irradiated side, and mRNA delivery into brain parenchymal cells was confirmed. This study highlights a hybrid DDS platform that combines physical BBB opening (via FUS) and molecular targeting (via antibody-modified LNPs), and proposes a novel nucleic acid-based therapeutic strategy for malignant gliomas, particularly those with recurrence or resistance to conventional therapies."
+  },
+  {
+    "paperId": "92c72ac32a9c64f26ea085ec2b6d5ae47229714c",
+    "externalIds": {
+      "PubMedCentral": "12895399",
+      "DOI": "10.1021/acsbiomaterials.5c00631",
+      "CorpusId": 279984834,
+      "PubMed": "40631444"
+    },
+    "url": "https://www.semanticscholar.org/paper/92c72ac32a9c64f26ea085ec2b6d5ae47229714c",
+    "title": "Reducing Complexity in Lipid Nanoparticles: Three-Component Zwitterionic Amino Lipids for Targeted Extrahepatic mRNA Delivery",
+    "venue": "ACS Biomaterials Science & Engineering",
+    "year": 2025,
+    "citationCount": 4,
+    "openAccessPdf": {
+      "url": "",
+      "status": null,
+      "license": null,
+      "disclaimer": "Notice: Paper or abstract available at https://pmc.ncbi.nlm.nih.gov/articles/PMC12895399, which is subject to the license by the author or copyright owner provided with this content. Please go to the source to verify the license and copyright information for your use."
+    },
+    "authors": [
+      {
+        "authorId": "2275140108",
+        "name": "Joshua Robinson"
+      },
+      {
+        "authorId": "2306327190",
+        "name": "Di Zhang"
+      },
+      {
+        "authorId": "2334539605",
+        "name": "Pratima Basak"
+      },
+      {
+        "authorId": "30417406",
+        "name": "Amogh Vaidya"
+      },
+      {
+        "authorId": "2266268092",
+        "name": "Sumanta Chatterjee"
+      },
+      {
+        "authorId": "2302837831",
+        "name": "Xiaoyan Bian"
+      },
+      {
+        "authorId": "2306079688",
+        "name": "Minjeong Kim"
+      },
+      {
+        "authorId": "2266233252",
+        "name": "Xizhen Lian"
+      },
+      {
+        "authorId": "2149147396",
+        "name": "Yehui Sun"
+      },
+      {
+        "authorId": "2275205798",
+        "name": "Erick Guerrero"
+      },
+      {
+        "authorId": "2266425660",
+        "name": "Xu Wang"
+      },
+      {
+        "authorId": "2152576925",
+        "name": "Sang M. Lee"
+      },
+      {
+        "authorId": "2121296017",
+        "name": "Shuai Liu"
+      },
+      {
+        "authorId": "150146245",
+        "name": "J. Gong"
+      },
+      {
+        "authorId": "2300039413",
+        "name": "Mayank Tiwari"
+      },
+      {
+        "authorId": "1500440198",
+        "name": "Godwin K Babanyinah"
+      },
+      {
+        "authorId": "39999239",
+        "name": "M. Stefan"
+      },
+      {
+        "authorId": "3701844",
+        "name": "L. Farbiak"
+      },
+      {
+        "authorId": "2400765",
+        "name": "D. Siegwart"
+      }
+    ],
+    "abstract": "Simplicity and chemical expansion of lipid nanoparticles (LNPs) offer the potential for increased therapeutic benefit of mRNA vaccines and medicines. 3-Component Zwitterionic Amino Lipid (ZAL) LNPs offer simplicity and varied organ target scope, though there is a lack of chemical and formulation exploration with this class of lipids. Herein, we report the synthesis and evaluation of ZALs with improved biocompatibility, enhanced mRNA delivery efficacy, and extrahepatic organ-specific delivery through derivation at the secondary hydroxyl position with opivalate, chloride, bromide, and acetate. Evaluation of these novel ZAL molecules revealed organ-specific delivery trends, changes in delivery efficacy, and an engineering framework for chemically modifying lipid components that correlate with each specific chemical modification. Furthermore, the most efficacious ZAL derivative, which contains an acetate modification, displayed enhanced immune cell transfection in an organ-specific manner. This study provides a roadmap for reducing the complexity of LNPs by decreasing the number of lipid components in an LNP from the canonical 4 lipids to 3 lipids and expands the chemical scope of LNPs capable of mediating extrahepatic delivery."
+  },
+  {
+    "paperId": "f2fc87c8a1d98ab895b8863725d0ada894cd955a",
+    "externalIds": {
+      "PubMedCentral": "10601965",
+      "DOI": "10.1021/acs.bioconjchem.3c00019",
+      "CorpusId": 257856231,
+      "PubMed": "36996808"
+    },
+    "url": "https://www.semanticscholar.org/paper/f2fc87c8a1d98ab895b8863725d0ada894cd955a",
+    "title": "Lysine-Derived Charge-Altering Releasable Transporters: Targeted Delivery of mRNA and siRNA to the Lungs",
+    "venue": "Bioconjugate chemistry",
+    "year": 2023,
+    "citationCount": 17,
+    "openAccessPdf": {
+      "url": "",
+      "status": null,
+      "license": null,
+      "disclaimer": "Notice: Paper or abstract available at https://pmc.ncbi.nlm.nih.gov/articles/PMC10601965, which is subject to the license by the author or copyright owner provided with this content. Please go to the source to verify the license and copyright information for your use."
+    },
+    "authors": [
+      {
+        "authorId": "3531341",
+        "name": "Timothy R. Blake"
+      },
+      {
+        "authorId": "6438723",
+        "name": "O. Haabeth"
+      },
+      {
+        "authorId": "2306555163",
+        "name": "Adrienne Sallets"
+      },
+      {
+        "authorId": "33831075",
+        "name": "Rebecca L. McClellan"
+      },
+      {
+        "authorId": "10000521",
+        "name": "Trevor J Del Castillo"
+      },
+      {
+        "authorId": "1404332422",
+        "name": "J. Vilches-Moure"
+      },
+      {
+        "authorId": "15550364",
+        "name": "Wilson C Ho"
+      },
+      {
+        "authorId": "2048046",
+        "name": "P. Wender"
+      },
+      {
+        "authorId": "2172753846",
+        "name": "Ronald Levy"
+      },
+      {
+        "authorId": "6704390",
+        "name": "R. Waymouth"
+      }
+    ],
+    "abstract": "Targeted delivery of nucleic acid therapeutics to the lungs could transform treatment options for pulmonary disease. We have previously developed oligomeric charge-altering releasable transporters (CARTs) for in vivo mRNA transfection and demonstrated their efficacy for use in mRNA-based cancer vaccination and local immunomodulatory therapies against murine tumors. While our previously reported glycine-based CART-mRNA complexes (G-CARTs/mRNA) show selective protein expression in the spleen (mouse, >99%), here, we report a new lysine-derived CART-mRNA complex (K-CART/mRNA) that, without additives or targeting ligands, shows selective protein expression in the lungs (mouse, >90%) following systemic IV administration. We further show that by delivering siRNA using the K-CART, we can significantly decrease expression of a lung-localized reporter protein. Blood chemistry and organ pathology studies demonstrate that K-CARTs are safe and well-tolerated. We report on the new step economical, organocatalytic synthesis (two steps) of functionalized polyesters and oligo-carbonate-co-\u03b1-aminoester K-CARTs from simple amino acid and lipid-based monomers. The ability to direct protein expression selectively in the spleen or lungs by simple, modular changes to the CART structure opens fundamentally new opportunities in research and gene therapy."
+  },
+  {
+    "paperId": "67f8bc1816fe3863b952c6ae02064a143f948090",
+    "externalIds": {
+      "PubMedCentral": "12719227",
+      "DOI": "10.1016/j.mtbio.2025.102584",
+      "CorpusId": 283236416,
+      "PubMed": "41438702"
+    },
+    "url": "https://www.semanticscholar.org/paper/67f8bc1816fe3863b952c6ae02064a143f948090",
+    "title": "mRNA delivery systems 2.0: Engineering extrahepatic delivery for non-vaccine therapeutics",
+    "venue": "Materials Today Bio",
+    "year": 2025,
+    "citationCount": 11,
+    "openAccessPdf": {
+      "url": "",
+      "status": null,
+      "license": null,
+      "disclaimer": "Notice: Paper or abstract available at https://pmc.ncbi.nlm.nih.gov/articles/PMC12719227, which is subject to the license by the author or copyright owner provided with this content. Please go to the source to verify the license and copyright information for your use."
+    },
+    "authors": [
+      {
+        "authorId": "2298038885",
+        "name": "Manoj Dalabehera"
+      },
+      {
+        "authorId": "2268496175",
+        "name": "A. Ghosh"
+      },
+      {
+        "authorId": "2290271867",
+        "name": "Satyajit Mohanty"
+      },
+      {
+        "authorId": "2393996067",
+        "name": "Dinesh Kumar Chellapan"
+      },
+      {
+        "authorId": "2355639446",
+        "name": "Shubham K. Chaudhari"
+      },
+      {
+        "authorId": "2198957161",
+        "name": "Y. Ale"
+      },
+      {
+        "authorId": "2313717628",
+        "name": "Neelam Poonia"
+      },
+      {
+        "authorId": "2313712970",
+        "name": "Rudra Narayan Subudhi"
+      },
+      {
+        "authorId": "2355590652",
+        "name": "Manmeet Kaur Khanna"
+      },
+      {
+        "authorId": "2249730964",
+        "name": "Hae Gyun Lim"
+      }
+    ],
+    "abstract": "Recent breakthroughs in mRNA therapeutics have transformed vaccine development, largely powered by lipid nanoparticle (LNP) based delivery systems. However, these systems exhibit a strong hepatic tropism, making them suboptimal for targeting extrahepatic organs such as the brain, lungs, pancreas, heart, and tumor tissues critical to non-vaccine therapeutic applications. This review explores next-generation delivery strategies designed to overcome liver centric distribution. We highlight emerging platforms, including pKa-tuned LNPs, polymeric and peptide-based carriers, exosomes, and biomimetic vesicles, along with physical enhancement techniques such as ultrasound, laser, and MRI-guided systems. Nonetheless, researchers are achieving more precise delivery to deep seated tissues by integrating these technologies with targeted ligands and responsive release mechanisms. Applications in oncology, cardiology, pulmonology, and neurology are discussed with a focus on preclinical and early clinical outcomes. Regulatory considerations, including immunogenicity, biodistribution, and manufacturing scalability, are also reviewed. Ultimately, this article presents a forward-looking perspective on engineering safe, organ specific mRNA delivery platforms beyond the liver, enabling the advancement of precision therapeutics. This review will provide a timely and comprehensive overview of innovative strategies to overcome these challenges, focusing on non-vaccine applications."
+  },
+  {
+    "paperId": "3855955ec3b9b91d7b9b1998a63b2e4761528e2a",
+    "externalIds": {
+      "PubMedCentral": "12612904",
+      "DOI": "10.1021/acsomega.5c05346",
+      "CorpusId": 282806367,
+      "PubMed": "41244463"
+    },
+    "url": "https://www.semanticscholar.org/paper/3855955ec3b9b91d7b9b1998a63b2e4761528e2a",
+    "title": "Aminoglycoside Drugs as Adjuvants to Enhance siRNA/mRNA Delivery by Lipid Nanoparticles",
+    "venue": "ACS Omega",
+    "year": 2025,
+    "citationCount": 1,
+    "openAccessPdf": {
+      "url": "",
+      "status": null,
+      "license": "CCBY",
+      "disclaimer": "Notice: Paper or abstract available at https://pmc.ncbi.nlm.nih.gov/articles/PMC12612904, which is subject to the license by the author or copyright owner provided with this content. Please go to the source to verify the license and copyright information for your use."
+    },
+    "authors": [
+      {
+        "authorId": "2275292220",
+        "name": "Xue-Long Sun"
+      },
+      {
+        "authorId": "2354198823",
+        "name": "Lei Qian"
+      }
+    ],
+    "abstract": "Nucleic acid drugs (such as siRNA and mRNA) hold broad prospects in disease treatment, but their clinical application is limited by low delivery efficiency, particularly due to insufficient lysosomal escape. This study aims to explore aminoglycoside small-molecule drugs as adjuvants to enhance the lysosomal escape efficiency of lipid nanoparticles (LNPs) for nucleic acid drug delivery, thereby improving therapeutic effects and providing new strategies for gene therapy. In this study, five FDA-approved aminoglycoside small molecules were selected as adjuvants to enhance the lysosomal escape of LNPs/siRNA and improve the siRNA delivery effect. In vitro results confirmed that aminoglycoside drugs significantly enhanced the delivery efficiency of LNPs/siRNA, reducing luciferase expression to as low as 22.15%. Mechanistic studies revealed that kanamycin sulfate markedly reduced siRNA colocalization with lysosomes and destabilized lysosomal membranes under acidic conditions (pH 6.2), increasing hemolytic effects by 3.6-fold. Additionally, kanamycin sulfate significantly improved the silencing efficacy of LNPs/siEGFR on EGFR mRNA and protein expression and boosted LNPs/mSARS-CoV-2-mediated spike protein expression. Therefore, aminoglycoside small molecules (particularly kanamycin) can effectively enhance nucleic acid delivery efficiency by disrupting endosomal membrane structures, providing a novel adjuvant strategy for the clinical application of siRNA and mRNA drugs."
+  },
+  {
+    "paperId": "3f560660037f76d3f4c2957e325428e397992cd9",
+    "externalIds": {
+      "PubMedCentral": "12800395",
+      "DOI": "10.1016/j.omtn.2025.102801",
+      "CorpusId": 283808385,
+      "PubMed": "41541269"
+    },
+    "url": "https://www.semanticscholar.org/paper/3f560660037f76d3f4c2957e325428e397992cd9",
+    "title": "Ribofuranose-based GalNAc-conjugated siRNA enhances the liver-targeted delivery and elicits robust RNAi-mediated gene silencing",
+    "venue": "Molecular Therapy: Nucleic Acids",
+    "year": 2025,
+    "citationCount": 3,
+    "openAccessPdf": {
+      "url": "",
+      "status": null,
+      "license": null,
+      "disclaimer": "Notice: Paper or abstract available at https://pmc.ncbi.nlm.nih.gov/articles/PMC12800395, which is subject to the license by the author or copyright owner provided with this content. Please go to the source to verify the license and copyright information for your use."
+    },
+    "authors": [
+      {
+        "authorId": "2356123908",
+        "name": "Ze-Ao Huang"
+      },
+      {
+        "authorId": "2384486833",
+        "name": "Zhen-Min Li"
+      },
+      {
+        "authorId": "2385688913",
+        "name": "Jie Wang"
+      },
+      {
+        "authorId": "2356149726",
+        "name": "Guang-Shen Ji"
+      },
+      {
+        "authorId": "2384702416",
+        "name": "Zhong-Cai Gao"
+      },
+      {
+        "authorId": "2398625726",
+        "name": "Ai-Fu Chen"
+      },
+      {
+        "authorId": "2358416526",
+        "name": "Zhi-Kang Tian"
+      },
+      {
+        "authorId": "2384814397",
+        "name": "Fei Yu"
+      },
+      {
+        "authorId": "2385500406",
+        "name": "Geng-Shen Song"
+      }
+    ],
+    "abstract": "The N-acetylgalactosamine (GalNAc)-conjugate delivery platform has emerged as a pivotal enabling technology for the clinical translation of oligonucleotide therapeutics. The development of GalNAc-conjugated small interfering RNA (siRNA) therapeutics has been significantly advanced through structural optimization of the delivery platform. Here, we report that a series of ribofuranose- and deoxyribofuranose-incorporated GalNAc-siRNA conjugates targeting proprotein convertase subtilisin/kexin type 9 (PCSK9) mRNA were synthesized and evaluated for their bioactivities and tissue distribution in vivo. When compared in detail with inclisiran, an approved siRNA drug that incorporates a triantennary GalNAc construct (designated L96) for targeted liver delivery, inc-G5, which contains ribofuranose ring within its GalNAc cluster, exhibits superior efficacy. Additionally, pharmacokinetic (PK) analysis in rats revealed that G5-conjugated siRNAs preferentially accumulate in the liver, have an extended elimination half-life, and exhibit the highest liver-to-kidney ratio, which indicated excellent liver delivery specificity. Moreover, the synthesis of G5 can be readily scaled up to the kilogram level, thereby providing robust support for the production of oligonucleotide drugs. These results underscore the critical application of ribofuranose integration in GalNAc-siRNA drugs, establishing G5 as a promising liver-targeted delivery moiety for siRNAs to achieve sustained gene silencing with improved hepatic specificity and therapeutic durability."
+  },
+  {
+    "paperId": "884cd8e57d565a1239e40df86218b111f03722a8",
+    "externalIds": {
+      "PubMedCentral": "12049435",
+      "DOI": "10.1038/s41467-025-58523-w",
+      "CorpusId": 278313352,
+      "PubMed": "40319025"
+    },
+    "url": "https://www.semanticscholar.org/paper/884cd8e57d565a1239e40df86218b111f03722a8",
+    "title": "Liposomal lipid nanoparticles for extrahepatic delivery of mRNA",
+    "venue": "Nature Communications",
+    "year": 2025,
+    "citationCount": 65,
+    "openAccessPdf": {
+      "url": "https://doi.org/10.1038/s41467-025-58523-w",
+      "status": "GOLD",
+      "license": "CCBYNCND",
+      "disclaimer": "Notice: Paper or abstract available at https://pmc.ncbi.nlm.nih.gov/articles/PMC12049435, which is subject to the license by the author or copyright owner provided with this content. Please go to the source to verify the license and copyright information for your use."
+    },
+    "authors": [
+      {
+        "authorId": "2290039517",
+        "name": "M. H. Cheng"
+      },
+      {
+        "authorId": "2271846427",
+        "name": "Yao Zhang"
+      },
+      {
+        "authorId": "2272096728",
+        "name": "Kevin Fox"
+      },
+      {
+        "authorId": "37316832",
+        "name": "Jerry Leung"
+      },
+      {
+        "authorId": "2161601499",
+        "name": "Colton Strong"
+      },
+      {
+        "authorId": "2269029722",
+        "name": "E. Kang"
+      },
+      {
+        "authorId": "2265006346",
+        "name": "Yihang Chen"
+      },
+      {
+        "authorId": "2383265448",
+        "name": "Michelle Tong"
+      },
+      {
+        "authorId": "1946679738",
+        "name": "Hemashree Bommadevara"
+      },
+      {
+        "authorId": "2265178209",
+        "name": "Eric Jan"
+      },
+      {
+        "authorId": "2359037082",
+        "name": "Owen Yuk Long Ip"
+      },
+      {
+        "authorId": "2295570758",
+        "name": "Cristina Rodr\u00edguez-Rodr\u00edguez"
+      },
+      {
+        "authorId": "8931602",
+        "name": "K. Saatchi"
+      },
+      {
+        "authorId": "3842334",
+        "name": "U. H\u00e4feli"
+      },
+      {
+        "authorId": "2359038195",
+        "name": "Amir Abdolahzadeh"
+      },
+      {
+        "authorId": "2265106001",
+        "name": "D. Witzigmann"
+      },
+      {
+        "authorId": "2265177282",
+        "name": "P. Cullis"
+      }
+    ],
+    "abstract": "Long-circulating, transfection-competent lipid nanoparticle (LNP)-mRNA delivery systems are critical for achieving efficient transfection in extrahepatic tissues. Here we investigate the properties of LNP mRNA systems containing high proportions of bilayer forming lipids, using equimolar egg sphingomyelin and cholesterol as the bilayer-forming components. We show that LNP mRNA systems prepared at bilayer lipid to ionizable lipid molar ratios of 4-0.67 exhibit high mRNA encapsulation efficiencies (90\u2013100%) and excellent transfection potencies in vitro. Systems with bilayer lipid to ionizable lipid molar ratios equating to 4 exhibit a liposomal morphology with a solid core suspended in an aqueous interior surrounded by a lipid bilayer. These liposomal LNPs exhibit longer circulation lifetimes than LNP systems with Onpattro-like lipid compositions and have enhanced extrahepatic transfection properties. The prolonged blood circulation lifetime is attributed to reduced plasma protein adsorption. The transfection competency of liposomal LNP systems is attributed to export of the solid core containing mRNA from the LNP as the endosomal pH is lowered. Long-circulating, transfection-competent LNP-mRNA systems are key for effective extrahepatic delivery. Here, authors show that LNPs with high bilayer lipid ratios yield high mRNA encapsulation, prolonged circulation, and enhanced transfection in extrahepatic tissues."
+  },
+  {
+    "paperId": "3a94e00ca042304ff5473d4579caae1ff92dd50b",
+    "externalIds": {
+      "DOI": "10.1039/d5bm00363f",
+      "CorpusId": 277353248,
+      "PubMed": "40178804"
+    },
+    "url": "https://www.semanticscholar.org/paper/3a94e00ca042304ff5473d4579caae1ff92dd50b",
+    "title": "GalNAc-functionalized metal-organic frameworks for targeted siRNA delivery: enhancing survivin silencing in hepatocellular carcinoma.",
+    "venue": "Biomaterials Science",
+    "year": 2025,
+    "citationCount": 6,
+    "openAccessPdf": {
+      "url": "",
+      "status": null,
+      "license": null,
+      "disclaimer": "Notice: Paper or abstract available at https://api.unpaywall.org/v2/10.1039/d5bm00363f?email=<INSERT_YOUR_EMAIL> or https://doi.org/10.1039/d5bm00363f, which is subject to the license by the author or copyright owner provided with this content. Please go to the source to verify the license and copyright information for your use."
+    },
+    "authors": [
+      {
+        "authorId": "97128019",
+        "name": "Xiuyan Wan"
+      },
+      {
+        "authorId": "2241391608",
+        "name": "Yingli Ge"
+      },
+      {
+        "authorId": "2302120691",
+        "name": "Wanqi Zhu"
+      },
+      {
+        "authorId": "2241413544",
+        "name": "Jie Zhang"
+      },
+      {
+        "authorId": "47538388",
+        "name": "W. Pan"
+      },
+      {
+        "authorId": "2310751743",
+        "name": "Na Li"
+      },
+      {
+        "authorId": "145926966",
+        "name": "B. Tang"
+      }
+    ],
+    "abstract": "Small interfering RNA (siRNA) is a potent method for silencing survivin mRNA within cells, offering a promising option for treating hepatocellular carcinoma (HCC) since survivin is specifically overexpressed in HCC cells. However, the clinical use of gene therapy with siRNA is limited by factors such as rapid enzyme degradation, low cell uptake, and non-specific distribution in the body. In this study, we investigate the use of a specially selected metal-organic framework (MOF) to encapsulate siRNA, with the aim of silencing survivin mRNA in HCC cells and reducing the survivin protein level. The MOF was functionalized with triantennary N-acetylgalactosamine (GalNAc), which has high affinity for asialoglycoprotein receptors that are overexpressed in HCC cells. Both in vitro and in vivo experiments showed that the GalNAc-decorated MOF specifically accumulated in HCC tumor tissue and was effectively endocytosed by HCC cells. The protective properties of the MOF increased the stability of siRNA and allowed for significant downregulation of survivin expression in HCC tumors, contributing to tumor inhibition through the suppression of cell proliferation and the induction of apoptosis. These findings highlight the potential of MOF-based siRNA delivery systems for targeted cancer therapy."
+  },
+  {
+    "paperId": "61e55f9204d336847a938a8e2c05d82f0acd881c",
+    "externalIds": {
+      "DOI": "10.1016/j.biotechadv.2025.108546",
+      "CorpusId": 276658498,
+      "PubMed": "40015385"
+    },
+    "url": "https://www.semanticscholar.org/paper/61e55f9204d336847a938a8e2c05d82f0acd881c",
+    "title": "Targeted delivery systems of siRNA based on ionizable lipid nanoparticles and cationic polymer vectors.",
+    "venue": "Biotechnology Advances",
+    "year": 2025,
+    "citationCount": 32,
+    "openAccessPdf": {
+      "url": "",
+      "status": "CLOSED",
+      "license": null,
+      "disclaimer": "Notice: Paper or abstract available at https://api.unpaywall.org/v2/10.1016/j.biotechadv.2025.108546?email=<INSERT_YOUR_EMAIL> or https://doi.org/10.1016/j.biotechadv.2025.108546, which is subject to the license by the author or copyright owner provided with this content. Please go to the source to verify the license and copyright information for your use."
+    },
+    "authors": [
+      {
+        "authorId": "2333518202",
+        "name": "Ziying Yao"
+      },
+      {
+        "authorId": "2278973535",
+        "name": "Taiqing Liu"
+      },
+      {
+        "authorId": "2347682473",
+        "name": "Jingwen Wang"
+      },
+      {
+        "authorId": "2278324341",
+        "name": "Yunhai Fu"
+      },
+      {
+        "authorId": "2278210043",
+        "name": "Jinhua Zhao"
+      },
+      {
+        "authorId": "2278421180",
+        "name": "Xiaoyu Wang"
+      },
+      {
+        "authorId": "2197466243",
+        "name": "Yinqi Li"
+      },
+      {
+        "authorId": "2278216470",
+        "name": "Xiaodong Yang"
+      },
+      {
+        "authorId": "2333666041",
+        "name": "Zhiyao He"
+      }
+    ],
+    "abstract": "As an emerging therapeutic tool, small interfering RNA (siRNA) had the capability to down-regulate nearly all human mRNAs via sequence-specific gene silencing. Numerous studies have demonstrated the substantial potential of siRNA in the treatment of broad classes of diseases. With the discovery and development of various delivery systems and chemical modifications, six siRNA-based drugs have been approved by 2024. The utilization of siRNA-based therapeutics has significantly propelled efforts to combat a wide array of previously incurable diseases and advanced at a rapid pace, particularly with the help of potent targeted delivery systems. Despite encountering several extracellular and intracellular challenges, the efficiency of siRNA delivery has been gradually enhanced. Currently, targeted strategies aimed at improving potency and reducing toxicity played a crucial role in the druggability of siRNA. This review focused on recent advancements on ionizable lipid nanoparticles (LNPs) and cationic polymer (CP) vectors applied for targeted siRNA delivery. Based on various types of targeted modification, we primarily described delivery systems modified with receptor ligands, peptides, antibodies, aptamers and amino acids. Finally, we discussed the challenges and opportunities associated with siRNA delivery systems based on ionizable LNPs and CPs vectors."
+  }
+]

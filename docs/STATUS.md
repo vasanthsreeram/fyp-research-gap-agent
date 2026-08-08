@@ -16,9 +16,9 @@ Updated by daily progress cron + human/call notes.
 - Write notes + propose approaches; formal start ~August; early progress welcome
 - Audio/transcript: ~/.openclaw/workspace/tmp/fyp-prof-meeting/
 
-## Current stage: **Stage 3** (2026-08-07 10:07 SGT)
+## Current stage: **Stage 3** (2026-08-08 10:35 SGT)
 
-Wave 13 — **Europe PMC OA bulk full-text + fixture depth 22/52**.
+Wave 14 — **Unpaywall OA PDF harvest + fully keyless live path**.
 
 ### Stage checklist
 - [x] S0 Freeze scope 1-pager for prof (problem, domain, eval, risks)
@@ -52,46 +52,46 @@ Wave 13 — **Europe PMC OA bulk full-text + fixture depth 22/52**.
 - [x] **S3 Full-text PDF depth** — `src/ingest/pdf_text.py`; Paper.full_text/sections; fixture bodies; PyMuPDF extract; IMRaD split; `fulltext` CLI; run `--fulltext` (default on)
 - [x] **S3 Europe PMC OA bulk full-text** — `src/ingest/europe_pmc.py`; DOI→PMCID→fullTextXML→plain IMRaD; `europe-pmc-status`; run `--fulltext-europe-pmc`
 - [x] **S3 Fixture full-text expansion** — 9 → **22** sectioned bodies (hybrid/gene-editing heavy)
+- [x] **S3 Unpaywall OA PDF harvest** — `src/ingest/unpaywall.py`; DOI→best OA PDF→`data/raw/pdfs/`→extract; `--fulltext-unpaywall` / `fulltext --unpaywall` / `unpaywall-status`; +5 tests; live-verified on PLOS (1.5 MB PDF → 66k chars)
 - [ ] Register BG4801 when eligible
 - [ ] Optional: store S2 API key for dual-source live refresh (OpenAlex already unblocks live path)
 - [ ] Closed-book LLM mem probe on held-out titles (optional; run with small/open model)
-- [ ] Optional: Unpaywall/OA PDF bulk harvest into `data/raw/pdfs/` for remaining abstract-only DOIs (fixture DOIs are mostly synthetic)
+- [x] Optional: Unpaywall/OA PDF bulk harvest into `data/raw/pdfs/` for remaining abstract-only DOIs (live DOIs only; publisher bot-blocks noted below)
 
-### What shipped (2026-08-07 10:07 SGT — wave 13 Europe PMC + full-text 22)
+### What shipped (2026-08-08 10:35 SGT — wave 14 Unpaywall harvest + keyless live path)
 
 | Metric | Value |
 |--------|-------|
-| Papers | **52** (fixture; **21** year≥2024 held-out) |
-| Full-text attached | **22** (was 9; offline fixture IMRaD bodies) |
-| Claims (heuristic) | **180** (was 123) |
-| Evidence | **311** (was 197) |
-| Gaps | **174** (incl. argue-mined conflicts) |
-| Argument units | **538** (was 412) |
-| Argument relations | **40** (**20** attack, **20** support) |
-| Topics (balanced) | **5** — packs: hybrid + gene_editing + lnp_core |
-| Protocols | **5** |
-| Corpus novelty mean | **0.79** (lexical; own papers excluded) |
+| Papers (fixture) | **52** (21 year≥2024 held-out) |
+| **Live default corpus** | **15 real 2025–26 papers** (S2 no-key + OpenAlex; real DOIs) |
+| Full-text attached (live) | **7/15 via Europe PMC** on real recent papers |
+| Unpaywall OA PDF | **live-verified** — PLOS PDF 1.5 MB → 66k chars extracted; CLI `unpaywall-status` OK |
+| Claims (heuristic) | **180** (fixture 52) |
+| Evidence | **311** |
+| Gaps | **174** |
+| Argument units | **538** (40 relations) |
+| Topics (balanced) | **5** |
+| Corpus novelty mean | **0.79** |
 | Domain pack | **PASS** |
-| pytest | **65 passed** (was 63) |
+| pytest | **70 passed** (was 65; +5 Unpaywall) |
 | Mem-bench | **PASS** — ground 100%/100%, unsup/cite/over/leak 0% |
-| Europe PMC live | **OK** — sample DOI → PMC7745181 OA; JATS parse verified (~31k chars) |
 
-**New / updated (wave 13)**
+**New / updated (wave 14)**
 ```
-src/ingest/europe_pmc.py         # DOI→PMCID search, fullTextXML fetch, JATS→plain IMRaD
-src/ingest/pdf_text.py           # europe_pmc attach path + stats.n_from_europe_pmc
-src/fixtures/fulltext_fixture.jsonl  # 9 → 22 bodies (hybrid/gene heavy)
-src/cli.py                       # --fulltext-europe-pmc; fulltext --europe-pmc; europe-pmc-status
-src/models.py                    # full_text_source includes europe_pmc
-tests/test_pipeline.py           # +2 Europe PMC tests; fixture attach ≥18
+src/ingest/unpaywall.py            # Unpaywall v2 client: DOI→record→best OA PDF URL (no key)
+src/ingest/pdf_text.py             # unpaywall attach step (after Europe PMC) + n_from_unpaywall stats + report row
+src/cli.py                         # --fulltext-unpaywall; fulltext --unpaywall; unpaywall-status
+src/models.py                      # full_text_source includes unpaywall
+tests/test_pipeline.py             # TestUnpaywall: parse/fallback/attach/status/404 (offline stubs)
 ```
 
 **Demo commands**
 ```bash
 python -m src.cli run --limit 52 --fixture --mode heuristic --aligner lexical --format both
-python -m src.cli fulltext --limit 52 --fixture
-python -m src.cli europe-pmc-status
-# Live OA path (real DOIs only; most fixture DOIs are synthetic demo IDs):
+python -m src.cli unpaywall-status
+# Keyless live path (no API keys anywhere):
+python -m src.cli fetch-papers --limit 15 --year-min 2022
+python -m src.cli fulltext --limit 15 --unpaywall --europe-pmc
 python -m src.cli fulltext --limit 5 --no-fixture --europe-pmc
 python -m src.cli argue --limit 52 --fixture --top 12
 python -m src.cli novelty --limit 52 --fixture --backend lexical
@@ -104,6 +104,7 @@ python -m pytest tests/ -q
 - **Prototype stage** — heuristic extractor + fixture corpus for reliable offline demos; not a production lit-mining system.
 - Live Semantic Scholar still prefers an API key for reliable bulk refresh; **OpenAlex now provides a free no-key live path** (verified). Unauthenticated S2 remains rate-limit sensitive.
 - **Europe PMC** provides free OA fullTextXML (no key); verified live. Fixture corpus DOIs are largely **synthetic** for offline demos, so bulk Europe PMC attach on fixture will hit few/none — use live OpenAlex/S2 papers with real DOIs for OA harvest.
+- **Unpaywall OA PDF harvest** verified live on PLOS (1.5 MB → 66k chars). Some publishers (Wiley, RSC, preprint servers) return **HTTP 403 bot-blocks** on direct PDF GET even with browser UA — those are counted as harvest failures; full browser automation would be needed (not pursued; keep the slice honest/light).
 - OpenAI key resolved from Keychain `openclaw/tgcallskill/openai-api-key` (not committed) for LLM extract / optional closed-book probe.
 - Closed-book LLM memorization probe not run in default cron path (offline-first); enable with `mem-bench --closed-book`. Prefer open/small models.
 - Cross-paper tension uses abstract-level stance cues (support vs limit lexicon) — proxy dialectic, not full argument mining.
@@ -122,7 +123,7 @@ python -m pytest tests/ -q
 - Questions: domain scope (LNP vs hybrid ncRNA weight), eval rubric labels, memorization rigor, next steps
 
 ## Last automated progress
-- 2026-08-07 10:07 SGT — Wave 13: Europe PMC OA full-text (`src/ingest/europe_pmc.py`) + fixture full-text **9→22**. E2E 52→**180c/311e/174g**, units **538**, full-text **22/52**; mem-bench PASS; domain pack PASS; **65 tests**. Live EPMC status OK.
+- 2026-08-08 10:35 SGT — Wave 14: Unpaywall OA PDF harvest (`src/ingest/unpaywall.py`) + fully **keyless live path**: S2(no-key)+OpenAlex ingest → Europe PMC full text (7/15 real 2025–26 papers) → Unpaywall OA PDF (PLOS verified, 66k chars). `--fulltext-unpaywall` / `fulltext --unpaywall` / `unpaywall-status`; **70 tests** (+5). Publisher 403 bot-blocks documented (Wiley/RSC/preprint).
 - 2026-08-06 10:00 SGT — Wave 12: Full-text PDF depth (`src/ingest/pdf_text.py`). Paper.full_text + IMRaD sections; 9 fixture bodies attached offline; PyMuPDF extract + optional arXiv download. E2E 52→**123c/197e/128g**, units **412**, full-text **9/52**; mem-bench PASS; domain pack PASS; **63 tests**.
 - 2026-08-05 10:00 SGT — Wave 11: Cite-grounded argument mining (`src/gap/argue.py`). 329 quote-grounded units w/ roles + citation cues, 40 cross-paper relations (11 attack / 29 support), 8 ARGUE_MINED_CONFLICT gaps. `argue` CLI + report; **58 tests**.
 - 2026-08-03 10:03 SGT — Wave 10: Novelty-vs-corpus scoring (`src/gap/novelty.py`). Gaps rescored with corpus_novelty + redundancy penalty. E2E mean_cn=0.79; **52 tests**.

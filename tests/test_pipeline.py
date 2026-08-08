@@ -1078,3 +1078,155 @@ class TestFullTextDepth:
         assert p.pdf_path == str(pdf_path)
         kinds = {s.kind.value for s in p.sections}
         assert "methods" in kinds or "results" in kinds or len(p.full_text or "") > 80
+
+
+class TestUnpaywall:
+    """Wave 14: Unpaywall OA PDF harvest (offline stubs; no network in tests)."""
+
+    FAKE_RECORD = {
+        "doi": "10.1371/journal.pbio.3002278",
+        "is_oa": True,
+        "title": "Unpaywall probe paper",
+        "year": 2024,
+        "journal_name": "PLOS Biology",
+        "best_oa_location": {
+            "host_type": "publisher",
+            "version": "publishedVersion",
+            "license": "cc-by",
+            "url_for_pdf": "https://journals.plos.org/plosbiology/article/file?id=10.1371/journal.pbio.3002278&type=printable",
+            "url_for_landing_page": "https://journals.plos.org/plosbiology/article?id=10.1371/journal.pbio.3002278",
+        },
+        "oa_locations": [
+            {
+                "host_type": "publisher",
+                "url_for_pdf": "https://journals.plos.org/plosbiology/article/file?id=10.1371/journal.pbio.3002278&type=printable",
+                "url_for_landing_page": "https://journals.plos.org/plosbiology/article?id=10.1371/journal.pbio.3002278",
+            }
+        ],
+    }
+
+    def test_lookup_parses_record_offline(self, monkeypatch):
+        from src.ingest import unpaywall as upw
+
+        monkeypatch.setattr(upw, "_request_json", lambda url, **kw: self.FAKE_RECORD)
+        rec = upw.lookup("10.1371/journal.pbio.3002278", email="test@example.com")
+        assert rec is not None
+        assert rec.is_oa is True
+        assert rec.doi == "10.1371/journal.pbio.3002278"
+        assert rec.best_host_type == "publisher"
+        assert rec.best_version == "publishedVersion"
+        assert rec.year == 2024
+        assert rec.best_url_for_pdf and "file?id=" in rec.best_url_for_pdf
+        assert rec.n_locations == 1
+        assert upw.best_pdf_url("10.1371/journal.pbio.3002278") == rec.best_url_for_pdf
+
+    def test_lookup_404_returns_none(self, monkeypatch):
+        import urllib.error
+
+        from src.ingest import unpaywall as upw
+
+        def boom(url, **kw):
+            raise urllib.error.HTTPError(url, 404, "Not Found", None, None)
+
+        monkeypatch.setattr(upw, "_request_json", boom)
+        assert upw.lookup("10.9999/nonexistent") is None
+        assert upw.best_pdf_url("10.9999/nonexistent") is None
+
+    def test_best_pdf_url_falls_back_to_oa_locations(self, monkeypatch):
+        from src.ingest import unpaywall as upw
+
+        rec = {
+            "doi": "10.example/fallback",
+            "is_oa": True,
+            "best_oa_location": {
+                "host_type": "repository",
+                "url_for_pdf": None,
+                "url_for_landing_page": "https://repo.example/landing",
+            },
+            "oa_locations": [
+                {
+                    "host_type": "repository",
+                    "url_for_pdf": None,
+                    "url_for_landing_page": "https://repo.example/a",
+                },
+                {
+                    "host_type": "publisher",
+                    "url_for_pdf": "https://publisher.example/paper.pdf",
+                    "url_for_landing_page": "https://publisher.example/paper",
+                },
+            ],
+        }
+        monkeypatch.setattr(upw, "_request_json", lambda url, **kw: rec)
+        assert upw.best_pdf_url("10.example/fallback") == "https://publisher.example/paper.pdf"
+
+    def test_unpaywall_attach_with_stub(self, monkeypatch, tmp_path):
+        from src.ingest import unpaywall as upw
+        from src.ingest.pdf_text import attach_fulltext_to_papers
+
+        _NL = chr(10)  # avoid escape ambiguity; splitter needs real newlines
+        body = _NL.join(
+            [
+                "Abstract",
+                "Hybrid ncRNA co-delivery via LNP.",
+                "",
+                "Methods",
+                "We formulated bifunctional cargo LNPs with ionizable lipids.",
+                "",
+                "Results",
+                "RISC loading interfered with mRNA expression by 40%.",
+                "",
+                "Limitations",
+                "Endosomal escape remains poorly understood.",
+            ]
+        )
+
+        monkeypatch.setattr(
+            upw,
+            "best_pdf_url",
+            lambda doi, email=upw.DEFAULT_MAILTO: "https://publisher.example/oa.pdf",
+        )
+        # Avoid real PDF download + extraction in tests
+        monkeypatch.setattr(
+            "src.ingest.pdf_text.download_pdf",
+            lambda url, dest: dest.write_text("not a real pdf"),
+        )
+        monkeypatch.setattr(
+            "src.ingest.pdf_text.extract_text_from_pdf",
+            lambda path, max_pages=40: body,
+        )
+
+        p = Paper(
+            id="paper_unpaywall_test",
+            title="Stub OA PDF paper",
+            abstract="Short abstract only.",
+            doi="10.example/oa-pdf",
+        )
+        papers, stats = attach_fulltext_to_papers(
+            [p],
+            use_fixture=False,
+            download=False,
+            europe_pmc=False,
+            unpaywall=True,
+            skip_existing=False,
+            pdf_dir=tmp_path,
+        )
+        assert stats.n_from_unpaywall == 1
+        assert papers[0].has_full_text()
+        assert papers[0].full_text_source == "unpaywall"
+        assert papers[0].pdf_url == "https://publisher.example/oa.pdf"
+        assert "RISC loading" in (papers[0].full_text or "")
+        assert any(s.kind.value == "methods" for s in papers[0].sections)
+
+    def test_unpaywall_status_offline(self, monkeypatch):
+        from src.ingest import unpaywall as upw
+
+        monkeypatch.setattr(upw, "lookup", lambda doi, email=upw.DEFAULT_MAILTO: upw.UnpaywallRecord(
+            doi=doi,
+            is_oa=True,
+            best_url_for_pdf="https://publisher.example/oa.pdf",
+            title="Probe paper",
+        ))
+        st = upw.unpaywall_status(sample_doi="10.example/probe")
+        assert st["ok"] is True
+        assert st["is_oa"] is True
+        assert st["pdf_url"] == "https://publisher.example/oa.pdf"

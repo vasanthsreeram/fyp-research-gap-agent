@@ -64,6 +64,7 @@ class FullTextAttachStats:
     n_from_pdf: int = 0
     n_from_download: int = 0
     n_from_europe_pmc: int = 0
+    n_from_unpaywall: int = 0
     n_failed: int = 0
     sources: dict[str, int] = field(default_factory=dict)
     attached_ids: list[str] = field(default_factory=list)
@@ -344,16 +345,18 @@ def attach_fulltext_to_papers(
     use_fixture: bool = True,
     download: bool = False,
     europe_pmc: bool = False,
+    unpaywall: bool = False,
     pdf_dir: Optional[Path] = None,
     max_attach: Optional[int] = None,
     skip_existing: bool = True,
     fixture_path: Optional[Path] = None,
 ) -> tuple[list[Paper], FullTextAttachStats]:
-    """Attach full text where possible (fixture → local PDF → Europe PMC → PDF URL).
+    """Attach full text where possible (fixture → local PDF → Europe PMC → Unpaywall → PDF URL).
 
     Returns (papers, stats). Papers list is the same objects (mutated in place).
 
     ``europe_pmc=True`` enables live DOI→PMC OA fullTextXML (no API key).
+    ``unpaywall=True`` enables live DOI→Unpaywall OA PDF harvest into data/raw/pdfs/ (no API key).
     ``download=True`` enables direct PDF URL fetch (arXiv / known pdf_url).
     """
     stats = FullTextAttachStats(n_input=len(papers))
@@ -447,6 +450,35 @@ def attach_fulltext_to_papers(
                 logger.warning("Europe PMC attach failed for %s: %s", paper.id, e)
                 stats.n_failed += 1
 
+        # 3b) Unpaywall OA PDF harvest (DOI → best OA PDF → download → extract)
+        if unpaywall and paper.doi:
+            try:
+                from src.ingest.unpaywall import best_pdf_url
+
+                uurl = best_pdf_url(paper.doi)
+                if uurl:
+                    safe = re.sub(r"[^a-zA-Z0-9._-]+", "_", paper.id)[:80]
+                    dest = pdf_dir / f"{safe}.pdf"
+                    download_pdf(uurl, dest)
+                    text = extract_text_from_pdf(dest)
+                    if len(text) > 120:
+                        attach_full_text(
+                            paper,
+                            text,
+                            source="unpaywall",
+                            pdf_path=str(dest),
+                            pdf_url=uurl,
+                        )
+                        stats.n_attached += 1
+                        stats.n_from_unpaywall += 1
+                        stats.bump_source("unpaywall")
+                        stats.attached_ids.append(paper.id)
+                        attached += 1
+                        continue
+            except Exception as e:
+                logger.warning("Unpaywall harvest failed for %s (%s): %s", paper.id, paper.doi, e)
+                stats.n_failed += 1
+
         # 4) Optional live PDF download (arXiv etc.)
         if download:
             url = resolve_pdf_url(paper)
@@ -475,12 +507,13 @@ def attach_fulltext_to_papers(
                     stats.n_failed += 1
 
     logger.info(
-        "Full-text attach: %d/%d attached (fixture=%d pdf=%d europe_pmc=%d download=%d failed=%d)",
+        "Full-text attach: %d/%d attached (fixture=%d pdf=%d europe_pmc=%d unpaywall=%d download=%d failed=%d)",
         stats.n_attached,
         stats.n_input,
         stats.n_from_fixture,
         stats.n_from_pdf,
         stats.n_from_europe_pmc,
+        stats.n_from_unpaywall,
         stats.n_from_download,
         stats.n_failed,
     )
@@ -509,6 +542,7 @@ def fulltext_markdown_report(papers: list[Paper], stats: Optional[FullTextAttach
             f"| From fixture | {stats.n_from_fixture} |",
             f"| From local PDF | {stats.n_from_pdf} |",
             f"| From Europe PMC OA | {stats.n_from_europe_pmc} |",
+            f"| From Unpaywall OA PDF | {stats.n_from_unpaywall} |",
             f"| From PDF download | {stats.n_from_download} |",
             f"| Failed | {stats.n_failed} |",
         ]

@@ -1,4 +1,4 @@
-"""Paper ingestion package: Semantic Scholar + OpenAlex + Europe PMC + arXiv + fixture + full-text PDF."""
+"""Paper ingestion package: Semantic Scholar + OpenAlex + Europe PMC + arXiv + Unpaywall + fixture + full-text PDF."""
 
 from __future__ import annotations
 

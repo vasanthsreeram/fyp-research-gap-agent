@@ -111,7 +111,7 @@ class Paper(BaseModel):
     sections: list[PaperSection] = Field(default_factory=list)
     pdf_path: Optional[str] = None
     pdf_url: Optional[str] = None
-    full_text_source: Optional[str] = None  # fixture | pdf | arxiv_pdf | oa_pdf | europe_pmc | manual
+    full_text_source: Optional[str] = None  # fixture | pdf | arxiv_pdf | oa_pdf | europe_pmc | unpaywall | manual
 
     def has_full_text(self) -> bool:
         return bool((self.full_text or "").strip()) and len((self.full_text or "").strip()) > len(
